@@ -1,33 +1,34 @@
-Make directory for dockerfile 
+```
+nano Dockerfile 
+```
+```
+FROM ubuntu:16.04
+# Set the maintaniner 
+MAINTAINER ptbrooks@ucdavis.edu 
 
-	mkdir /Users/philliptbrooks/Dropbox/metagenome_assembly/make_fastqc
-	cd /Users/philliptbrooks/Dropbox/metagenome_assembly/make_fastqc
-	
-Make docker file 
+#
+ENV PACKAGES wget unzip libjbzip2-java libsam-java fastx-toolkit
 
-	cat <<EOF > Dockerfile
-	FROM ubuntu:16.04
-	RUN apt-get update
-	RUN apt-get install fastqc
-	EOF
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ${PACKAGES} && \
+    apt-get clean 
 
-Check it out 
+WORKDIR /home
 
-	cat Dockerfile
+RUN wget -c http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5.zip && \
+	unzip fastqc_v0.11.5.zip && \
+	cd FastQC && \
+	chmod +x fastqc && \
+	ln -s /home/FastQC/fastqc /usr/local/bin/fastqc
+```
 
 Build docker image 
-
-	docker build -t fastqc_ctr .
-
+```
+docker build -t fastqc_ctr .
+```
 Test it 
-
-	docker run -it fastqc_ctr fastqc -h 
-	
-Move into directory for assembly
-	
-	cd "path to data"
-
-Link data to docker image and run 
-
-	docker run -v "path to data":/mydata fastqc_ctr
+```
+docker run -it fastqc_ctr fastqc -h 
+```	
 
