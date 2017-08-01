@@ -1,0 +1,4 @@
+intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
+5150000.0,0.4733455882352941,0.998062015503876,0.4733455882352941,"CP012728.1 Bacillus anthracis strain PR10-4, complete genome",../database/genbank-k31.sbt.json,9c676987aacdf4b98f4a54a86ce81c09
+4060000.0,0.37316176470588236,0.8285714285714286,0.37316176470588236,"MZNJ01000001.1 Salmonella enterica subsp. enterica serovar Typhimurium strain LT2 KO_STM3538 BCW_7502_1__paired__contig_1, whole genome shotgun sequence",../database/genbank-k31.sbt.json,908c1e7301363ef4ac5658d4f7650597
+1670000.0,0.15349264705882354,1.0,0.15349264705882354,"FPEE01000083.1 Campylobacter jejuni isolate 11168H genome assembly, contig: scaffold68_size765, whole genome shotgun sequence",../database/genbank-k31.sbt.json,37369bda9c5cc7a52e74de091608d311

@@ -1,0 +1,5 @@
+intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
+5330000.0,0.34950819672131145,1.0,0.34950819672131145,BX470251.1 Photorhabdus luminescens subsp. laumondii TTO1 complete genome,../database/genbank-k31.sbt.json,f38b30cc34c8341c45dde18e84fc1a4f
+4190000.0,0.27475409836065573,1.0,0.27475409836065573,"CP001114.1 Deinococcus deserti VCD115, complete genome",../database/genbank-k31.sbt.json,e916a176f7035b4f1962c5c49e56818d
+2970000.0,0.19475409836065574,1.0,0.19475409836065574,"CP002985.1 Acidithiobacillus ferrivorans SS3, complete genome",../database/genbank-k31.sbt.json,d85347d6bfe69560e5cd266463290765
+2760000.0,0.18098360655737705,1.0,0.18098360655737705,"FM211688.1 Listeria monocytogenes L99 serovar 4a, complete genome",../database/genbank-k31.sbt.json,f406fb0fe4840a35d87293d8c0e26a2e
