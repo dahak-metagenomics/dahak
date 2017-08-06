@@ -63,6 +63,8 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o qc/after_trim
 ```
 ```
+#### Merge paired-end reads
+
 cd ../..
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py /data/SRR606249_subset10_1.trim.fq.gz /data/SRR606249_subset10_2.trim.fq.gz --no-reformat -o /data/SRR606249_subset10.pe.trim.fq.gz --gzip
 ```
