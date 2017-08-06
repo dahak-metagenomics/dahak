@@ -4,12 +4,14 @@ sudo apt-get -y update
 sudo apt install python-pip
 pip install osfclient
 ```
+
 #### Install docker
 ```
 wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
 exit
 ```
+
 #### Sign back in and retrieve containers for quality assement
 ```
 docker pull biocontainers/fastqc
@@ -26,7 +28,6 @@ osf -p dm938 fetch osfstorage/SRR606249_subset10_1.fq.gz
 osf -p dm938 fetch osfstorage/SRR606249_subset10_2.fq.gz
 ```
 
-
 #### link the data and run fastqc 
 ```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o qc/before_trim
@@ -35,11 +36,13 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o qc/before_trim
 ```
 
-#Grab the adapter sequences
+#### Grab the adapter sequences
 
+```
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
+```
 
-#link the data and run trimmomatic
+#### link the data and run trimmomatic
 ```
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36--4 trimmomatic PE /data/SRR606249_subset10_1.fq.gz \
                  /data/SRR606249_subset10_2.fq.gz \
@@ -62,9 +65,9 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 ```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o qc/after_trim
 ```
-```
-#### Merge paired-end reads
 
+#### Merge paired-end reads
+```
 cd ../..
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py /data/SRR606249_subset10_1.trim.fq.gz /data/SRR606249_subset10_2.trim.fq.gz --no-reformat -o /data/SRR606249_subset10.pe.trim.fq.gz --gzip
 ```
