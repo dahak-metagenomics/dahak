@@ -1,4 +1,4 @@
-#### from unbuntu 16.04 
+#### from ubuntu 16.04 
 ```
 sudo apt-get -y update
 sudo apt install python-pip
