@@ -20,7 +20,7 @@ docker pull quay.io/biocontainers/khmer:2.1--py35_0
 docker pull biocontainers/jupyter
 ```
 
-#### make a directory called data, download the osf cli, and rectrieve some data
+#### make a directory called data, download the osf cli, and retrieve some data
 ```
 mkdir data
 cd data
@@ -30,6 +30,10 @@ osf -p dm938 fetch osfstorage/SRR606249_subset10_2.fq.gz
 
 #### link the data and run fastqc 
 ```
+mkdir qc
+mkdir qc/before_trim 
+cd qc/before_trim 
+```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o qc/before_trim
 ```
 ```
@@ -37,7 +41,6 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 ```
 
 #### Grab the adapter sequences
-
 ```
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
 ```
@@ -56,8 +59,8 @@ docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36
 
 #### Now run fastqc on the trimmed data
 ```
-mkdir qc/after_trim
-cd qc/after_trim
+mkdir ~/data/qc/after_trim
+cd ../after_trim
 ```
 ```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o qc/after_trim
