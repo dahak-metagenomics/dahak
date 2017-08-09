@@ -1,7 +1,8 @@
-#### from unbuntu 16.04 
+#### from ubuntu 16.04 
 ```
-sudo apt-get -y update
-sudo apt install python-pip
+sudo apt-get -y update && \
+sudo apt-get -y install python-pip \
+    zlib1g-dev ncurses-dev python-dev
 pip install osfclient
 ```
 
@@ -33,6 +34,10 @@ osf -p dm938 fetch osfstorage/SRR606249_subset10_2.fq.gz
 mkdir qc
 mkdir qc/before_trim 
 cd qc/before_trim 
+```
+mkdir qc/before_trim
+cd qc/before_trim
+```
 ```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o qc/before_trim
 ```
