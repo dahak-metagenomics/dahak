@@ -35,6 +35,7 @@ mkdir qc
 mkdir qc/before_trim 
 cd qc/before_trim 
 ```
+```
 mkdir qc/before_trim
 cd qc/before_trim
 ```
