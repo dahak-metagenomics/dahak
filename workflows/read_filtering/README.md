@@ -1,7 +1,8 @@
 #### from ubuntu 16.04 
 ```
-sudo apt-get -y update
-sudo apt install python-pip
+sudo apt-get -y update && \
+sudo apt-get -y install python-pip \
+    zlib1g-dev ncurses-dev python-dev
 pip install osfclient
 ```
 
