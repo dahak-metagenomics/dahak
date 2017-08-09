@@ -20,7 +20,7 @@ docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost
 #### link the data and run SPAdes 
 ```
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/spades:3.10.1--py27_0 metaspades.py --12 /data/SRR606249_subset10.pe.trim.fq.gz \
-	-o /data/spades_ouput_podar_metaG_sub_10
+	-o /data/spades_output_podar_metaG_sub_10
 ```
 #### Now run quast to generate some assembly statistics 
 ```
