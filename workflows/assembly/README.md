@@ -1,4 +1,4 @@
-#### from unbuntu 16.04 using filtered reads
+#### from ubuntu 16.04 using filtered reads
 
 ```
 docker pull quay.io/biocontainers/megahit:1.1.1--py36_0
