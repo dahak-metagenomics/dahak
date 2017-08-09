@@ -4,7 +4,7 @@
 docker pull quay.io/biocontainers/megahit:1.1.1--py36_0
 docker pull quay.io/biocontainers/spades:3.10.1--py27_0
 docker pull quay.io/biocontainers/quast:4.5--boost1.61_1
-docker pull quay.io/biocontainers/prokka:1.11--0
+docker pull ummidock/prokka:1.12 prokka
 ```
 ```
 tmux 
@@ -28,11 +28,9 @@ docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost
 ```
 #### Now annotate your contigs with prokka
 ```
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/prokka:1.11--0 prokka /data/podar_metaG_sub_10/final.contigs.fa \
-	--outdir /data/prokka_annotation --prefix podar_metaG_sub_10 
+ddocker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 prokka /data/megahit_output_podar_metaG_sub_10/final.contigs.fa --outdir /data/prokka_annotation --prefix podar_metaG_sub_10_megahit
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/prokka:1.11--0 prokka /data/spades_ouput_podar_metaG_sub_10/contigs.fasta \
-	--outdir /data/prokka_annotation --prefix podar_metaG_sub_10 
+docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 prokka /data/spades_output_podar_metaG_sub_10/final.contigs.fasta --outdir /data/prokka_annotation --prefix podar_metaG_sub_10_spades
 ```
 
