@@ -31,6 +31,10 @@ osf -p dm938 fetch osfstorage/SRR606249_subset10_2.fq.gz
 
 #### link the data and run fastqc 
 ```
+mkdir qc/before_trim
+cd qc/before_trim
+```
+```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o qc/before_trim
 ```
 ```
