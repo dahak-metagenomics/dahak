@@ -44,6 +44,7 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 
 #### Grab the adapter sequences
 ```
+cd ~/data
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
 ```
 
@@ -62,7 +63,7 @@ docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36
 #### Now run fastqc on the trimmed data
 ```
 mkdir ~/data/qc/after_trim
-cd ../after_trim
+cd qc/after_trim
 ```
 ```
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o qc/after_trim
