@@ -1,4 +1,3 @@
-cat <<EOF > Dockerfile
 FROM ubuntu:16.04
 RUN apt-get update --fix-missing
 RUN apt-get upgrade -y 
@@ -9,4 +8,4 @@ RUN ./abricate/bin/abricate --check
 RUN ./abricate/bin/abricate --setupdb
 ENTRYPOINT abricate/bin/abricate
 CMD abricate/bin/abricate
-EOF
+
