@@ -1,0 +1,14 @@
+#from ubuntu 16.04 
+
+#### Let's annnotate your contigs with prokka. First, let's download the prokka container along with a few others we'll use later: 
+```
+docker pull ummidock/prokka:1.12
+docker pull 
+```
+#### now, link the data and run prokka
+```
+docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 prokka /data/megahit_output_podar_metaG_sub_10/final.contigs.fa --outdir /data/prokka_annotation_megahit --prefix podar_metaG_sub_10_megahit
+```
+```
+docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 prokka /data/spades_output_podar_metaG_sub_10/contigs.fasta --outdir /data/prokka_annotation_spades --prefix podar_metaG_sub_10_spades
+```
