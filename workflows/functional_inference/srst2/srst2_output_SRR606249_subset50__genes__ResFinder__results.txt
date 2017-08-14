@@ -1,0 +1,2 @@
+Sample	lsa(A)
+SRR606249_subset50	lsa(A)*
