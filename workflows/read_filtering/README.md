@@ -3,6 +3,13 @@
 sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
     zlib1g-dev ncurses-dev python-dev
+```
+upgarde pip 
+```
+pip install --upgrade pip
+```
+Now, install the open science command line interface 
+```
 pip install osfclient
 ```
 
@@ -16,9 +23,8 @@ exit
 #### Sign back in and retrieve containers for quality assement
 ```
 docker pull biocontainers/fastqc
-quay.io/biocontainers/trimmomatic:0.36--4
+docker pull quay.io/biocontainers/trimmomatic:0.36--4
 docker pull quay.io/biocontainers/khmer:2.1--py35_0
-docker pull biocontainers/jupyter
 ```
 
 #### make a directory called data, download the osf cli, and retrieve some data
@@ -36,10 +42,10 @@ mkdir qc/before_trim
 cd qc/before_trim 
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o qc/before_trim
+docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o qc/before_trim
+docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o /data/qc/before_trim
 ```
 
 #### Grab the adapter sequences
@@ -66,10 +72,10 @@ mkdir ~/data/qc/after_trim
 cd qc/after_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o qc/after_trim
+docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o /data/qc/after_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o qc/after_trim
+docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o /data/qc/after_trim
 ```
 
 #### Merge paired-end reads
