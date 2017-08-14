@@ -4,10 +4,7 @@
 docker pull quay.io/biocontainers/megahit:1.1.1--py36_0
 docker pull quay.io/biocontainers/spades:3.10.1--py27_0
 docker pull quay.io/biocontainers/quast:4.5--boost1.61_1
-docker pull quay.io/biocontainers/ummidock/prokka:1.12
-```
-```
-tmux 
+docker pull ummidock/prokka:1.12
 ```
 #### link the data and run Megahit
 ```
