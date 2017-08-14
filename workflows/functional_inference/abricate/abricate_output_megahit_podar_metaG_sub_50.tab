@@ -1,0 +1,12 @@
+Using database resfinder:  2130 sequences -  Mar 17, 2017
+#FILE	SEQUENCE	START	END	GENE	COVERAGE	COVERAGE_MAP	GAPS	%COVERAGE	%IDENTITY	DATABASE	ACCESSION
+Processing: /data/megahit_output_podar_metaG_sub_50/final.contigs.fa
+Found 8 genes in /data/megahit_output_podar_metaG_sub_50/final.contigs.fa
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_11635	17	138	aph(6)-Ic_1	454-575/801	........===....	0/0	15.23	78.689	resfinder	X01702
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_33629	56449	57945	lsa(A)_2	1-1497/1497	===============	0/0	100.00	99.933	resfinder	AY58982
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_35327	1364	1492	car(A)_1	562-690/1656	....==../......	2/4	7.67	77.863	resfinder	M80346
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_36978	21	293	blaOXA-162_1	526-798/798	......../.=====	2/2	34.09	79.197	resfinder	GU197550
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_37220	3275	3453	vat(A)_1	346-524/660	.......=/====..	2/2	26.97	75.556	resfinder	L07778
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_38187	1781	2384	blaOXA-181_1	123-726/798	..============.	0/0	75.69	81.788	resfinder	HM992946
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_7954	5463	6065	vat(B)_1	1-603/639	========/======	2/4	94.05	76.860	resfinder	U19459
+/data/megahit_output_podar_metaG_sub_50/final.contigs.fa	k119_8205	262	370	oqxB_1	1168-1276/3153	.....==........	0/0	3.46	83.486	resfinder	EU370913
