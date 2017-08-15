@@ -8,7 +8,7 @@ upgarde pip
 ```
 pip install --upgrade pip
 ```
-Now, install the open science command line interface 
+Now, install the open science framework command line interface 
 ```
 pip install osfclient
 ```
