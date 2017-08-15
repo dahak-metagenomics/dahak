@@ -4,11 +4,11 @@ sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
     zlib1g-dev ncurses-dev python-dev
 ```
-upgarde pip 
+#### upgarde pip 
 ```
 pip install --upgrade pip
 ```
-Now, install the open science framework command line interface 
+#### Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
 ```
 pip install osfclient
 ```
@@ -27,7 +27,7 @@ docker pull quay.io/biocontainers/trimmomatic:0.36--4
 docker pull quay.io/biocontainers/khmer:2.1--py35_0
 ```
 
-#### make a directory called data, download the osf cli, and retrieve some data
+#### make a directory called data and retrieve some data using the osfclient 
 ```
 mkdir data
 cd data
@@ -80,6 +80,6 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 
 #### Merge paired-end reads
 ```
-cd ../..
+cd ~/data
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py /data/SRR606249_subset10_1.trim.fq.gz /data/SRR606249_subset10_2.trim.fq.gz --no-reformat -o /data/SRR606249_subset10.pe.trim.fq.gz --gzip
 ```
