@@ -1,0 +1,81 @@
+intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
+8360000.0,0.022792954904847593,0.908695652173913,0.022792954904847593,"CP000270.1 Burkholderia xenovorans LB400 chromosome 1, complete sequence",/data/genbank-k31.sbt.json,00ba560c11b5aed2491ac8a484d4e210
+7860000.0,0.021429739898576803,0.9974619289340102,0.021429739898576803,"BA000019.2 Nostoc sp. PCC 7120 DNA, complete genome",/data/genbank-k31.sbt.json,b707f3cdca627cd3c985ada91454874e
+6830000.0,0.01862151698565898,1.0,0.01862151698565898,BX119912.1 Rhodopirellula baltica SH 1 complete genome,/data/genbank-k31.sbt.json,fe2f7e3e143e72582f902ff258901d47
+6260000.0,0.01706745187851028,0.9936507936507937,0.01706745187851028,"CP000875.1 Herpetosiphon aurantiacus DSM 785, complete genome",/data/genbank-k31.sbt.json,e04a17715259ffe539c22d2f480a2484
+6160000.0,0.01679480887725612,0.9983792544570502,0.01679480887725612,"AE015928.1 Bacteroides thetaiotaomicron VPI-5482, complete genome",/data/genbank-k31.sbt.json,8affae43de8758c8d77c302cacc884ab
+5540000.0,0.015104422269480342,0.9685314685314685,0.015104422269480342,"CP000850.1 Salinispora arenicola CNS-205, complete genome",/data/genbank-k31.sbt.json,9cd58999b3384a98ae6e1c6d42918dff
+5280000.0,0.014395550466219532,0.998109640831758,0.014395550466219532,"AE010299.1 Methanosarcina acetivorans str. C2A, complete genome",/data/genbank-k31.sbt.json,5a9fc0ee959336a305ee239f9b66b7b9
+5270000.0,0.014368286166094117,0.9581818181818181,0.014368286166094117,"CP001252.1 Shewanella baltica OS223, complete genome",/data/genbank-k31.sbt.json,7d8a17e40b0ac01fb333233e000e5972
+5220000.0,0.014231964665467037,0.9980879541108987,0.014231964665467037,"CP000909.1 Chloroflexus aurantiacus J-10-fl, complete genome",/data/genbank-k31.sbt.json,6cf63ffd3b4cdd74285f8c2ea5c04d78
+5170000.0,0.014095643164839959,0.9922630560928434,0.013986585964338296,"CP000139.1 Bacteroides vulgatus ATCC 8482, complete genome",/data/genbank-k31.sbt.json,c2a9fe2dfaa14f88998b7d1dabc05f46
+5120000.0,0.01395932166421288,0.9326047358834244,0.01395932166421288,"JGWU01000001.1 Bordetella bronchiseptica D989 ctg7180000008197, whole genome shotgun sequence",/data/genbank-k31.sbt.json,66bec36337846c889154be759d35e5e1
+4900000.0,0.013359507061453732,0.9701789264413518,0.0133049784612029,"CP001013.1 Leptothrix cholodnii SP-6, complete genome",/data/genbank-k31.sbt.json,77c2bf53734a8f5a0a8368ca4166f45f
+4620000.0,0.01259610665794209,0.9369918699186992,0.012568842357816674,"CP000031.2 Ruegeria pomeroyi DSS-3, complete genome",/data/genbank-k31.sbt.json,cce0ed45cf8a9c5f5e30e2dd96b8ad2d
+4850000.0,0.013223185560826654,0.9213709677419355,0.012459785157315011,"CP000667.1 Salinispora tropica CNB-440, complete genome",/data/genbank-k31.sbt.json,0859bb63eaa83740362a288b98c7052e
+4500000.0,0.012268935056437101,1.0,0.012268935056437101,"AP009153.1 Gemmatimonas aurantiaca T-27 DNA, complete genome",/data/genbank-k31.sbt.json,ea5b483d89c2834cba889470ee54bc06
+4290000.0,0.01169638475380337,1.0,0.01169638475380337,"CP001472.1 Acidobacterium capsulatum ATCC 51196, complete genome",/data/genbank-k31.sbt.json,53ae51540690b8114e8c9b1de15ac31f
+3890000.0,0.010605812748786738,0.9922879177377892,0.010524019848410492,"CH959317.1 Sulfitobacter sp. NAS-14.1 scf_1099451320472 genomic scaffold, whole genome shotgun sequence",/data/genbank-k31.sbt.json,5d89b30ca0135902efc54d4dfef06c07
+3730000.0,0.010169583946780086,1.0,0.010169583946780086,"CP000568.1 Clostridium thermocellum ATCC 27405, complete genome",/data/genbank-k31.sbt.json,c8dfefe51d10d2bc69e98ccb9f52cb8f
+3630000.0,0.009896940945525928,0.9705882352941176,0.009896940945525928,"CP001957.1 Haloferax volcanii DS2 plasmid pHV1, complete sequence",/data/genbank-k31.sbt.json,3289847d4f801890f470cabe9b0f4450
+3620000.0,0.009869676645400513,1.0,0.009869676645400513,"AE017180.2 Geobacter sulfurreducens PCA, complete genome",/data/genbank-k31.sbt.json,cad70347d69826f67584d0a9d218bdbd
+3160000.0,0.008615518839631386,0.9461077844311377,0.008615518839631386,"CP015081.1 Deinococcus radiodurans R1 chromosome 1, complete sequence",/data/genbank-k31.sbt.json,2aa01a4a459411e33b8293e4a22aa64a
+3010000.0,0.00820655433775015,1.0,0.00820655433775015,"CP000492.1 Chlorobium phaeobacteroides DSM 266, complete genome",/data/genbank-k31.sbt.json,e767853e7baa62955403be55c7f72807
+2980000.0,0.008124761437373902,1.0,0.008124761437373902,"FWDH01000003.1 Caldicellulosiruptor bescii strain MACB1021 genome assembly, contig: Ga0100411_13, whole genome shotgun sequence",/data/genbank-k31.sbt.json,e536cba653f63e430649511f1fd3da08
+2940000.0,0.008015704236872239,1.0,0.008015704236872239,"AE017226.1 Treponema denticola ATCC 35405, complete genome",/data/genbank-k31.sbt.json,95591705e9950838f79db07b039c8fe5
+2940000.0,0.008015704236872239,0.9965986394557823,0.007988439936746824,"CP001097.1 Chlorobium limicola DSM 245, complete genome",/data/genbank-k31.sbt.json,9362f23a446169126889093f9e397fa4
+2890000.0,0.007879382736245161,0.9930795847750865,0.00782485413599433,"CP001110.1 Pelodictyon phaeoclathratiforme BU-1, complete genome",/data/genbank-k31.sbt.json,e09dfa5e16f222a6d38c184d9d516b0e
+2820000.0,0.00768853263536725,0.752,0.00768853263536725,"AE017285.1 Desulfovibrio vulgaris subsp. vulgaris str. Hildenborough, complete genome",/data/genbank-k31.sbt.json,6b64a44da6121f5526cec0b6dce12446
+2800000.0,0.007634004035116418,1.0,0.007634004035116418,"BA000023.2 Sulfolobus tokodaii str. 7 DNA, complete genome",/data/genbank-k31.sbt.json,f292d2441d8e26c207c58181bd4d744e
+2740000.0,0.007470418234363924,1.0,0.007470418234363924,"CP001071.1 Akkermansia muciniphila ATCC BAA-835, complete genome",/data/genbank-k31.sbt.json,80981d8317d487ec28111c3c213d0ea5
+2720000.0,0.007415889634113092,0.9926739926739927,0.007388625333987676,"DS996397.1 Desulfovibrio piger ATCC 29098 Scfld442 genomic scaffold, whole genome shotgun sequence",/data/genbank-k31.sbt.json,a6a6ce237ee70bb2cf3165dd09c6e9c3
+2750000.0,0.007497682534489339,0.9381818181818182,0.007034189432357271,"CP000679.1 Caldicellulosiruptor saccharolyticus DSM 8903, complete genome",/data/genbank-k31.sbt.json,cf64168ab51ce93b21d98adc064d2d5e
+2450000.0,0.006679753530726866,1.0,0.006679753530726866,"FUWK01000085.1 Nitrosomonas europaea strain ATCC 25978 genome assembly, contig: EI56DRAFT_scaffold00085.85, whole genome shotgun sequence",/data/genbank-k31.sbt.json,307e4a5b67c2bb3b440fdad32939e7e9
+2400000.0,0.006543432030099787,0.9795918367346939,0.006543432030099787,"AGVN01000001.1 Enterococcus faecalis M7 contig00001, whole genome shotgun sequence",/data/genbank-k31.sbt.json,acb2965752f6b9c438efce2d6bdc2e65
+5020000.0,0.013686678662958722,0.45136186770428016,0.006325317629096461,"CP000753.1 Shewanella baltica OS185, complete genome",/data/genbank-k31.sbt.json,587ce2c355149eb1cb3bf0c4d69148a9
+2200000.0,0.005998146027591472,0.9954545454545455,0.005970881727466056,"AP008226.1 Thermus thermophilus HB8 genomic DNA, complete genome",/data/genbank-k31.sbt.json,e20fdae84d9cec8407e59e79e41c18b1
+2170000.0,0.0059163531272152245,0.9953917050691244,0.005889088827089809,"AE006470.1 Chlorobium tepidum TLS, complete genome",/data/genbank-k31.sbt.json,7d9da9000d4b6a24c5a55815cc7d8e58
+2120000.0,0.005780031626588146,1.0,0.005780031626588146,"AE000782.1 Archaeoglobus fulgidus DSM 4304, complete genome",/data/genbank-k31.sbt.json,3a93c5e5b629f1fce8280618c357add4
+2100000.0,0.005725503026337314,1.0,0.005725503026337314,"CP012889.1 Porphyromonas gingivalis 381, complete genome",/data/genbank-k31.sbt.json,4240ce4c5515014ee9a3e7adb685745a
+2070000.0,0.005643710125961067,1.0,0.005643710125961067,"BX571656.1 Wolinella succinogenes DSM 1740, complete genome",/data/genbank-k31.sbt.json,3bbc7531f877e6d693443e88e3d14753
+2060000.0,0.005616445825835651,1.0,0.005616445825835651,"AE009441.1 Pyrobaculum aerophilum str. IM2, complete genome",/data/genbank-k31.sbt.json,8fab421f80debb367920adaf38055609
+2060000.0,0.005616445825835651,1.0,0.005616445825835651,"CP000660.1 Pyrobaculum arsenaticum DSM 13514, complete genome",/data/genbank-k31.sbt.json,2ac538bda6676ab3094d4e839edda746
+2000000.0,0.005452860025083156,0.995,0.005425595724957741,"CP000607.1 Chlorobium phaeovibrioides DSM 265, complete genome",/data/genbank-k31.sbt.json,95aaeaea3012141b402966b29c82fc77
+1980000.0,0.005398331424832325,1.0,0.005398331424832325,"CP000916.1 Thermotoga neapolitana DSM 4359, complete genome",/data/genbank-k31.sbt.json,afde32ceab3120d5faa07dc7a775ee73
+1980000.0,0.005398331424832325,1.0,0.005398331424832325,"CP001251.1 Dictyoglomus turgidum DSM 6724, complete genome",/data/genbank-k31.sbt.json,c7cc65fdc4d0616de9da652b2a4f1182
+1970000.0,0.005371067124706909,0.9468599033816425,0.005343802824581493,"KQ961402.1 Zymomonas mobilis strain ATCC 31823 genomic scaffold Scaffold1, whole genome shotgun sequence",/data/genbank-k31.sbt.json,4015ab3973c872e370417525140f014c
+1940000.0,0.005289274224330662,1.0,0.005289274224330662,"CP000924.1 Thermoanaerobacter pseudethanolicus ATCC 33223, complete genome",/data/genbank-k31.sbt.json,abc1fbcffa4727db1b86d4336e1e8e33
+1900000.0,0.005180217023828999,1.0,0.005180217023828999,"CP001230.1 Persephonella marina EX-H1, complete genome",/data/genbank-k31.sbt.json,22ea53cb8b5ed6f0111bb23e0e07ff01
+1890000.0,0.005152952723703583,1.0,0.005152952723703583,"CP001080.1 Sulfurihydrogenibium sp. YO3AOP1, complete genome",/data/genbank-k31.sbt.json,f6a745dde9ee49cc29099100f344d88f
+1890000.0,0.005152952723703583,0.9947368421052631,0.005152952723703583,"CP000561.1 Pyrobaculum calidifontis JCM 11548, complete genome",/data/genbank-k31.sbt.json,0807a5e01fe14298ceb8b0942add6814
+3450000.0,0.009406183543268444,0.5391304347826087,0.0050711598233273356,"CH959311.1 Sulfitobacter sp. EE-36 scf_1099451318005 genomic scaffold, whole genome shotgun sequence",/data/genbank-k31.sbt.json,ff4e1fc48292a24374adb73fc92125e6
+1830000.0,0.004989366922951088,1.0,0.004989366922951088,"AE009439.1 Methanopyrus kandleri AV19, complete genome",/data/genbank-k31.sbt.json,52b7001fb3a8044471e241d92caee51c
+1820000.0,0.0049621026228256725,1.0,0.0049621026228256725,"AE009950.1 Pyrococcus furiosus DSM 3638, complete genome",/data/genbank-k31.sbt.json,69beff4768741ffcf24042c0e1b218b8
+1850000.0,0.00504389552320192,0.9351351351351351,0.00471672392169693,"CP000702.1 Thermotoga petrophila RKU-1, complete genome",/data/genbank-k31.sbt.json,e359799f20c251c8cbc891aff8e7e7a5
+1650000.0,0.0044986095206936035,1.0,0.0044986095206936035,"CP000609.1 Methanococcus maripaludis C5, complete genome",/data/genbank-k31.sbt.json,126e81e8e622700f92ae8f2b575feaa7
+1650000.0,0.0044986095206936035,1.0,0.0044986095206936035,"BA000001.2 Pyrococcus horikoshii OT3 DNA, complete genome",/data/genbank-k31.sbt.json,4d1f4d965dce9c9ef8aa5cdfd259cfd4
+1570000.0,0.004280495119690277,1.0,0.004280495119690277,"L77117.1 Methanocaldococcus jannaschii DSM 2661, complete genome",/data/genbank-k31.sbt.json,8c263f05cef839ce7a1b2e22bd72f30f
+1540000.0,0.00419870221931403,1.0,0.00419870221931403,"CP001130.1 Hydrogenobaculum sp. Y04AAS1, complete genome",/data/genbank-k31.sbt.json,2b82635a5f2d042c9f682ad0871baa63
+1560000.0,0.0042532308195648615,0.9551282051282052,0.004062380718686951,"BX950229.1 Methanococcus maripaludis strain S2, complete sequence",/data/genbank-k31.sbt.json,dd903669568ea7ec0dbba0951ae8a5db
+1410000.0,0.003844266317683625,1.0,0.003844266317683625,"CP001941.1 Aciduliprofundum boonei T469, complete genome",/data/genbank-k31.sbt.json,e5f7e22bf16cffd3bddddd2cd7a5ad84
+1820000.0,0.0049621026228256725,0.7486338797814208,0.003735209117181962,"ABZS01000228.1 Sulfurihydrogenibium yellowstonense SS-5 gcontig_18, whole genome shotgun sequence",/data/genbank-k31.sbt.json,3322327ff3de78b77504440f743fab59
+1380000.0,0.0037624734173073776,0.5756302521008403,0.003735209117181962,"JANA01000001.1 Fusobacterium sp. OBRC1 ctgN310L54181C40.3705, whole genome shotgun sequence",/data/genbank-k31.sbt.json,eca94e3350cebe372d4ce3376a12e272
+1330000.0,0.0036261519166802987,1.0,0.0036261519166802987,"CP000816.1 Ignicoccus hospitalis KIN4/I, complete genome",/data/genbank-k31.sbt.json,53b5aefaa64b084011c475e00b0e78ae
+750000.0,0.0020448225094061834,0.2329192546583851,0.0020448225094061834,"FOVK01000036.1 Proteiniclasticum ruminis strain ML2 genome assembly, contig: Ga0073291_136, whole genome shotgun sequence",/data/genbank-k31.sbt.json,da5d8428c14307f3f59a4faf8544b144
+1830000.0,0.004989366922951088,0.37158469945355194,0.001853972408528273,"CP000969.1 Thermotoga sp. RQ2, complete genome",/data/genbank-k31.sbt.json,91992ffe9a481b88327a07ed20506f6b
+400000.0,0.0010905720050166311,1.0,0.0010905720050166311,"AE017199.1 Nanoarchaeum equitans Kin4-M, complete genome",/data/genbank-k31.sbt.json,6fb0ea9531668675dd80006a14bae331
+390000.0,0.0010633077048912154,0.178743961352657,0.0010087791046403838,"JUYP01000024.1 Streptococcus parasanguinis strain 65_SPAR 113_5973_78183, whole genome shotgun sequence",/data/genbank-k31.sbt.json,88adb12a8aa8b50ee5f1dabcc7ba01f7
+1370000.0,0.003735209117181962,0.11764705882352941,0.0007634004035116419,"LN831027.1 Fusobacterium nucleatum subsp. polymorphum genome assembly NCTC10562, chromosome : 1",/data/genbank-k31.sbt.json,7690493ad4a6cb6af23b48aaee96421c
+2720000.0,0.007415889634113092,0.06722689075630252,0.0006543432030099788,"CP000527.1 Desulfovibrio vulgaris DP4, complete genome",/data/genbank-k31.sbt.json,5264acddba1182c3122aff55fdaa2a90
+420000.0,0.0011451006052674627,0.07667731629392971,0.0006543432030099788,"FNDZ01000023.1 Proteiniclasticum ruminis strain CGMCC 1.5058 genome assembly, contig: Ga0104464_123, whole genome shotgun sequence",/data/genbank-k31.sbt.json,6e12b153a59438d4761399f35b01e014
+1190000.0,0.003244451714924478,0.05394190871369295,0.00035443590163040516,CP013328.1 Fusobacterium nucleatum subsp. polymorphum strain ChDC F319 genome,/data/genbank-k31.sbt.json,a8b0dbf33674980cce9ed785734fcf2f
+140000.0,0.00038170020175582093,0.03857566765578635,0.00035443590163040516,"CP000951.1 Synechococcus sp. PCC 7002, complete genome",/data/genbank-k31.sbt.json,00097334e2a6f79ee11bd140ddce9695
+330000.0,0.0008997219041387207,0.04608294930875576,0.0002726430012541578,"JVSR01000007.1 Streptococcus parasanguinis strain 139.rep2_SPAR 102_16358_239263, whole genome shotgun sequence",/data/genbank-k31.sbt.json,2c3a4ebda6d012f3d4d1b2e7076307d1
+110000.0,0.00029990730137957356,0.045871559633027525,0.0002726430012541578,"KV794070.1 Streptococcus sp. HMSC078H03 genomic scaffold Scaffold0, whole genome shotgun sequence",/data/genbank-k31.sbt.json,21f092bdc5b0605b0ebb9a30b76c1460
+90000.0,0.000245378701128742,0.016885553470919325,0.000245378701128742,"FLZD01000399.1 Escherichia coli isolate CG50C.G2 genome assembly, contig: NODE_399_length_78_cov_51_ID_17168, whole genome shotgun sequence",/data/genbank-k31.sbt.json,d8769005af396d9d4c342e6c8d17ef3b
+340000.0,0.0009269862042641365,0.03333333333333333,0.00019085010087791047,"KQ235732.1 Fusobacterium nucleatum subsp. vincentii 4_1_13 genomic scaffold supercont2.1, whole genome shotgun sequence",/data/genbank-k31.sbt.json,bb7e72b4c0ed2dd43ca7bcc0ab1e423a
+3720000.0,0.010142319646654671,0.009259259259259259,0.00019085010087791047,"AMWG01000001.1 Rhodopirellula baltica SWK14 cSWK140001, whole genome shotgun sequence",/data/genbank-k31.sbt.json,9b9244b03f205fb40ab3bfa8383df2b5
+360000.0,0.000981514804514968,0.03015075376884422,0.0001635858007524947,"GL732449.1 Streptococcus parasanguinis ATCC 903 genomic scaffold SCAFFOLD1, whole genome shotgun sequence",/data/genbank-k31.sbt.json,5cd1ce750f4ca32a5cee66bfbf313172
+60000.0,0.0001635858007524947,0.016339869281045753,0.0001363215006270789,"LRAD01000001.1 Microbacterium laevaniformans strain LCDC 91-0039 Mlaev_contig000001, whole genome shotgun sequence",/data/genbank-k31.sbt.json,a7e1eba9767bb94062dcfec778b1e093
+80000.0,0.00021811440100332624,0.017857142857142856,0.0001363215006270789,"FREM01000944.1 Enterococcus faecium isolate Hp_6-9 genome assembly, contig: NODE_944_length_128_cov_2808_ID_10274, whole genome shotgun sequence",/data/genbank-k31.sbt.json,dabc48e3f930c62235862c27dfeba327
+60000.0,0.0001635858007524947,0.0099601593625498,0.0001363215006270789,"MOYM01000001.1 Stenotrophomonas sp. TD3 Scaffold1_1, whole genome shotgun sequence",/data/genbank-k31.sbt.json,7b4d81925c1c0bb16451623babebd951
