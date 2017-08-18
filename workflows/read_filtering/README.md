@@ -4,7 +4,7 @@ sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
     zlib1g-dev ncurses-dev python-dev
 ```
-#### upgarde pip 
+#### upgrade pip 
 ```
 pip install --upgrade pip
 ```
