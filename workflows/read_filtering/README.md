@@ -80,10 +80,4 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 cd ~/data
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py /data/SRR606249_subset10_1.trim.fq.gz /data/SRR606249_subset10_2.trim.fq.gz --no-reformat -o /data/SRR606249_subset10.pe.trim.fq.gz --gzip
 ```
-~or~ 
 
-#### Merge paired-end reads using PANDAseq
-```
-cd ~/data
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/pandaseq:2.11--1 pandaseq -f /data/SRR606249_subset10_1.trim.fq.gz -r /data/SRR606249_subset10_2.trim.fq.gz −u SRR606249_subset10_2.trim.fa.unpaired.txt −w SRR606249_subset10_2.merged.trim.fa
-```
