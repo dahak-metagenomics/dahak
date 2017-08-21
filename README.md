@@ -1,16 +1,35 @@
 
 # dahak
 
-Dahak is a software suite that integrates state-of-the-art open source tools for metagenomic analyses. Tools in the dahak software suite will perform various steps in metagenomic analysis workflows including data pre-processing, metagenome assembly, taxonomic and functional classification, genome binning, and gene assignment. We aim to deliver the analytical framework as a robust and reliable containerized workflow system, which will be free from dependency, installation, and execution problems typically associated with other open-source bioinformatics solutions. This will maximize the transparency, data provenance (i.e., the process of tracing the origins of data and its movement through the workflow), and reproducibility.
+dahak is a software suite that integrates state-of-the-art open source tools for metagenomic analyses. Tools in the dahak software suite will perform various steps in metagenomic analysis workflows including data pre-processing, metagenome assembly, taxonomic and functional classification, genome binning, and gene assignment. We aim to deliver the analytical framework as a robust and reliable containerized workflow system, which will be free from dependency, installation, and execution problems typically associated with other open-source bioinformatics solutions. This will maximize the transparency, data provenance (i.e., the process of tracing the origins of data and its movement through the workflow), and reproducibility.
 
 ## Getting Started
 
-Analyis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with read filtering instrcutions for Docker installation are included there. 
+Analyis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering]( and instrcutions for Docker installation are included there. 
 
 ## Prerequisites
 
-It is assumed that all steps will be executed in an Ubuntu 16.04 image. 
+It is assumed that all steps will be executed using an Ubuntu 16.04 image. 
 
+## Data 
+For purposes of benchmarking this project will use the following datasets: 
+
+- [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
+  - NCBI SRA Accession: [SRX200676](https://www.ncbi.nlm.nih.gov/sra/?term=SRX200676)
+
+- 50% subsample of Shakya et al. 2013*
+  SRR606249_subset50_1.fq.gz
+  SRR606249_subset50_1.fq.gz
+
+- 25% subsample of Shakya et al. 2013*
+  SRR606249_subset25_1.fq.gz
+  SRR606249_subset25_1.fq.gz
+  
+- 10% subsample of Shakya et al. 2013*
+  SRR606249_subset10_1.fq.gz
+  SRR606249_subset10_1.fq.gz
+
+*Subsampled data sets can be retieved from the open sccience framework using the [osfclient](https://github.com/dib-lab/osf-cli). See example in [read_filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering). 
 
 ## Contributing
 
@@ -35,5 +54,4 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE.md](L
 
 * [Bioconda](https://bioconda.github.io) 
 * Hat tip to anyone who's code was used
-* Inspiration
-* etc
+
