@@ -4,10 +4,6 @@ sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
     zlib1g-dev ncurses-dev python-dev
 ```
-#### upgrade pip 
-```
-pip install --upgrade pip
-```
 #### Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
 ```
 pip install osfclient
