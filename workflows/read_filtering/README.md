@@ -2,7 +2,7 @@
 ```
 sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
-    zlib1g-dev ncurses-dev python-dev
+    zlib1g-dev ncurses-dev python-dev
 ```
 #### Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
 ```
@@ -16,7 +16,7 @@ sudo usermod -aG docker ubuntu
 exit
 ```
 
-#### Sign back in and retrieve containers for quality assement
+#### Sign back in and retrieve containers for quality assessment
 ```
 docker pull biocontainers/fastqc
 docker pull quay.io/biocontainers/trimmomatic:0.36--4
