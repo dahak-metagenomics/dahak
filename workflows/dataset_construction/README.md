@@ -10,13 +10,12 @@ tar -vxzf sratoolkit.tar.gz
 ```
 ls
 ```
-## In order for the new software to work we will have to put it in the VM's path. In the example the name of the sratoolkit is 
-sratoolkit.2.8.2-1-ubuntu64. Make sure to get the dots and dashes correctly copied and don't forget to add /bin following the 
-sratoolkit name.
+## In order for the new software to work we will have to put it in our path. In the example the name of the sratoolkit is 
+sratoolkit.2.8.2-1-ubuntu64.
 ```
 export PATH=$PATH:$PWD/sratoolkit.2.8.2-1-ubuntu64/bin
 ```
-## Use fastq dump to down the files
+## Use [fastq-dump](https://edwards.sdsu.edu/research/fastq-dump/) to download the files
 ```
 fastq-dump --split-files --gzip --defline-seq '@$ac.$si.$sg/$ri' --defline-qual '+' -Z SRR606249 > SRR606249.fq.gz
 ```
