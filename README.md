@@ -5,7 +5,7 @@ dahak is a software suite that integrates state-of-the-art open source tools for
 
 ## Getting Started
 
-Analyis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering]( and instrcutions for Docker installation are included there. 
+Analyis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instrcutions for Docker installation are included there. 
 
 ## Prerequisites
 
