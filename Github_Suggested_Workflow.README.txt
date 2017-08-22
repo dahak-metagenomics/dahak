@@ -1,7 +1,7 @@
 #This is a file detailing the suggested Github workflow in the Dahak repo
 
 #To download the repo on your local machine
-git clone "https://github.com/dahak-metagenomics/"
+git clone "https://github.com/dahak-metagenomics/dahak"
 
 #Thereafter, keep your master branch up-to-date before making/editing new files
 git checkout master
