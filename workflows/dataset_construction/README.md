@@ -14,6 +14,10 @@ ls
 ```
 export PATH=$PATH:$PWD/sratoolkit.2.8.2-1-ubuntu64/bin
 ```
+#### Next, install khmer
+```
+pip install khmer 
+```
 #### Use [fastq-dump](https://edwards.sdsu.edu/research/fastq-dump/) to download the files
 ```
 fastq-dump --split-files --gzip --defline-seq '@$ac.$si.$sg/$ri' --defline-qual '+' -Z SRR606249 > SRR606249.fq.gz
@@ -24,3 +28,8 @@ sample-reads-randomly.py -N 10800000 -M 100000000 -o SRR606249_subset10.fq.gz --
 sample-reads-randomly.py -N 27000000 -M 100000000 -o SRR606249_subset25.fq.gz --gzip SRR606249.fq.gz
 sample-reads-randomly.py -N 54000000 -M 100000000 -o SRR606249_subset50.fq.gz --gzip SRR606249.fq.gz
 ```
+#### Split the reads prior to uploading for storage
+```
+for i in *.fq.gz; do  split-paired-reads.py -1 $i_1.fq.gz -2 $i_1.fq.gz --gzip $i; done
+```
+
