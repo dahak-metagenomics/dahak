@@ -20,7 +20,7 @@ docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/spades:3.10.1--p
 ```
 #### Now run quast to generate some assembly statistics 
 ```
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 quast.py /data/spades_ouput_podar_metaG_sub_10/contigs.fasta -o data/spades_output__podar_metaG_sub_10_quast_report
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 quast.py /data/spades_ouput_podar_metaG_sub_10/contigs.fasta -o data/spades_output_podar_metaG_sub_10_quast_report
 ```
 
 
