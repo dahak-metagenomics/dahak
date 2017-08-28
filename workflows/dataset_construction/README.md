@@ -30,6 +30,8 @@ sample-reads-randomly.py -N 54000000 -M 100000000 -o SRR606249_subset50.fq.gz --
 ```
 #### Split the reads prior to uploading for storage
 ```
-for i in *.fq.gz; do  split-paired-reads.py -1 $i_1.fq.gz -2 $i_1.fq.gz --gzip $i; done
+SRR606249_subset10.fq.gz split-paired-reads.py -1 SRR606249_subset10_1.fq.gz -2 SRR606249_subset10_2.fq.gz --gzip 
+SRR606249_subset25.fq.gz split-paired-reads.py -1 SRR606249_subset25_1.fq.gz -2 SRR606249_subset25_2.fq.gz --gzip 
+SRR606249_subset50.fq.gz split-paired-reads.py -1 SRR606249_subset50_1.fq.gz -2 SRR606249_subset50_2_1.fq.gz --gzip 
 ```
 
