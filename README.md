@@ -5,7 +5,7 @@ dahak is a software suite that integrates state-of-the-art open source tools for
 
 ## Getting Started
 
-Analyis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instrcutions for Docker installation are included there. 
+Analysis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instructions for Docker installation are included there. 
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ For purposes of benchmarking this project will use the following datasets:
   SRR606249_subset10_1.fq.gz
   SRR606249_subset10_1.fq.gz
 
-*Subsampled data sets can be retieved from the open sccience framework using the [osfclient](https://github.com/dib-lab/osf-cli). See example in [read_filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering). 
+*Subsampled data sets can be retrieved from the Open Science Framework using the [osfclient](https://github.com/dib-lab/osf-cli). See example in [read_filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering). 
 
 ## Contributing
 
