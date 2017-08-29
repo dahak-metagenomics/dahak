@@ -14,7 +14,7 @@ It is assumed that all steps will be executed using an Ubuntu 16.04 image.
 ## Data 
 For purposes of benchmarking this project will use the following datasets: 
 
-- [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
+- [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
   - NCBI SRA Accession: [SRX200676](https://www.ncbi.nlm.nih.gov/sra/?term=SRX200676)
 
 - 50% subsample of Shakya et al. 2013*
