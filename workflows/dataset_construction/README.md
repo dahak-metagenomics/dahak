@@ -33,5 +33,6 @@ sample-reads-randomly.py -N 54000000 -M 100000000 -o SRR606249_subset50.fq.gz --
 split-paired-reads.py SRR606249_subset10.fq.gz -1 SRR606249_subset10_1.fq.gz -2 SRR606249_subset10_2.fq.gz --gzip 
 split-paired-reads.py SRR606249_subset25.fq.gz -1 SRR606249_subset25_1.fq.gz -2 SRR606249_subset25_2.fq.gz --gzip 
 split-paired-reads.py SRR606249_subset50.fq.gz -1 SRR606249_subset50_1.fq.gz -2 SRR606249_subset50_2.fq.gz --gzip 
+split-paired-reads.py SRR606249.fq.gz -1 SRR606249_1.fq.gz -2 SRR606249_2.fq.gz --gzip
 ```
 
