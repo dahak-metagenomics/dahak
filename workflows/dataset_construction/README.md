@@ -24,9 +24,9 @@ fastq-dump --split-files --gzip --defline-seq '@$ac.$si.$sg/$ri' --defline-qual 
 ```
 #### Now we will use the sample-reads-randomly.py script from khmer to generate subsampled datasets with 10, 25, and 50% percent of the reads.
 ```
-sample-reads-randomly.py -N 10800000 -M 100000000 -o SRR606249_subset10.fq.gz --gzip SRR606249.fq.gz
-sample-reads-randomly.py -N 27000000 -M 100000000 -o SRR606249_subset25.fq.gz --gzip SRR606249.fq.gz
-sample-reads-randomly.py -N 54000000 -M 100000000 -o SRR606249_subset50.fq.gz --gzip SRR606249.fq.gz
+sample-reads-randomly.py -N 5400000 -M 100000000 -o SRR606249_subset10.fq.gz --gzip SRR606249.fq.gz
+sample-reads-randomly.py -N 13500000 -M 100000000 -o SRR606249_subset25.fq.gz --gzip SRR606249.fq.gz
+sample-reads-randomly.py -N 27000000 -M 100000000 -o SRR606249_subset50.fq.gz --gzip SRR606249.fq.gz
 ```
 #### Split the reads prior to uploading for storage
 ```
