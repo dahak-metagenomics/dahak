@@ -1,6 +1,7 @@
+
 #!/bin/bash
 
-i="SRR606249_subset50"
+i="SRR606249"
 
 pip install osfclient
 
@@ -12,8 +13,8 @@ docker pull quay.io/biocontainers/pandaseq:2.11--1
 #
 mkdir data
 cd data
-osf -p dm938 fetch osfstorage/${i}_1.fq.gz
-osf -p dm938 fetch osfstorage/${i}_2.fq.gz
+#osf -p dm938 fetch osfstorage/${i}_1.fq.gz
+#osf -p dm938 fetch osfstorage/${i}_2.fq.gz
 
 #### Link the data and run fastqc
 mkdir qc
@@ -28,7 +29,7 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc \
     fastqc /data/${i}_2.fq.gz -o /data/qc/before_trim
 
 #### Download the adapters 
-cd data
+cd ~/data
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
 
 #### Run trimmomatic
