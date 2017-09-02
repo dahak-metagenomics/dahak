@@ -27,6 +27,6 @@ docker pull thanhleviet/abricate abricate
 docker pull ummidock/prokka:1.12
 
 docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-    prokka /data/megahit_output_podar_metaG_100/final.contigs.fa --outdir /data/prokka_annotation --prefix podar_metaG_100
+    prokka /data/megahit_output_podar_metaG_100/final.contigs.fa --outdir /data/prokka_megahit_100_annotation --prefix podar_metaG_100
 docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-    prokka /data/spades_output_podar_metaG_100/contigs.fasta --outdir /data/prokka_annotation --prefix podar_metaG_sub_100
+    prokka /data/spades_output_podar_metaG_100/contigs.fasta --outdir /data/prokka_spades_100_annotation --prefix podar_metaG_sub_100
