@@ -1,0 +1,65 @@
+/usr/local/lib/python2.7/site-packages/quast-4.5-py2.7.egg-info/scripts/quast.py /data/spades_output_podar_metaG_100/contigs.fasta -o data/spades_output_podar_metaG_100_quast_report
+
+Version: 4.5
+
+System information:
+  OS: Linux-4.4.0-1032-aws-x86_64-with-glibc2.2.5 (linux_64)
+  Python version: 2.7.13
+  CPUs number: 64
+
+Started: 2017-09-02 04:18:22
+
+Logging to /data/spades_output_podar_metaG_100_quast_report/quast.log
+NOTICE: Maximum number of threads is set to 16 (use --threads option to set it manually)
+
+CWD: /
+Main parameters: 
+  Threads: 16, minimum contig length: 500, ambiguity: one, threshold for extensive misassembly size: 1000
+
+Contigs:
+  Pre-processing...
+  /data/spades_output_podar_metaG_100/contigs.fasta ==> contigs
+
+2017-09-02 04:18:34
+Running Basic statistics processor...
+  Contig files: 
+    contigs
+  Calculating N50 and L50...
+    contigs, N50 = 62753, L50 = 673, Total length = 198291683, GC % = 51.49, # N's per 100 kbp =  0.00
+  Drawing Nx plot...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/Nx_plot.pdf
+  Drawing cumulative plot...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/cumulative_plot.pdf
+  Drawing GC content plot...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/GC_content_plot.pdf
+  Drawing contigs GC content plot...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/contigs_GC_content_plot.pdf
+  Drawing Coverage histogram (bin size: 1x)...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/coverage_histogram.pdf
+  Drawing contigs coverage histogram (bin size: 1x)...
+    saved to /data/spades_output_podar_metaG_100_quast_report/basic_stats/contigs_coverage_histogram.pdf
+Done.
+
+NOTICE: Genes are not predicted by default. Use --gene-finding option to enable it.
+
+2017-09-02 04:18:52
+Creating large visual summaries...
+This may take a while: press Ctrl-C to skip this step..
+  1 of 2: Creating Icarus viewers...
+  2 of 2: Creating PDF with all tables and plots...
+Done
+
+2017-09-02 04:18:55
+RESULTS:
+  Text versions of total report are saved to /data/spades_output_podar_metaG_100_quast_report/report.txt, report.tsv, and report.tex
+  Text versions of transposed total report are saved to /data/spades_output_podar_metaG_100_quast_report/transposed_report.txt, transposed_report.tsv, and transposed_report.tex
+  HTML version (interactive tables and plots) saved to /data/spades_output_podar_metaG_100_quast_report/report.html
+  PDF version (tables and plots) is saved to /data/spades_output_podar_metaG_100_quast_report/report.pdf
+  Icarus (contig browser) is saved to /data/spades_output_podar_metaG_100_quast_report/icarus.html
+  Log saved to /data/spades_output_podar_metaG_100_quast_report/quast.log
+
+Finished: 2017-09-02 04:18:55
+Elapsed time: 0:00:33.083513
+NOTICEs: 2; WARNINGs: 1; non-fatal ERRORs: 0
+
+Thank you for using QUAST!
