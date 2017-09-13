@@ -28,8 +28,7 @@ docker pull quay.io/biocontainers/pandaseq:2.11--1
 ```
 mkdir data
 cd data
-osf -p dm938 fetch osfstorage/SRR606249_subset10_1.fq.gz
-osf -p dm938 fetch osfstorage/SRR606249_subset10_2.fq.gz
+for i in $(cat files.txt); do osf -u philliptbrooks@gmail.com -p dm938 fetch osfstorage/data/${i}; done
 ```
 
 #### Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 

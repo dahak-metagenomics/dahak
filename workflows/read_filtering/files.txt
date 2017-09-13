@@ -1,0 +1,8 @@
+SRR606249_1.fq.gz
+SRR606249_2.fq.gz
+SRR606249_subset10_1.fq.gz
+SRR606249_subset10_2.fq.gz
+SRR606249_subset25_1.fq.gz
+SRR606249_subset25_2.fq.gz
+SRR606249_subset50_1.fq.gz
+SRR606249_subset50_2.fq.gz
