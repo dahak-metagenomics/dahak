@@ -1,6 +1,6 @@
 From Ubuntu 16.04 
 
-To compare sourmahs signatures from raw reads 
+To compare sourmash signatures from raw reads 
 ```
 docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
 compare /data/SRR606249.pe.trim2.fq.gz.scaled10k.k51.sig \
