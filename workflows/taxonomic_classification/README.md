@@ -5,22 +5,32 @@
 #### Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather allows us taxonomically calssify the components of a metagenome by compairing MinHash signatures to a database. First, download the database. 
 ```
 cd ~/data
-curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k31-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
 tar xzf microbe-genbank-sbt-k31-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k51-2017.05.09.tar.gz
+tar xzf microbe-genbank-sbt-k51-2017.05.09.tar.gz
 ```
-#### Now, download the container
+#### Now, download the containers
 ```
 docker pull quay.io/biocontainers/sourmash:2.0.0a1--py35_2
 docker pull quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0
 docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 ```
-#### Next, calculate a signature for our data
+#### Next, calculate signatures for our data
 ```
-docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute --scaled 10000 -k 31 /data/SRR606249_subset10.pe.trim.fq.gz -o /data/SRR606249_subset10.pe.trim.scaled10k.k31.sig
+for i in *.pe.trim2.fq.gz
+do
+	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
+		--scaled 10000 -k 51 /data/${i} -o /data/${i}.scaled10k.k51.sig
+done
 ```
 #### And compare that signature to our database to classify the components.
 ```
-docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash gather -k 31 /data/SRR606249_subset10.pe.trim.scaled10k.k31.sig /data/genbank-k31.sbt.json -o /data/gather_output_SRR606249_subset10.pe.trim.scaled10k.csv
+for i in *sig
+do
+	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash gather \
+		-k 31 /data/${i} /data/genbank-k51.sbt.json /data/refseq- -o /data/${i}gather.output.csv
+done
 ```
 #### Now, let's download and unpack the kaiju database 
 ```
