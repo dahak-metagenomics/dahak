@@ -28,7 +28,11 @@ docker pull quay.io/biocontainers/pandaseq:2.11--1
 ```
 mkdir data
 cd data
-for i in $(cat files.txt); do osf -u philliptbrooks@gmail.com -p dm938 fetch osfstorage/data/${i}; done
+
+for i in $(cat files.txt)
+do 
+	osf -u philliptbrooks@gmail.com -p dm938 fetch osfstorage/data/${i}
+done
 ```
 
 #### Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
@@ -52,14 +56,25 @@ curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03
 
 #### Link the data and run [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 ```
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36--4 trimmomatic PE /data/SRR606249_subset10_1.fq.gz \
-                 /data/SRR606249_subset10_2.fq.gz \
-        /data/SRR606249_subset10_1.trim.fq.gz /data/s1_se \
-        /data/SRR606249_subset10_2.trim.fq.gz /data/s2_se \
+for filename in *_1*.fq.gz
+do
+    # first, make the base by removing .fq.gz using the unix program basename
+    base=$(basename $filename .fq.gz)
+    echo $base
+
+    # now, construct the base2 filename by replacing _1 with _2
+    base2=${base/_1/_2}
+    echo $base2
+
+    docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36--4 trimmomatic PE /data/${base}.fq.gz \
+                /data/${base2}.fq.gz \
+        /data/${base}.trim.fq.gz /data/${base}_se \
+        /data/${base2}.trim.fq.gz /data/${base2}_se \
         ILLUMINACLIP:/data/TruSeq2-PE.fa:2:40:15 \
         LEADING:2 TRAILING:2 \
         SLIDINGWINDOW:4:2 \
         MINLEN:25
+done
 ```
 
 #### Now run fastqc on the trimmed data
@@ -75,8 +90,24 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 ```
 
 #### Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/)
+#### The output file name includes 'trim2' indicating the reads were trimmed at 
+#### a quality score of 2. If other values were used change the output name 
+#### accordingly
+
 ```
 cd ~/data
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py /data/SRR606249_subset10_1.trim.fq.gz /data/SRR606249_subset10_2.trim.fq.gz --no-reformat -o /data/SRR606249_subset10.pe.trim.fq.gz --gzip
+for filename in *_1.trim.fq.gz
+do
+    # first, make the base by removing _1.trim.fq.gz with basename
+    base=$(basename $filename _1.trim.fq.gz)
+    echo $base
+
+    # construct the output filename
+    output=${base}.pe.trim2.fq.gz
+
+    docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py \
+        /data/${base}_1.trim.fq.gz /data/${base}_2.trim.fq.gz --no-reformat -o /data/$output --gzip
+
+done
 ```
 
