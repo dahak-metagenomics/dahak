@@ -21,3 +21,4 @@ compare /comparison/megahit_output_podar_metaG_subset_10.sig \
 /data/megahit_output_podar_metaG_subset_100.sig \
 /comparison/spades_output_podar_metaG_subset_100.sig \
 --csv /data/metaG_comparison.csv
+```
