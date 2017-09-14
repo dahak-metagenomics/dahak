@@ -21,7 +21,7 @@ docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 for i in *.pe.trim2.fq.gz
 do
 	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
-		--scaled 10000 -k 51 /data/${i} -o /data/${i}.scaled10k.k51.sig
+	--scaled 10000 -k 51 /data/${i} -o /data/${i}.scaled10k.k51.sig
 done
 ```
 #### And compare that signature to our database to classify the components.
@@ -29,7 +29,7 @@ done
 for i in *sig
 do
 	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash gather \
-		-k 31 /data/${i} /data/genbank-k51.sbt.json /data/refseq- -o /data/${i}gather.output.csv
+	-k 31 /data/${i} /data/genbank-k51.sbt.json /data/refseq- -o /data/${i}gather.output.csv
 done
 ```
 #### Now, let's download and unpack the kaiju database 
