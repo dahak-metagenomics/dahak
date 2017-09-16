@@ -6,7 +6,7 @@
 ```
 cd ~/data
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
-tar xzf microbe-genbank-sbt-k31-2017.05.09.tar.gz
+tar xzf microbe-genbank-sbt-k51-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k51-2017.05.09.tar.gz
 tar xzf microbe-genbank-sbt-k51-2017.05.09.tar.gz
 ```
@@ -18,18 +18,18 @@ docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 ```
 #### Next, calculate signatures for our data
 ```
-for i in *.pe.trim2.fq.gz
+for i in 
 do
 	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
-		--scaled 10000 -k 51 /data/${i} -o /data/${i}.scaled10k.k51.sig
+	--scaled 10000 -k 51 /data/${i} -o /data/${i}.scaled10k.k51.sig
 done
 ```
-#### And compare that signature to our database to classify the components.
+#### And compare those signatures to our database to classify the components.
 ```
-for i in *sig
+for i in *trim2*sig
 do
 	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash gather \
-		-k 31 /data/${i} /data/genbank-k51.sbt.json /data/refseq- -o /data/${i}gather.output.csv
+	-k 51 /data/${i} /data/genbank-k51.sbt.json /data/refseq-k51.sbt.json -o /data/${i}gather.output.csv
 done
 ```
 #### Now, let's download and unpack the kaiju database 
@@ -46,6 +46,8 @@ gunzip SRR606249_subset10.pe.trim.fq.gz
 ```
 #### and then link the data and run kaiju
 ```
+for i in SRR606249_subset10.pe.trim.fq.gz
+do
 docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju -v -t /data/kaijudb/nodes.dmp -f data/kaijudb/kaiju_db.fmi -i /data/SRR606249_subset10.pe.trim.fq -o /data/kaiju_output_SRR606249_subset10_1.pe.trim.out -z 16
 ```
 ```
