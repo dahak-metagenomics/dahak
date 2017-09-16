@@ -1,6 +1,0 @@
-intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
-5270000.0,0.2957351290684624,1.0,0.2957351290684624,"CU928164.2 Escherichia coli IAI39 chromosome, complete genome",../database/genbank-k31.sbt.json,312d479a6ac8faeeeafc460f08abcd67
-5150000.0,0.2890011223344557,0.998062015503876,0.2890011223344557,"CP012728.1 Bacillus anthracis strain PR10-4, complete genome",../database/genbank-k31.sbt.json,9c676987aacdf4b98f4a54a86ce81c09
-2970000.0,0.16666666666666666,1.0,0.16666666666666666,"CP002985.1 Acidithiobacillus ferrivorans SS3, complete genome",../database/genbank-k31.sbt.json,d85347d6bfe69560e5cd266463290765
-2760000.0,0.15488215488215487,1.0,0.15488215488215487,"FM211688.1 Listeria monocytogenes L99 serovar 4a, complete genome",../database/genbank-k31.sbt.json,f406fb0fe4840a35d87293d8c0e26a2e
-1670000.0,0.09371492704826039,1.0,0.09371492704826039,"FPEE01000083.1 Campylobacter jejuni isolate 11168H genome assembly, contig: scaffold68_size765, whole genome shotgun sequence",../database/genbank-k31.sbt.json,37369bda9c5cc7a52e74de091608d311

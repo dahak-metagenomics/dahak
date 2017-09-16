@@ -1,5 +1,0 @@
-intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
-5270000.0,0.5285857572718154,1.0,0.5285857572718154,"CU928164.2 Escherichia coli IAI39 chromosome, complete genome",../database/genbank-k31.sbt.json,312d479a6ac8faeeeafc460f08abcd67
-4930000.0,0.4944834503510532,0.4746450304259635,0.23470411233701102,"CP001855.1 Escherichia coli O83:H1 str. NRG 857C, complete genome",../database/genbank-k31.sbt.json,3f6082c99612ef0622995b4b5c5fdd22
-1920000.0,0.19257773319959878,0.9696969696969697,0.19257773319959878,"CP000025.1 Campylobacter jejuni RM1221, complete genome",../database/genbank-k31.sbt.json,a38dd480662095f725894111f06057b3
-1670000.0,0.1675025075225677,0.2634730538922156,0.044132397191574725,"FPEE01000083.1 Campylobacter jejuni isolate 11168H genome assembly, contig: scaffold68_size765, whole genome shotgun sequence",../database/genbank-k31.sbt.json,37369bda9c5cc7a52e74de091608d311
