@@ -1,4 +1,0 @@
-intersect_bp,f_orig_query,f_match,f_unique_to_query,name,filename,md5
-5270000.0,0.47477477477477475,1.0,0.47477477477477475,"CU928164.2 Escherichia coli IAI39 chromosome, complete genome",../database/genbank-k31.sbt.json,312d479a6ac8faeeeafc460f08abcd67
-4070000.0,0.36666666666666664,0.8081632653061225,0.3567567567567568,"MZNJ01000001.1 Salmonella enterica subsp. enterica serovar Typhimurium strain LT2 KO_STM3538 BCW_7502_1__paired__contig_1, whole genome shotgun sequence",../database/genbank-k31.sbt.json,908c1e7301363ef4ac5658d4f7650597
-1870000.0,0.16846846846846847,0.9444444444444444,0.16846846846846847,"CP000025.1 Campylobacter jejuni RM1221, complete genome",../database/genbank-k31.sbt.json,a38dd480662095f725894111f06057b3
