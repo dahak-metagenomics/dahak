@@ -29,7 +29,11 @@ done
 for i in *trim2*sig
 do
 	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash gather \
+<<<<<<< HEAD
 	-k 51 /data/${i} /data/genbank-k51.sbt.json /data/refseq-k51.sbt.json -o /data/${i}gather.output.csv
+=======
+	-k 31 /data/${i} /data/genbank-k51.sbt.json /data/refseq- -o /data/${i}gather.output.csv
+>>>>>>> fbeeb097d740f4a0799a4e8b9d202caf09976d4f
 done
 ```
 #### Now, let's download and unpack the kaiju database 
