@@ -1,6 +1,6 @@
 From Ubuntu 16.04 
 
-To compare sourmash signatures from raw reads 
+#### To compare sourmash signatures from raw reads 
 ```
 docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
 compare /data/SRR606249.pe.trim2.fq.gz.scaled10k.k51.sig \
@@ -9,7 +9,7 @@ compare /data/SRR606249.pe.trim2.fq.gz.scaled10k.k51.sig \
 /data/SRR606249_subset50.pe.trim2.fq.gz.scaled10k.k51.sig \
 --csv /data/skakya_reads_trim2_comparison.csv
 ```
-To compare sourmash signatures from assemblies 
+#### To compare sourmash signatures from assemblies 
 ```
 docker run -v ~/home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
 compare /comparison/megahit_output_podar_metaG_subset_10.sig \
