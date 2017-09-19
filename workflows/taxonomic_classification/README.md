@@ -6,7 +6,6 @@
 ```
 cd ~/data
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
-tar -zxvf microbe-refseq-sbt-k51-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k51-2017.05.09.tar.gz
 tar xzf microbe-refseq-sbt-k51-2017.05.09.tar.gz
 tar xzf microbe-genbank-sbt-k51-2017.05.09.tar.gz
