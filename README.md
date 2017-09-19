@@ -37,7 +37,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Contributors
 
-Phillip Brooks<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</sup>, Stephanie L. Guertin<sup>3</sup>, F. Curtis Hewitt<sup>3</sup>, Dana R. Kadavy<sup>3</sup>, Alexander F. Koeppel<sup>4</sup>, Oana I. Lungu<sup>3</sup>, Krista L. Ternus<sup>3</sup>, Stephen D. Turner<sup>4</sup>, C. Titus Brown<sup>1</sup>
+Phillip Brooks<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</sup>, Stephanie L. Guertin<sup>3</sup>, F. Curtis Hewitt<sup>3</sup>, Dana R. Kadavy<sup>3</sup>, Alexander F. Koeppel<sup>4</sup>, Oana I. Lungu<sup>3</sup>, Krista L. Ternus<sup>3</sup>, Stephen D. Turner<sup>4,</sup><sup>5</sup>, C. Titus Brown<sup>1</sup>
 
 <sup>1</sup>School of Veterinary Medicine, University of California Davis, Davis, CA, United States of America 
 
@@ -47,14 +47,16 @@ Phillip Brooks<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</su
 
 <sup>4</sup>Department of Public Health Sciences, University of Virginia, Charlottesville, VA, United States of America
 
+<sup>5</sup>Bioinformatics Core, University of Virginia School of Medicine, Charlottesville, VA, United States of America
+
 See also the list of [contributors](https://github.com/dahak-metagenomics/dahak/graphs/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details
 
 ## Acknowledgments
 
 * [Bioconda](https://bioconda.github.io) 
-* Hat tip to anyone who's code was used
+* Hat tip to anyone whose code was used
 
