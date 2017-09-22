@@ -24,8 +24,7 @@ docker pull quay.io/biocontainers/sourmash:2.0.0a1--py35_2
 docker pull quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0
 docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 ```
-#### If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy 
-trimmed_files.txt to your working directory or provide the path to this file. 
+#### If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy trimmed_files.txt to your working directory or provide the path to this file. 
 ```
 for i in $(cat trimmed_files.txt) 
 do 
@@ -60,7 +59,7 @@ curl -LO http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz
 tar zxvf kaiju_index_nr_euk.tgz
 rm -r kaiju_index_nr_euk.tgz
 ```
-#### unzip file for processing
+#### unzip files for processing using kaiju
 ```
 cd ~/data
 gunzip *.trim.fq.gz
@@ -90,7 +89,7 @@ do
 	/data/kaijudb/nodes.dmp -n /data/kaijudb/names.dmp -i /data/${i} -o /data/${i}.kaiju.out.krona
 done
 ```
-#### Convert file kaiju file to format readable by krona
+#### Convert kaiju file to format readable by krona
 ```
 for i in *trim2.out
 do
@@ -103,7 +102,8 @@ done
 for i in *trim2.out
 do
         docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport -v -t \
-        /data/kaijudb/nodes.dmp -n /data/kaijudb/names.dmp -i /data/${i}  -r genus -m 1 -o /data/${i}.kaiju_out_krona.1percenttotal.summary
+        /data/kaijudb/nodes.dmp -n /data/kaijudb/names.dmp -i /data/${i} -r \
+	genus -m 1 -o /data/${i}.kaiju_out_krona.1percenttotal.summary
 done
 ```
 #### Now for comparison let's take the genera that comprise at least 1 percent of all of the classified reads
