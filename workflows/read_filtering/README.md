@@ -89,7 +89,7 @@ docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR6
 docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o /data/qc/after_trim
 ```
 
-#### Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/. The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. If other values were used change the output name accordingly
+#### Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/). The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. If other values were used change the output name accordingly
 
 ```
 cd ~/data
