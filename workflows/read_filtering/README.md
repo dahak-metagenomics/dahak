@@ -31,7 +31,7 @@ cd data
 
 for i in $(cat files.txt)
 do 
-	osf -u philliptbrooks@gmail.com -p dm938 fetch osfstorage/data/${i}
+	osf -u <insert_your_username> -p dm938 fetch osfstorage/data/${i}
 done
 ```
 
