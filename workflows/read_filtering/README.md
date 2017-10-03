@@ -24,14 +24,14 @@ docker pull quay.io/biocontainers/khmer:2.1--py35_0
 docker pull quay.io/biocontainers/pandaseq:2.11--1
 ```
 
-#### Make a directory called data and retrieve some data using the osfclient 
+#### Make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
 ```
 mkdir data
 cd data
 
 for i in $(cat files.txt)
 do 
-	osf -u <insert_your_username> -p dm938 fetch osfstorage/data/${i}
+	osf -p dm938 fetch osfstorage/data/${i}
 done
 ```
 
