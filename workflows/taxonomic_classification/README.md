@@ -1,4 +1,4 @@
-#### Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
+## Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
 
 #### Requirements (from unbuntu 16.04 using filtered reads)
 - Disk space(120 gb)
@@ -115,7 +115,7 @@ do
         genus -m 1 -u -o /data/${i}.kaiju_out_krona.1percentclassified.summary
 done
 ```
-#### Download the krona image from quay.io so we can visulaize the results from kaiju 
+#### Download the krona image from quay.io so we can visualize the results from kaiju 
 ```
 docker pull quay.io/biocontainers/krona:2.7--pl5.22.0_1
 ```
@@ -127,7 +127,7 @@ do
         /data/${i}.kaiju_out_krona.all.html /data/${i}
 done
 ```
-#### Generate krona html with output from genera respresenting atleast 1 percent of the total reads
+#### Generate krona html with output from genera at least 1 percent of the total reads
 ```
 for i in *kaiju_out_krona.1percenttotal.summary
 do
@@ -135,7 +135,7 @@ do
         /data/${i}.kaiju_out_krona.1percenttotal.html /data/${i}
 done
 ```
-#### Generate krona html with output from genera respresenting atleast 1 percent of all classified reads
+#### Generate krona html with output from genera at least 1 percent of all classified reads
 ```
 for i in *kaiju_out_krona.1percentclassified.summary
 do
