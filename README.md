@@ -14,22 +14,15 @@ It is assumed that all steps will be executed using an Ubuntu 16.04 image.
 ## Data 
 For purposes of benchmarking this project will use the following datasets: 
 
-- [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
-  - NCBI SRA Accession: [SRX200676](https://www.ncbi.nlm.nih.gov/sra/?term=SRX200676)
+| Dataset |Description |
+|---|---|
+| Shakya complete | Complete metagenomic dataset from Shakya et al., 2013<sup>*</sup> containing bacterial and archaeal genomes|
+| Shakya subset 50 | 50 percent of the reads from Shakya complete|
+| Shakya subset 25 | 25 percent of the reads from Shakya complete|
+| Shakya subset 10 | 10 percent of the reads from Shakya complete|
 
-- 50% subsample of Shakya et al. 2013*
-  SRR606249_subset50_1.fq.gz
-  SRR606249_subset50_1.fq.gz
-
-- 25% subsample of Shakya et al. 2013*
-  SRR606249_subset25_1.fq.gz
-  SRR606249_subset25_1.fq.gz
-  
-- 10% subsample of Shakya et al. 2013*
-  SRR606249_subset10_1.fq.gz
-  SRR606249_subset10_1.fq.gz
-
-*Subsampled data sets can be retrieved from the Open Science Framework using the [osfclient](https://github.com/dib-lab/osf-cli). See example in [read_filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering). 
+<sup>*</sup>[Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
+ 
 
 ## Contributing
 
