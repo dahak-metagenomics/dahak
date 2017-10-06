@@ -3,7 +3,7 @@ Functional inference
 
 #### From ubuntu 16.04 using assembled contigs 
 
-#### first, download the [ABRicate][https://github.com/tseemann/abricate] and [Prokka][http://www.vicbioinformatics.com/software.prokka.shtml] images
+#### first, download the [ABRicate](https://github.com/tseemann/abricate) and [Prokka](http://www.vicbioinformatics.com/software.prokka.shtml) images
 ```
 docker pull thanhleviet/abricate abricate
 docker pull ummidock/prokka:1.12
