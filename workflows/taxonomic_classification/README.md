@@ -26,7 +26,7 @@ docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 ```
 #### If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy trimmed_files.txt to your working directory or provide the path to this file. 
 ```
-for i in $(cat trimmed_files.txt) 
+for i in $(cat trimmed_2_files.txt) 
 do 
 	osf -u philliptbrooks@gmail.com -p dm938 fetch osfstorage/data/${i} 
 done 
