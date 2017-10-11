@@ -57,6 +57,6 @@ do
 
 	docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
 	quast.py /data/${base}.spades_output/contigs.fasta \
-	-o data/${base}.spades_output_quast
+	-o data/${base}.spades_quast_report
 done
 ```
