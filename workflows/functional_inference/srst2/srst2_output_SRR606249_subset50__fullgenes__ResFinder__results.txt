@@ -1,4 +1,0 @@
-Sample	DB	gene	allele	coverage	depth	diffs	uncertainty	divergence	length	maxMAF	clusterid	seqid	annotation
-SRR606249_subset50	ResFinder	lsa(A)	lsa(A)	100.0	18.878	26snp		1.737	1497	0.063	38	251	
-SRR606249_subset50	ResFinder	lsa(A)	lsa(A)	100.0	19.553	26snp		1.737	1497	0.441	38	251	
-SRR606249_subset50	ResFinder	lsa(A)	lsa(A)	100.0	19.553	26snp		1.737	1497	0.441	38	251	
