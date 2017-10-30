@@ -52,8 +52,8 @@ do
         /data/${base}.trim2.fq.gz /data/${base}_2se \
         /data/${base2}.trim2.fq.gz /data/${base2}_2se \
         ILLUMINACLIP:/data/TruSeq2-PE.fa:2:40:15 \
-        LEADING:30 TRAILING:30 \
-        SLIDINGWINDOW:4:30 \
+        LEADING:2 TRAILING:2 \
+        SLIDINGWINDOW:4:2 \
         MINLEN:25
 done
 
