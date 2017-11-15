@@ -16,7 +16,8 @@ base=`echo ${i} | awk -F'[.]' '{print $1"."$2}'`
 echo $base
 
 docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-    prokka /data/${i} --outdir /data/functional_inference/contig_annotations --prefix ${base}_spades_
+	prokka /data/${i} --outdir /data/functional_inference/contig_annotations/${base}_spades_output \
+ 	--prefix ${base}_spades_
 done
 
 for i in *_megahit_output/final.contigs.fa
@@ -26,8 +27,10 @@ base=`echo ${i} | awk -F'[.]' '{print $1"."$2}'`
 echo $base
 
 docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-    prokka /data/${i} --outdir /data/functional_inference/contig_annotations --prefix ${base}_megahit_
+    	prokka /data/${i} --outdir /data/functional_inference/contig_annotations\${base}_megahit_output \
+	--prefix ${base}_megahit_
 done
+
 #Search antibiotic resistance genes using abricate
 
 for i in *_spades_output/contigs.fasta

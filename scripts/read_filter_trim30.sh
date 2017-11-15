@@ -82,3 +82,13 @@ do
         /data/${base}_1.trim30.fq.gz /data/${base}_2.trim30.fq.gz --no-reformat -o /data/$output --gzip
 
 done
+
+for i in ~/data/qc/*_trim30
+do
+
+        base=`echo ${i} | awk -F'[/]' '{print $6}'`
+        echo $base
+
+        docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/multiqc:1.2--py27_0 multiqc /data/qc/${base} -o /data/qc/${base}
+done
+
