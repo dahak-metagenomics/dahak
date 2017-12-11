@@ -1,32 +1,77 @@
 #!/bin/bash
 
-i="SRR606249"
 
 #### from ubuntu 16.04 using filtered reads
 docker pull quay.io/biocontainers/megahit:1.1.1--py36_0
-docker pull quay.io/biocontainers/spades:3.10.1--py27_0
-docker pull quay.io/biocontainers/quast:4.5--boost1.61_1
+docker pull quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0
+docker pull quay.io/biocontainers/quast:4.5--boost1.61_1d
+docker pull thanhleviet/abricate abricate
+docker pull ummidock/prokka:1.12
 
 #### link the data and run Megahit
+for filename in *_1.trim2.fq.gz
+do
+
+base=$(basename $filename _1.trim2.fq.gz)
+echo $base 
+
 docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/megahit:1.1.1--py36_0 \
-    megahit --12 /data/${i}.pe.trim.fq.gz -o /data/megahit_output_podar_metaG_100
+    megahit -1 /data/${base}_1.trim2.fq.gz -2 /data/${base}_2.trim2.fq.gz -o /data/${filename}_megahit_output
+done
+
+
+for filename in *_1.trim30.fq.gz
+do
+
+base=$(basename $filename _1.trim30.fq.gz)
+echo $base 
+
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/megahit:1.1.1--py36_0 \
+    megahit -1 /data/${base}_1.trim30.fq.gz -2 /data/${base}_2.trim30.fq.gz -o /data/${filename}_megahit_output
+done
+
+
 
 #### Now run quast to generate some assembly statistics 
-#docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
-#    quast.py /data/megahit_output_podar_metaG_100/final.contigs.fa -o /data/megahit_output_podar_metaG_100_quast_report
+for i in *megahit_output/final.contigs.fa
+do 
+
+base=`echo ${i} | awk -F'[.]' '{print $1"."$2}'`
+echo $base
+
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
+    quast.py /data/${i} -o /data/${base}_quast_report
+done
 
 #### link the data and run SPAdes 
-docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/spades:3.10.1--py27_0 \
-    metaspades.py --12 /data/${i}.pe.trim.fq.gz -o /data/spades_output_podar_metaG_100
+for filename in *_1.trim2.fq.gz
+do
+
+base=$(basename $filename _1.trim2.fq.gz)
+echo $base
+
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0 \
+    metaspades.py -t 64 -1 /data/${base}_1.trim2.fq.gz -2 /data/${base}_2.trim2.fq.gz -o /data/${filename}_spades_output
+done
+
+for filename in *_1.trim30.fq.gz
+do
+
+base=$(basename $filename _1.trim30.fq.gz)
+echo $base
+
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0 \
+    metaspades.py -t 64 -1 /data/${base}_1.trim30.fq.gz -2 /data/${base}_2.trim30.fq.gz -o /data/${filename}_spades_output
+done
 
 #### Now run quast to generate some assembly statistics 
-#docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
-#    quast.py /data/spades_output_podar_metaG_100/contigs.fasta -o data/spades_output_podar_metaG_100_quast_report
+for i in *_spades_output/contigs.fasta
+do 
 
-#docker pull thanhleviet/abricate abricate
-#docker pull ummidock/prokka:1.12
+base=`echo ${i} | awk -F'[.]' '{print $1"."$2}'`
+echo $base
 
-#docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-#    prokka /data/megahit_output_podar_metaG_100/final.contigs.fa --outdir /data/prokka_megahit_100_annotation --prefix podar_metaG_100
-#docker run -v /home/ubuntu/data:/data -it ummidock/prokka:1.12 \
-#    prokka /data/spades_output_podar_metaG_100/contigs.fasta --outdir /data/prokka_spades_100_annotation --prefix podar_metaG_sub_100
+docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
+    quast.py /data/${i} -o data/${basde}_quast_report
+done 
+
