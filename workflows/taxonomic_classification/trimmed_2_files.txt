@@ -1,8 +1,8 @@
-SRR606249_1.trim.fq.gz
-SRR606249_2.trim.fq.gz
-SRR606249_subset50_1.trim.fq.gz
-SRR606249_subset50_2.trim.fq.gz
-SRR606249_subset25_1.trim.fq.gz
-SRR606249_subset25_2.trim.fq.gz
-SRR606249_subset10_1.trim.fq.gz
-SRR606249_subset10_2.trim.fq.gz
+SRR606249_1.trim2.fq.gz
+SRR606249_2.trim2.fq.gz
+SRR606249_subset50_1.trim2.fq.gz
+SRR606249_subset50_2.trim2.fq.gz
+SRR606249_subset25_1.trim2.fq.gz
+SRR606249_subset25_2.trim2.fq.gz
+SRR606249_subset10_1.trim2.fq.gz
+SRR606249_subset10_2.trim2.fq.gz
