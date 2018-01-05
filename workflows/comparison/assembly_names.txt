@@ -1,0 +1,12 @@
+osfstorage/assembly/SRR606249_1.trim2.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_1.trim2.fq.gz_spades_output/contigs.fasta
+osfstorage/assembly/SRR606249_1.trim30.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_1.trim30.fq.gz_spades_output/contigs.fasta
+osfstorage/assembly/SRR606249_subset10_1.trim2.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_subset10_1.trim2.fq.gz_spades_output/contigs.fasta
+osfstorage/assembly/SRR606249_subset10_1.trim30.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_subset10_1.trim30.fq.gz_spades_output/contigs.fasta
+osfstorage/assembly/SRR606249_subset25_1.trim2.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_subset25_1.trim2.fq.gz_spades_output/contigs.fasta
+osfstorage/assembly/SRR606249_subset50_1.trim30.fq.gz_megahit_output/final.contigs
+osfstorage/assembly/SRR606249_subset50_1.trim30.fq.gz_spades_output/contigs.fasta
