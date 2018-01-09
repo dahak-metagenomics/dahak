@@ -1,6 +1,6 @@
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_comparison.k21.csv
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_comparison.k31.csv
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_comparison.k51.csv
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_megahitandspades_comparison.k21.csv
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_megahitandspades_comparison.k31.csv
-osfstorage/comparisons/sourmash/SRR606249.pe.trim2and30_megahitandspades_comparison.k51.csv
+SRR606249.pe.trim2and30_comparison.k21.csv
+SRR606249.pe.trim2and30_comparison.k31.csv
+SRR606249.pe.trim2and30_comparison.k51.csv
+SRR606249.pe.trim2and30_megahitandspades_comparison.k21.csv
+SRR606249.pe.trim2and30_megahitandspades_comparison.k31.csv
+SRR606249.pe.trim2and30_megahitandspades_comparison.k51.csv
