@@ -101,16 +101,28 @@ do
 		/data/SRR606249_subset10_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
 		/data/SRR606249_subset10_1.trim2.fq.gz_spades_output.k21_31_51.sig \
 		/data/SRR606249_subset10_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset10_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset25_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset25_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
+		/data/SRR606249_subset25_1.trim2.fq.gz_spades_output.k21_31_51.sig \
 		/data/SRR606249_subset25_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset25_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
+		/data/SRR606249_subset25_1.trim30.fq.gz_spades_output.k21_31_51.sig \
 		/data/SRR606249_subset50_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset50_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
+		/data/SRR606249_subset50_1.trim2.fq.gz_spades_output.k21_31_51.sig \
 		/data/SRR606249_subset50_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
-		/data/SRR606249_subset50_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
+		/data/SRR606249_subset50_1.trim30.fq.gz_spades_output.k21_31_51.sig \
 		-k ${i} \
 		--csv /data/SRR606249.pe.trim2and30_megahitandspades_comparison.k${i}.csv
 done
 ```
+#### Compare reads to assemblies
+
+for i in 21 31 51
+do
+        docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
+                compare /data/SRR606249_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
+                /data/SRR606249_1.trim2.fq.gz_spades_output.k21_31_51.sig \
+		/data/SRR606249.pe.trim2.fq.gz.k21_31_51.sig \
+                /data/SRR606249.pe.trim30.fq.gz.k21_31_51.sig \
+                /data/SRR606249_1.trim30.fq.gz_megahit_output.k21_31_51.sig \
+                /data/SRR606249_1.trim30.fq.gz_spades_output.k21_31_51.sig \
+                -k ${i} \
+                --csv /data/SRR606249.pe.trim2and30_readstoassemblies_comparison.k${i}.csv
+done
