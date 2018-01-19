@@ -1,0 +1,82 @@
+'''
+Author: Phillip Brooks 
+Affiliation: UC Davis Lab for Data Intensive Biology
+Aim: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT 
+Date: Wed Jan 17 2018
+Run: snakemake --use-conda --use-singularity 
+Latest modification:
+'''
+##--------------------------------------------------------------------------------------##
+## Variables declaration                          
+## Declaring some variables
+## (SAMPLES, ASSEMBLER, qual)
+##--------------------------------------------------------------------------------------##
+
+SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
+ASSEMBLER = ['spades', 'megahit']
+
+rule all:    
+    input:
+        expand('outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}/report.html',
+               sample=SAMPLES,
+               qual=['2','30'],
+               assembler=ASSEMBLER,
+               )
+
+rule assembly_metaSPAdes:
+    input:
+        fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
+        rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+    output:
+        'outputs/assembly/spades/{sample}_trim{qual}_spades/{sample}_trim{qual}_spades.contigs.fa' 
+    message: '''--- Assembling quality trimmed data with SPAdes'''
+    singularity: 'docker://quay.io/biocontainers/spades:3.11.1--py27_zlib1.2.8_0'
+    log: 'outputs/assembly/spades/{sample}_trim{qual}_spades.log'
+    threads: 8 
+    shell:
+        '''
+        metaspades.py -t {threads} \
+            -1 {input.fwd} \
+            -2 {input.rev} \
+            -o `dirname {output}`
+#        mv `dirname {output}`/contigs.fasta {output}
+        '''
+
+rule assembly_MEGAHIT:
+    input:
+        fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
+        rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+    output:
+        'outputs/assembly/megahit/{sample}_trim{qual}_megahit/{sample}_trim{qual}_megahit.contigs.fa'
+    message: '''--- Assembling qulaity trimmed data with SPAdes'''
+    singularity: 'docker://quay.io/biocontainers/megahit:1.1.2--py35_0'
+    log: 
+        'outputs/assembly/megahit/{sample}_trim{qual}_megahit.log'
+    threads: 8
+    params: 
+        sample="{sample}", 
+        qual="{qual}" 
+    shell:
+        '''
+        rm -rf `dirname {output}`
+        megahit -t {threads} \
+	    -1 {input.fwd} \
+            -2 {input.rev} \
+	    --out-prefix={params.sample}_trim{params.qual}_megahit \
+	    -o `dirname {output}`
+#        mv `dirname {output}`/final.contigs.fa {output} 
+        '''
+
+rule assembly_statistics_quast:
+    input:
+        'outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample_id}_{assembler}.contigs.fa'
+    output:
+        'outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}/{sample_id}/report.html',
+    message: '''--- Assembling qulaity trimmed data with SPAdes'''
+    singularity: 'docker://quay.io/biocontainers/quast:4.5--boost1.61_1'
+    log: 
+        'outputs/assembly/stats/{assembler}_{sample_id}.log',
+    shell:
+       '''
+       quast.py {input} -o {output}
+       ''' 
