@@ -19,15 +19,7 @@ sudo usermod -aG docker ubuntu
 exit
 ```
 
-#### Sign back in and retrieve containers for quality assessment
-```
-docker pull biocontainers/fastqc
-docker pull quay.io/biocontainers/trimmomatic:0.36--4
-docker pull quay.io/biocontainers/khmer:2.1--py35_0
-docker pull quay.io/biocontainers/pandaseq:2.11--1
-```
-
-#### Make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
+#### Sign back in and make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
 ```
 mkdir data
 cd data
@@ -45,10 +37,10 @@ mkdir qc/before_trim
 cd qc/before_trim 
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
+docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o /data/qc/before_trim
+docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o /data/qc/before_trim
 ```
 
 #### Grab the adapter sequences
@@ -69,7 +61,7 @@ do
     base2=${base/_1/_2}
     echo $base2
 
-    docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/trimmomatic:0.36--4 trimmomatic PE /data/${base}.fq.gz \
+    docker run -v ${PWD}:/data -it quay.io/biocontainers/trimmomatic:0.36--4 trimmomatic PE /data/${base}.fq.gz \
                 /data/${base2}.fq.gz \
         /data/${base}.trim.fq.gz /data/${base}_se \
         /data/${base2}.trim.fq.gz /data/${base2}_se \
@@ -86,10 +78,10 @@ mkdir ~/data/qc/after_trim
 cd qc/after_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o /data/qc/after_trim
+docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o /data/qc/after_trim
 ```
 ```
-docker run -v /home/ubuntu/data:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o /data/qc/after_trim
+docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o /data/qc/after_trim
 ```
 
 #### Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/). The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. If other values were used change the output name accordingly
@@ -105,7 +97,7 @@ do
     # construct the output filename
     output=${base}.pe.trim2.fq.gz
 
-    docker run -v /home/ubuntu/data:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py \
+    docker run -v ${PWD}:/data -it quay.io/biocontainers/khmer:2.1--py35_0 interleave-reads.py \
         /data/${base}_1.trim.fq.gz /data/${base}_2.trim.fq.gz --no-reformat -o /data/$output --gzip
 
 done
