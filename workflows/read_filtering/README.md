@@ -19,14 +19,6 @@ sudo usermod -aG docker ubuntu
 exit
 ```
 
-#### Sign back in and retrieve containers for quality assessment
-```
-docker pull biocontainers/fastqc
-docker pull quay.io/biocontainers/trimmomatic:0.36--4
-docker pull quay.io/biocontainers/khmer:2.1--py35_0
-docker pull quay.io/biocontainers/pandaseq:2.11--1
-```
-
 #### Make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
 ```
 mkdir data
