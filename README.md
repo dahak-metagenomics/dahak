@@ -34,7 +34,7 @@ For purposes of benchmarking this project will use the following datasets:
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.MD) for details on our code of conduct and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests to us.
 
 ## Contributors
 
