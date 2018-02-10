@@ -1,16 +1,18 @@
 ## Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
 
+Requirements (assumes you have already run `read_filtering` step with Ubuntu 16.04 LTS):
 
-Requirements (from unbuntu 16.04 using filtered reads)
+- At least 120 GB disk space 
+- At least 32 GB RAM 
+- Updated packages (see read filtering)
+- Docker (see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md) for details)
+- (Optional) OSF CLI (command-line interface; see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md)) 
 
-- Disk space(120 gb)
-- RAM(32 gb)
-- Updated packages(see read filtering)
-- Docker(see read filtering for installation instructions)
-- osf cli(see read filtering for installation instructions)
+Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather allows us to taxonomically classify the components of a metagenome by comparing hashes in our dataset to hashes in a sequence bloom tree (SBT) representing genomes. 
 
+First, let's download two SBTs containing hashes that represent the microbial genomes in the [NCBI GenBank](#) and [RefSeq](#) databases. 
 
-Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather allows us to taxonomically classify the components of a metagenome by comparing hashes in our dataset to hashes in a sequence bloom tree (sbt) representing genomes. First, let's download two sbts containing hashes that represent the microbial genomes in the NCBI GenBank and RefSeq databases. 
+(Note: the first microbial genome `microbe-refseq*.tar.gz` is 3.6 GB, and the second microbial genome `microbe-genbank-sbt-k51-2017.05.09.tar.gz` is 4.3 GB.)
 
 ```
 mkdir data
@@ -31,7 +33,7 @@ docker pull quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0
 docker pull quay.io/biocontainers/kraken:0.10.6_eaf8fb68--pl5.22.0_4
 ```
 
-If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy trimmed_files.txt to your working directory or provide the path to this file. 
+If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy `trimmed_files.txt` to your working directory or provide the path to this file. 
 
 ```
 for i in $(cat trimmed_2_files.txt) 
@@ -40,7 +42,7 @@ do
 done 
 ```
 
-Next, calculate signatures for our data
+Next, calculate signatures for our data:
 
 ```
 for filename in *_1.trim.fq.gz
@@ -54,7 +56,7 @@ do
 done
 ```
 
-And compare those signatures to our database to classify the components.
+And compare those signatures to our database to classify the components:
 
 ```
 for i in *sig
@@ -64,7 +66,7 @@ do
 done
 ```
 
-Now, let's download and unpack the kaiju database (this takes about 15 minutes on my machine)
+Now, let's download and unpack the kaiju database (this takes about 15 minutes on my machine):
 
 ```
 mkdir kaijudb
@@ -74,14 +76,14 @@ tar zxvf kaiju_index_nr_euk.tgz
 rm -r kaiju_index_nr_euk.tgz
 ```
 
-unzip files for processing using kaiju
+Unzip files for processing using kaiju:
 
 ```
 cd ~/data
 gunzip *.trim.fq.gz
 ```
 
-and then link the data and run kaiju
+and then link the data and run kaiju:
 
 ```
 for filename in *_1.trim.fq
@@ -96,13 +98,13 @@ do
 done
 ```
 
-GZIP the fastq files
+Compress the fastq files with gzip:
 
 ```
 gzip *trim.fq
 ```
 
-Convert kaiju output to format readable by krona
+Convert kaiju output to format readable by krona:
 
 ```
 for i in *trim2.out
@@ -112,7 +114,7 @@ do
 done
 ```
 
-Convert kaiju file to format readable by krona
+Convert kaiju file to format readable by krona:
 
 ```
 for i in *trim2.out
@@ -122,7 +124,7 @@ do
 done
 ```
 
-Now let's filter out taxa with low abundances by obtaining genera that comprise at least 1 percent of the total reads
+Now let's filter out taxa with low abundances by obtaining genera that comprise at least 1 percent of the total reads:
 
 ```
 for i in *trim2.out
@@ -133,7 +135,7 @@ do
 done
 ```
 
-Now for comparison let's take the genera that comprise at least 1 percent of all of the classified reads
+Now for comparison, let's take the genera that comprise at least 1 percent of all of the classified reads:
 
 ```
 for i in *trim2.out
@@ -144,13 +146,13 @@ do
 done
 ```
 
-Download the krona image from quay.io so we can visualize the results from kaiju 
+Download the krona image from quay.io so we can visualize the results from kaiju:
 
 ```
 docker pull quay.io/biocontainers/krona:2.7--pl5.22.0_1
 ```
 
-Generate krona html with output from all of the reads
+Generate krona html with output from all of the reads:
 
 ```
 for i in *kaiju_out_krona.summary
@@ -160,7 +162,7 @@ do
 done
 ```
 
-Generate krona html with output from genera at least 1 percent of the total reads
+Generate krona html with output from genera at least 1 percent of the total reads:
 
 ```
 for i in *kaiju_out_krona.1percenttotal.summary
@@ -170,7 +172,7 @@ do
 done
 ```
 
-Generate krona html with output from genera at least 1 percent of all classified reads
+Generate krona html with output from genera at least 1 percent of all classified reads:
 
 ```
 for i in *kaiju_out_krona.1percentclassified.summary
@@ -179,3 +181,4 @@ do
         /data/${i}.kaiju_out_krona.1percentclassified.html /data/${i}
 done
 ```
+
