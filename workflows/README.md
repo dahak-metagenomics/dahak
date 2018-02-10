@@ -1,83 +1,36 @@
-# Workflows
+# Workflows and Workflow Components
 
-When analyzing metagenomic data, different tasks 
-(taxonomic classification, contig annotation, 
-or SBT assembly) are broken down into steps.
-Each directory here corresponds to a different step.
+When analyzing metagenomic data, different workflows
+(taxonomic classification, contig annotation, or SBT assembly) 
+are broken down into atomic operations. Each directory here
+corresponds to an atomic operation (a workflow component).
 
-A flowchart illustrating the different workflows and 
-tools is included below:
+A flowchart illustrating how each workflow component fits 
+together with tools into the overall process is included below:
 
 <img width="500px" src="/resources/WorkflowFlowchartOriginal.png" />
 
-Currently, each step of the workflow has its own snakefile.
+Currently, each workflow component has its own snakefile.
 Eventually, dahak workflows will consist of a single master
 snakefile calling sub-makefiles. 
 
-Steps are listed and described below.
+The following workflows are required deliverables:
+* Taxonomic characterization of bulk metagenome data sets with the sourmash tool against public and private reference databases;
+* Assembly-based approaches to give higher-confidence gene identity assignment than raw read assignment alone;
+* MinHash-based description of data sets at species and strain level;
+* Full-set and marker gene analysis of hybrid assembly/read collections to characterize taxonomic content;
+* Full-set gene analysis of hybrid assembly/read collections to characterize functional content;
+* Taxonomic and functional analysis performed on reads left out of the assembly;
+* Rapid k-mer-based ordination analyses of many samples to provide sample groupings and identify potential outliers; and
+* Interactive Jupyter notebooks for interpretation of results.
 
-## Dataset Construction
 
-See [`/dataset_construction`](/workflows/dataset_construction/) directory.
+## Workflows
 
-Dataset construction constructs SBTs from external genomic databases
-and saves them to disk so that they can then be shared and loaded.
+For coverage of workflows, see [Workflows.md](/workflows/Workflows.md).
 
-## Read Filtering
+## Workflow Components
 
-See [`/read_filtering`](/workflows/read_filtering/) directory.
-
-The read filtering step consists of processing raw reads from a 
-sequencer, such as discarding reads with a high uncertainty value
-or trimming off adapters.
-
-Tools like Fastqc and Trimmomatic will perform this filtering 
-process for the sequencer's reads.
-
-## Assembly
-
-See [`/assembly`](/workflows/assembly/) directory.
-
-The assembly step consists of software to determine the proper
-order of the reads, and assemble the genome. The assembly tool
-may use short reads (~350 or fewer reads), or it may use 
-long reads (>1000 reads). 
-
-Reads are assembled in order into contigs (chunks of contiguous
-reads). The contigs are themselves assembled into scaffolds 
-that consist of several contigs.
-
-The Spades tool can handle short or long reads, while the Megahit 
-tool works better for short reads. Pandaseq can merge overlapping reads.
-Metaquast gives assembly statistics that can help evaluate the assembly
-(how long, number of fragments, number of contigs, number of scaffolds, 
-etc.).
-
-Typically 30-40% of the reads can be fingerprinted by the assembler.
-
-## Comparison
-
-See [`/comparison`](/workflows/comparison/) directory.
-
-Operating at the level of k-mers (representations of the reads),
-the comparison step is taking the reads that were not fingerprinted
-by the assembler and seeing if they match genomes of other organisms. 
-
-The tool used for comparison is sourmash.
-
-## Functional Inference
-
-See [`/functional_inference`](/workflows/functional_inference/) directory.
-
-Once the assembly step has been completed, the assembly
-can be analyzed and annotated using external databases.
-Prokka is a tool for functional annotation of contigs.
-
-Variant calling searches for common variants of a given 
-gene. Variants are obtained by changing a few genes 
-in an existing genome.
-
-ShotMap was originally used for this step, but was 
-replaced by Miphaser.
+For coverage of workflow components, see [WorkflowComponents.md](/workflows/WorkflowComponents.md).
 
 
