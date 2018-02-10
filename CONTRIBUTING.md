@@ -1,10 +1,10 @@
 # How to Contribute
 
-The dahak tool is open-source, and anyone can contribute. To contribute to dahak, create a fork of this repository and make any changes to your fork. 
+The dahak tool is open-source, and anyone can contribute. To contribute to dahak, create a fork of this repository and make changes to your fork. 
 When you have finished making changes and are happy with your fork, you can submit a pull request to the original repository. This pull request must
 be reviewed by at least one dahak team member before it is merged into the dahak code base. 
 
-IF you are asked to make changes before your pull request can be accepted, continue to commit additional changes to the branch associated with your 
+If you are asked to make changes before your pull request can be accepted, continue to commit additional changes to the branch associated with your 
 original pull request. The pull request will automatically be updated each time you commit to that branch. Github provides a medium for communicating and 
 providing feedback. Once the pull request is approved, it will be merged into the main branch by the team.
 
