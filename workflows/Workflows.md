@@ -30,7 +30,7 @@ Terminal software/outputs are denoted by ovals.
 
 ## Functional Inference
 
-<img width="500px" src="/resources/Workflow4_Function.png" />
+<img width="500px" src="/resources/Workflow5_Function.png" />
 
 ## Sample Comparison
 
