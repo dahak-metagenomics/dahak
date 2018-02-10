@@ -10,7 +10,7 @@ tools is included below:
 
 <img width="500px" src="/resources/WorkflowFlowchartOriginal.png" />
 
-Currently, each step fo the workflow has its own snakefile.
+Currently, each step of the workflow has its own snakefile.
 Eventually, dahak workflows will consist of a single master
 snakefile calling sub-makefiles. 
 
@@ -43,7 +43,7 @@ order of the reads, and assemble the genome. The assembly tool
 may use short reads (~350 or fewer reads), or it may use 
 long reads (>1000 reads). 
 
-Reads are assembled in order into contigs (chunks of continguous
+Reads are assembled in order into contigs (chunks of contiguous
 reads). The contigs are themselves assembled into scaffolds 
 that consist of several contigs.
 
@@ -79,15 +79,5 @@ in an existing genome.
 
 ShotMap was originally used for this step, but was 
 replaced by Miphaser.
-
-
-
-
-
-
-
-
-
-
 
 
