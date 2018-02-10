@@ -9,9 +9,17 @@ Analysis protocols can be found in the [workflows](https://github.com/dahak-meta
 
 ## Prerequisites
 
-It is assumed that all steps will be executed using an Ubuntu 16.04 image. 
+Currently, for the sake of simplicity, it is assumed that all workflow steps
+will be run from Ubuntu 16.04 LTS.
+
+dahak is not a standalone program, but rather a collection of workflows
+that are defined in snakemake files and that utilize bioconda and Docker
+to install and run software for different tasks.
+
+See the [`workflows/`](/workflows/) directory to get started.
 
 ## Data 
+
 For purposes of benchmarking this project will use the following datasets: 
 
 | Dataset |Description |
@@ -26,7 +34,7 @@ For purposes of benchmarking this project will use the following datasets:
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.MD) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.MD) for details on our code of conduct and the process for submitting pull requests to us.
 
 ## Contributors
 
@@ -46,7 +54,7 @@ See also the list of [contributors](https://github.com/dahak-metagenomics/dahak/
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details.
 
 ## Acknowledgments
 
