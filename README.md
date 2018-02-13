@@ -7,6 +7,10 @@ Dahak is a software suite that integrates state-of-the-art open source tools for
 
 Analysis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instructions for Docker installation are included there. 
 
+You can run these protocols interactively using Docker or automate them using Snakemake and Singularity. See the workflows [README](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/README.md) for Docker, Snakemake and, Singularity istall instructions. 
+
+The assembly, comparison, functional inference, and taxonomic classification workflows are depednent upon the output of the read filtering workflow data. You can download our data to use in the read filtering protocol from the openscience framework. See the section below titled Data and the read filtering protocol for more information. 
+
 ## Prerequisites
 
 Currently, for the sake of simplicity, it is assumed that all workflow steps
