@@ -6,52 +6,20 @@ Alternatively we've developed snakefiles for automation that do not require inst
 First, update your machine:
 
 ```
-sudo apt-get -y update 
-sudo apt-get -y install python-pip \
-zlib1g-dev ncurses-dev python-dev
+# Update aptitude and install dependencies
+sudo apt-get -y update
+
+sudo apt-get -y install zlib1g-dev
+sudo apt-get -y install ncurses-dev
 ```
 
-Now, install the [open science framework command-line client](http://osfclient.readthedocs.io/en/stable/). We'll use this tool download data.
+Next, install Docker:
 
 ```
-pip install osfclient
-```
-
-Finally, install [docker](https://www.docker.com)
-
-```
+# Install Docker
 wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
-exit
 ```
-
-# Getting started with Snakemake
-
-[Snakemake](http://snakemake.readthedocs.io/en/stable/) is a Python build tool.
-
-First, download miniconda or anaconda if you prefer. 
-
-```
-curl -L -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-bash Miniconda3-latest-Linux-x86_64.sh
-```
-
-Next, set the channels (modify your path accordingly)
-
-```
-/home/ubuntu/miniconda3/bin/conda config --add channels r
-/home/ubuntu/miniconda3/bin/conda config --add channels defaults
-/home/ubuntu/miniconda3/bin/conda config --add channels conda-forge
-/home/ubuntu/miniconda3/bin/conda config --add channels bioconda
-```
-
-Then, install bioconda and snakemake on your system. 
-
-```
-conda install -c bioconda snakemake
-```
-
-Now log out and log back in.
 
 # Getting Started with Singularity
 
@@ -61,15 +29,14 @@ in higher security environments where permissions are restricted.
 After logging back in, proceed to install singularity. These instructions are for Ubuntu 16.04. Take a look at their website for alternate/updated instructions. 
 
 ```
-sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
-
-sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
 ```
 
 Update aptitude's information about the new software repositories:
 
 ```
-sudo apt-get update 
+sudo apt-get update
 ```
 
 Now install singularity:
@@ -82,5 +49,68 @@ Once it is installed, you can check the version:
 
 ```
 singularity --version
+```
+
+# Getting Started with Snakemake
+
+[Snakemake](http://snakemake.readthedocs.io/en/stable/) is a python build tool.
+To ensure a universal installation process, we will use [pyenv](https://github.com/pyenv/pyenv)
+to install the correct versions of python and conda.
+
+Start by running the pyenv installer:
+
+```
+# Install pyenv 
+curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+```
+
+Add pyenv's bin directory to `$PATH` (should already be in `~/.bash_profile` but just in case):
+
+```
+echo 'export PATH="~/.pyenv/bin:$PATH"' >> ~/.bash_profile
+```
+
+Now we set the version of conda we wish to install. We will install
+miniconda 4.3.30 for python 3:
+
+```
+CONDA="miniconda3-4.3.30"
+pyenv install $CONDA
+pyenv global $CONDA
+eval "$(pyenv init -)"
+```
+
+Now you can check to make sure you have the pyenv-installed version 
+of conda:
+
+```
+which conda
+conda --version
+python --version
+```
+
+Add the required conda channels:
+
+```
+conda update
+conda config --add channels r
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda config --add channels bioconda
+```
+
+Now install snakemake from the bioconda channel:
+
+```
+conda install -c bioconda snakemake
+```
+
+Finally, install the Open Science Framework CLI client
+using pip (this pip will correspond to the same python 
+that the conda and python commands point to):
+
+```
+pip install --upgrade pip
+pip install --user osfclient
 ```
 
