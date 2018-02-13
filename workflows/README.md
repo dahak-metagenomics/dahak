@@ -1,4 +1,44 @@
-# Getting started with Docker
+# Workflows and Workflow Components
+
+When analyzing metagenomic data, different workflows
+(taxonomic classification, contig annotation, or SBT assembly) 
+are broken down into atomic operations. Each directory here
+corresponds to an atomic operation (a workflow component).
+
+A flowchart illustrating how each workflow component fits 
+together with tools into the overall process is included below:
+
+<img width="500px" src="/resources/WorkflowFlowchartOriginal.png" />
+
+Currently, each workflow component has its own snakefile.
+Eventually, dahak workflows will consist of a single master
+snakefile calling sub-makefiles. 
+
+The following workflows are required deliverables:
+* Taxonomic characterization of bulk metagenome data sets with the sourmash tool against public and private reference databases;
+* Assembly-based approaches to give higher-confidence gene identity assignment than raw read assignment alone;
+* MinHash-based taxonomic description of data sets;
+* Full-set and marker gene analysis of hybrid assembly/read collections to characterize taxonomic content;
+* Full-set gene analysis of hybrid assembly/read collections to characterize functional content;
+* Taxonomic and functional analysis performed on reads left out of the assembly;
+* Rapid k-mer-based ordination analyses of many samples to provide sample groupings and identify potential outliers; and
+* Interactive Jupyter notebooks for interpretation of results.
+
+
+## Workflow Descriptions
+
+For coverage of workflows, see [Workflows.md](/workflows/Workflows.md).
+
+## Workflow Component Descriptions
+
+For coverage of workflow components, see [WorkflowComponents.md](/workflows/WorkflowComponents.md).
+
+## Getting Started
+
+The instructions that follow will help you get started running the workflows
+described above. 
+
+### Getting Started with Docker
 
 If you want to run these protocols interactively you will need to install Docker on your system. You can find more detailed instructions [here](https://docs.docker.com/install/). 
 Alternatively we've developed snakefiles for automation that do not require installation. You can find those instructions below. 
@@ -21,7 +61,7 @@ wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
 ```
 
-# Getting Started with Singularity
+### Getting Started with Singularity
 
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker containers 
 in higher security environments where permissions are restricted.
@@ -51,7 +91,7 @@ Once it is installed, you can check the version:
 singularity --version
 ```
 
-# Getting Started with Snakemake
+### Getting Started with Snakemake
 
 [Snakemake](http://snakemake.readthedocs.io/en/stable/) is a python build tool.
 To ensure a universal installation process, we will use [pyenv](https://github.com/pyenv/pyenv)
@@ -113,4 +153,3 @@ that the conda and python commands point to):
 pip install --upgrade pip
 pip install --user osfclient
 ```
-
