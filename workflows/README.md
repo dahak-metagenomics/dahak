@@ -6,7 +6,7 @@ If you want to run these protocols interactively you will need to install Docker
 ```
 sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
-    zlib1g-dev ncurses-dev python-dev
+zlib1g-dev ncurses-dev python-dev
 ```
 #### Now, install the [open science framework command-line client](http://osfclient.readthedocs.io/en/stable/). We'll use this tool download data.
 ```
