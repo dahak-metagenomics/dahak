@@ -21,7 +21,7 @@ do
 	base=$(basename $filename _1.trim2.fq.gz)
 	echo $base
 
-	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
+	docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
 		--merge /data/${base}.trim2.fq.gz \
 		--scaled 10000 \
 		-k 21,31,51 \
@@ -36,7 +36,7 @@ do
 	base=$(basename $filename _1.trim30.fq.gz)
 	echo $base
 
-	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
+	docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash compute \
 		--merge /data/${base}.trim30.fq.gz \
 		--scaled 10000 \
 		-k 21,31,51 \
@@ -72,6 +72,7 @@ do
         	/data/${i} \
         	-o /data/${base}.k21_31_51.sig
 done
+```
 ```
 for i in 21 31 51 
 do 
@@ -113,7 +114,7 @@ do
 done
 ```
 #### Compare reads to assemblies
-
+```
 for i in 21 31 51
 do
         docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
@@ -126,3 +127,4 @@ do
                 -k ${i} \
                 --csv /data/SRR606249.pe.trim2and30_readstoassemblies_comparison.k${i}.csv
 done
+```

@@ -1,0 +1,116 @@
+'''
+Author: Phillip Brooks 
+Affiliation: UC Davis Lab for Data Intensive Biology
+Aim: A simple Snakemake workflow to process reads to produce quality trimmed data 
+Date: Tue Jan 16 2018
+Run: snakemake --use-conda --use-singularity 
+Latest modification:
+'''
+##--------------------------------------------------------------------------------------##
+## Variables declaration                          
+## Declaring some variables
+## (SAMPLES, direction, qual)
+##--------------------------------------------------------------------------------------##
+
+SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
+
+rule all:    
+    input:
+        expand('outputs/qc/after_trimming/{sample}_trim{qual}_{direction}_fastqc.zip',
+               sample=SAMPLES,
+               direction=['1', '2'],
+               qual=['2','30']
+               ),
+        expand('outputs/qc/before_trimming/{sample}_{direction}_fastqc.zip',
+               sample=SAMPLES,
+               direction=['1', '2'],
+               )
+
+# To use os.path.join,
+# which is more robust than manually writing the separator.
+import os
+
+# Association between output files and source links
+links = {
+        'SRR606249_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7',
+        'SRR606249_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47',
+        'SRR606249_subset10_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b',
+        'SRR606249_subset10_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a',
+        'SRR606249_subset25_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38',
+        'SRR606249_subset25_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486',
+        'SRR606249_subset50_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf',
+        'SRR606249_subset50_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77'}
+
+# Make this association accessible via a function of wildcards
+def chainfile2link(wildcards):
+    return links[wildcards.chainfile]
+    
+rule download:
+    input:
+    output:
+        # We inform snakemake what this rule will generate
+        os.path.join('inputs/data/', '{chainfile}')
+    message: '''--- Downloading Data.'''
+    params:
+        # using a function of wildcards in params
+        link = chainfile2link,
+    shell:
+        '''
+        mkdir -p inputs/data/
+        wget {params.link} -O {output}
+        '''       
+
+rule download_TruSeq_PE:
+    output: 'inputs/adapters/TruSeq2-PE.fa'
+    message: '''--- Downloading adapters.'''
+    shell:
+        'wget -O {output} http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa'
+	
+
+rule pre_trimming_quality_assessment:
+    input:
+        'inputs/data/{sample}_{direction}.fq.gz',
+    output: 
+        'outputs/qc/before_trimming/{sample}_{direction}_fastqc.zip',
+    singularity: 'docker://brooksph/fastqc:latest'
+    threads: 2
+    shell:
+        'fastqc -t {threads} {input} -o `dirname {output}`'
+        
+rule quality_trimming:
+    input: 
+        fwd='inputs/data/{sample}_1.fq.gz',
+        rev='inputs/data/{sample}_2.fq.gz',
+        adapters='inputs/adapters/TruSeq2-PE.fa'
+    output:
+        fwd='outputs/trim/{sample}_trim{qual}_1.fq.gz',
+        rev='outputs/trim/{sample}_trim{qual}_2.fq.gz',
+        fwd_se='outputs/trim/{sample}_trim{qual}_1_se',
+        rev_se='outputs/trim/{sample}_trim{qual}_2_se',
+    message: '''--- Quality trimming data at q 2 and 30.'''
+    params:
+        qual='{qual}'    
+    singularity: 'docker://quay.io/biocontainers/trimmomatic:0.36--5'
+    log: 'outputs/trim/trimmomatic_pe_{sample}.log'
+    shell:
+        ''' 
+	trimmomatic PE \
+            {input.fwd} {input.rev} \
+            {output.fwd} {output.fwd_se} \
+            {output.rev} {output.rev_se} \
+            ILLUMINACLIP:{input.adapters}:2:40:15 \
+            LEADING:{params.qual} TRAILING:{params.qual} \
+            SLIDINGWINDOW:4:{params.qual} MINLEN:25 \
+        2> {log}
+        '''
+
+rule post_trimming_quality_assessment:
+    input:
+        'outputs/trim/{sample}_trim{qual}_{direction}.fq.gz',
+    output: 
+        'outputs/qc/after_trimming/{sample}_trim{qual}_{direction}_fastqc.zip',
+    message: '''--- Quality check of trimmed data with Fastqc.'''
+    singularity: 'docker://brooksph/fastqc:latest'
+    threads: 2 
+    shell:
+        'fastqc -t {threads} {input} -o `dirname {output}`'

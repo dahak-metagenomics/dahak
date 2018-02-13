@@ -13,9 +13,17 @@ The assembly, comparison, functional inference, and taxonomic classification wor
 
 ## Prerequisites
 
-It is assumed that all steps will be executed using an Ubuntu 16.04 image. 
+Currently, for the sake of simplicity, it is assumed that all workflow steps
+will be run from Ubuntu 16.04 LTS.
+
+dahak is not a standalone program, but rather a collection of workflows
+that are defined in snakemake files and that utilize bioconda and Docker
+to install and run software for different tasks.
+
+See the [`workflows/`](/workflows/) directory to get started.
 
 ## Data 
+
 For purposes of benchmarking this project will use the following datasets: 
 
 | Dataset |Description |
@@ -30,11 +38,11 @@ For purposes of benchmarking this project will use the following datasets:
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests to us.
 
 ## Contributors
 
-Phillip Brooks<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</sup>, Stephanie L. Guertin<sup>3</sup>, F. Curtis Hewitt<sup>3</sup>, Dana R. Kadavy<sup>3</sup>, Alexander F. Koeppel<sup>4</sup>, Oana I. Lungu<sup>3</sup>, Krista L. Ternus<sup>3</sup>, Stephen D. Turner<sup>4,</sup><sup>5</sup>, C. Titus Brown<sup>1</sup>
+Phillip Brooks<sup>1</sup>, Charles Reid<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</sup>, Stephanie L. Guertin<sup>3</sup>, F. Curtis Hewitt<sup>3</sup>, Alexander F. Koeppel<sup>4</sup>, Oana I. Lungu<sup>3</sup>, Krista L. Ternus<sup>3</sup>, Stephen D. Turner<sup>4,</sup><sup>5</sup>, C. Titus Brown<sup>1</sup>
 
 <sup>1</sup>School of Veterinary Medicine, University of California Davis, Davis, CA, United States of America 
 
@@ -50,7 +58,7 @@ See also the list of [contributors](https://github.com/dahak-metagenomics/dahak/
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details.
 
 ## Acknowledgments
 
