@@ -1,25 +1,28 @@
 Read assessement and filtering
 ==============================
 
-#### From ubuntu 16.04 
+From ubuntu 16.04 :
 ```
 sudo apt-get -y update && \
 sudo apt-get -y install python-pip \
     zlib1g-dev ncurses-dev python-dev
 ```
-#### Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
+Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
+
 ```
 pip install osfclient
 ```
 
-#### Install [docker](https://www.docker.com)
+Install [docker](https://www.docker.com)
+
 ```
 wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
 exit
 ```
 
-#### Sign back in and make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
+Make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
+
 ```
 mkdir data
 cd data
@@ -30,26 +33,27 @@ do
 done
 ```
 
-#### Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
+Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
+
 ```
 mkdir qc
 mkdir qc/before_trim 
 cd qc/before_trim 
-```
-```
+
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
-```
-```
+
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.fq.gz -o /data/qc/before_trim
 ```
 
-#### Grab the adapter sequences
+Grab the adapter sequences:
+
 ```
 cd ~/data
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
 ```
 
-#### Link the data and run [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
+Link the data and run [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
+
 ```
 for filename in *_1*.fq.gz
 do
@@ -72,19 +76,20 @@ do
 done
 ```
 
-#### Now run fastqc on the trimmed data
+Now run fastqc on the trimmed data:
+
 ```
 mkdir ~/data/qc/after_trim
 cd qc/after_trim
-```
-```
+
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o /data/qc/after_trim
-```
-```
+
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_2.trim.fq.gz -o /data/qc/after_trim
 ```
 
-#### Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/). The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. If other values were used change the output name accordingly
+Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/). 
+The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. 
+If other values were used change the output name accordingly.
 
 ```
 cd ~/data
@@ -102,3 +107,4 @@ do
 
 done
 ```
+
