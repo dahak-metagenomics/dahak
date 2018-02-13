@@ -17,7 +17,7 @@ snakefile calling sub-makefiles.
 The following workflows are required deliverables:
 * Taxonomic characterization of bulk metagenome data sets with the sourmash tool against public and private reference databases;
 * Assembly-based approaches to give higher-confidence gene identity assignment than raw read assignment alone;
-* MinHash-based description of data sets at species and strain level;
+* MinHash-based taxonomic description of data sets;
 * Full-set and marker gene analysis of hybrid assembly/read collections to characterize taxonomic content;
 * Full-set gene analysis of hybrid assembly/read collections to characterize functional content;
 * Taxonomic and functional analysis performed on reads left out of the assembly;
