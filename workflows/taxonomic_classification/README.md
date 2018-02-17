@@ -12,11 +12,11 @@ Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash ga
 
 First, let's download two SBTs containing hashes that represent the microbial genomes in the [NCBI GenBank](#) and [RefSeq](#) databases. 
 
-(Note: the first microbial genome `microbe-refseq*.tar.gz` is 3.6 GB, and the second microbial genome `microbe-genbank-sbt-k51-2017.05.09.tar.gz` is 4.3 GB.)
+(Note: these are each several GB in size, and unzipped they take up around 100 GB of space.)
 
 ```
-mkdir data
-cd data
+mkdir data/
+cd data/
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k31-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k21-2017.05.09.tar.gz
@@ -35,6 +35,8 @@ rm -r microbe-refseq-sbt-k51-2017.05.09.tar.gz
 rm -r microbe-refseq-sbt-k31-2017.05.09.tar.gz
 rm -r microbe-refseq-sbt-k21-2017.05.09.tar.gz
 rm -r microbe-genbank-sbt-k51-2017.05.09.tar.gz
+
+cd ../
 ```
 
 If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy `trimmed_files.txt` to your working directory or provide the path to this file. 
@@ -42,8 +44,8 @@ If you don't already have the trimmed data you can download it from osf using th
 ```
 for i in $(cat trimmed_{"2","30"}_files.txt)
 do
-	osf -u <username> -p dm938 fetch osfstorage/data/${i}
-	echo ${i} 
+    osf -u <username> -p dm938 fetch osfstorage/data/${i}
+    echo ${i} 
 done
 ```
 
@@ -52,17 +54,17 @@ Next, calculate signatures for our data:
 ```
 for filename in *_1.trim2.fq.gz
 do
-	#Remove _1.trim.fq from file name to create base
-	base=$(basename $filename _1.trim2.fq.gz)
-	echo $base
+    #Remove _1.trim.fq from file name to create base
+    base=$(basename $filename _1.trim2.fq.gz)
+    echo $base
 
 docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a2--py36_0 sourmash compute \
-	--merge /data/${base}.trim2.fq.gz \ 
-	--track-abundance \
-	--scaled 10000 -k 21,31,51 \ 
-	/data/${base}_1.trim2.fq.gz \
-	/data/${base}_2.trim2.fq.gz \
-	-o /data/${base}.trim2.scaled10k.k21_31_51.sig
+    --merge /data/${base}.trim2.fq.gz \ 
+    --track-abundance \
+    --scaled 10000 -k 21,31,51 \ 
+    /data/${base}_1.trim2.fq.gz \
+    /data/${base}_2.trim2.fq.gz \
+    -o /data/${base}.trim2.scaled10k.k21_31_51.sig
 done
 ```
 
@@ -75,13 +77,15 @@ do
 
         docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a2--py36_0 sourmash compute \
         --merge /data/${base}.trim.fq.gz \ 
-	--track-abundance \
-	--scaled 10000 -k 21,31,51 \ 
-	/data/${base}_1.trim30.fq.gz /data/${base}_2.trim30.fq.gz \
-	-o /data/${base}.trim30.scaled10k.k21_31_51.sig
+    --track-abundance \
+    --scaled 10000 -k 21,31,51 \ 
+    /data/${base}_1.trim30.fq.gz /data/${base}_2.trim30.fq.gz \
+    -o /data/${base}.trim30.scaled10k.k21_31_51.sig
 done
 ```
-#### And compare those signatures to our database to classify the components.
+
+And compare those signatures to our database to classify the components.
+
 ```
 for i in 21 31 51do
         for x in *sig
@@ -113,20 +117,20 @@ and then link the data and run kaiju:
 ```
 for filename in *1.trim2.fq.gz
 do
-	#Remove _1.trim2.fq from file name to create base
-	base=$(basename $filename _1.trim2.fq.gz)
-	echo $base
+    #Remove _1.trim2.fq from file name to create base
+    base=$(basename $filename _1.trim2.fq.gz)
+    echo $base
 
-	docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju \ 
-	-x \
-	-v \
-	-t \
-	/data/kaijudb/nodes.dmp \ 
-	-f /data/kaijudb/kaiju_db_nr_euk.fmi \
-	-i /data/${base}_1.trim2.fq.gz \ 
-	-j /data/${base}_2.trim2.fq.gz \
-	-o /data/${base}.kaiju_output.trim2.out \ 
-	-z 4
+    docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju \ 
+    -x \
+    -v \
+    -t \
+    /data/kaijudb/nodes.dmp \ 
+    -f /data/kaijudb/kaiju_db_nr_euk.fmi \
+    -i /data/${base}_1.trim2.fq.gz \ 
+    -j /data/${base}_2.trim2.fq.gz \
+    -o /data/${base}.kaiju_output.trim2.out \ 
+    -z 4
 done
 ```
 
@@ -138,15 +142,15 @@ do
         echo $base
 
         docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju \
-	-x \
-	-v \
-	-t \
+    -x \
+    -v \
+    -t \
         /data/kaijudb/nodes.dmp \
-	-f data/kaijudb/kaiju_db_nr_euk.fmi \ 
-	-i /data/${base}_1.trim30.fq.gz -j \
+    -f data/kaijudb/kaiju_db_nr_euk.fmi \ 
+    -i /data/${base}_1.trim30.fq.gz -j \
         /data/${base}_2.trim30.fq.gz \
-	-o /data/${base}.kaiju_output.trim30.out \
-	-z 4
+    -o /data/${base}.kaiju_output.trim30.out \
+    -z 4
 done
 ```
 
@@ -155,13 +159,13 @@ Convert kaiju output to format readable by krona:
 ```
 for i in *trim{"2","30"}.out
 do
-	docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju2krona 
-	-v \
-	-t \
-	/data/kaijudb/nodes.dmp \
-	-n /data/kaijudb/names.dmp \ 
-	-i /data/${i} \
-	-o /data/${i}.kaiju.out.krona
+    docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju2krona 
+    -v \
+    -t \
+    /data/kaijudb/nodes.dmp \
+    -n /data/kaijudb/names.dmp \ 
+    -i /data/${i} \
+    -o /data/${i}.kaiju.out.krona
 done
 ```
 
@@ -170,14 +174,14 @@ Convert kaiju file to format readable by krona:
 ```
 for i in *trim{"2","30"}.out
 do
-	docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport \
-	-v \
-	-t \
-	/data/kaijudb/nodes.dmp \
-	-n /data/kaijudb/names.dmp \
-	-i /data/${i} \
-	-r genus \
-	-o /data/${i}.kaiju_out_krona.summary 
+    docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport \
+    -v \
+    -t \
+    /data/kaijudb/nodes.dmp \
+    -n /data/kaijudb/names.dmp \
+    -i /data/${i} \
+    -r genus \
+    -o /data/${i}.kaiju_out_krona.summary 
 done
 
 
@@ -189,14 +193,14 @@ Now let's filter out taxa with low abundances by obtaining genera that comprise 
 for i in *trim{"2","30"}.out
 do
         docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport 
-	-v \
-	-t \
+    -v \
+    -t \
         /data/kaijudb/nodes.dmp \
-	-n /data/kaijudb/names.dmp \
-	-i /data/${i} 
-	-r genus \ 
-	-m 1 \
-	-o /data/${i}.kaiju_out_krona.1percenttotal.summary
+    -n /data/kaijudb/names.dmp \
+    -i /data/${i} 
+    -r genus \ 
+    -m 1 \
+    -o /data/${i}.kaiju_out_krona.1percenttotal.summary
 done
 ```
 
@@ -206,15 +210,15 @@ Now for comparison, let's take the genera that comprise at least 1 percent of al
 for i in *trim{"2","30"}.out
 do
         docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport \
-	-v \
-	-t \
+    -v \
+    -t \
         /data/kaijudb/nodes.dmp \
-	-n /data/kaijudb/names.dmp \
-	-i /data/${i} 
-	-r genus \
-	-m 1 \
-	-u \
-	-o /data/${i}.kaiju_out_krona.1percentclassified.summary
+    -n /data/kaijudb/names.dmp \
+    -i /data/${i} 
+    -r genus \
+    -m 1 \
+    -u \
+    -o /data/${i}.kaiju_out_krona.1percentclassified.summary
 done
 ```
 
