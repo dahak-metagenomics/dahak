@@ -1,4 +1,4 @@
-#### Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
+## Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
 
 Requirements (assumes you have already run `read_filtering` step with Ubuntu 16.04 LTS):
 
@@ -39,77 +39,119 @@ rm -r microbe-genbank-sbt-k51-2017.05.09.tar.gz
 cd ../
 ```
 
-If you don't already have the trimmed data you can download it from osf using the following command. First, you will need to copy `trimmed_files.txt` to your working directory or provide the path to this file. 
+If you don't already have the trimmed data you can download it from OSF:
 
 ```
-for i in $(cat trimmed_{"2","30"}_files.txt)
-do
-    osf -u <username> -p dm938 fetch osfstorage/data/${i}
-    echo ${i} 
-done
+wget https://osf.io/tzkjr/download -O SRR606249_1.trim2.fq.gz
+wget https://osf.io/sd968/download -O SRR606249_2.trim2.fq.gz
+wget https://osf.io/acs5k/download -O SRR606249_subset50_1.trim2.fq.gz
+wget https://osf.io/bem28/download -O SRR606249_subset50_2.trim2.fq.gz
+wget https://osf.io/syf3m/download -O SRR606249_subset25_1.trim2.fq.gz
+wget https://osf.io/zbcrx/download -O SRR606249_subset25_2.trim2.fq.gz
+wget https://osf.io/ksu3e/download -O SRR606249_subset10_1.trim2.fq.gz
+wget https://osf.io/k9tqn/download -O SRR606249_subset10_2.trim2.fq.gz
+wget https://osf.io/qtzyk/download -O SRR606249_1.trim30.fq.gz
+wget https://osf.io/dumz6/download -O SRR606249_2.trim30.fq.gz
+wget https://osf.io/v5jhs/download -O SRR606249_subset50_1.trim30.fq.gz
+wget https://osf.io/q4cfa/download -O SRR606249_subset50_2.trim30.fq.gz
+wget https://osf.io/jcp5n/download -O SRR606249_subset25_1.trim30.fq.gz
+wget https://osf.io/qevh9/download -O SRR606249_subset25_2.trim30.fq.gz
+wget https://osf.io/rtvuz/download -O SRR606249_subset10_1.trim30.fq.gz
+wget https://osf.io/zq4f9/download -O SRR606249_subset10_2.trim30.fq.gz
 ```
 
 Next, calculate signatures for our data:
 
 ```
+sourmashurl="quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
+
 for filename in *_1.trim2.fq.gz
 do
     #Remove _1.trim.fq from file name to create base
     base=$(basename $filename _1.trim2.fq.gz)
+    sigsuffix=".trim2.scaled10k.k21_31_51.sig"
     echo $base
 
-docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a2--py36_0 sourmash compute \
-    --merge /data/${base}.trim2.fq.gz \ 
-    --track-abundance \
-    --scaled 10000 -k 21,31,51 \ 
-    /data/${base}_1.trim2.fq.gz \
-    /data/${base}_2.trim2.fq.gz \
-    -o /data/${base}.trim2.scaled10k.k21_31_51.sig
+    if [ -f ${base}${sigsuffix} ]
+    then
+        # skip
+        echo "Skipping file ${base}${sigsuffix}, file exists."
+    else
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash compute \
+            --merge /data/${base}.trim2.fq.gz \
+            --track-abundance \
+            --scaled 10000 \
+            -k 21,31,51 \
+            /data/${base}_1.trim2.fq.gz \
+            /data/${base}_2.trim2.fq.gz \
+            -o /data/${base}${sigsuffix}
+    fi
 done
-```
 
-```
 for filename in *_1.trim30.fq.gz
 do
-        #Remove _1.trim.fq from file name to create base
-        base=$(basename $filename _1.trim30.fq.gz)
-        echo $base
+    #Remove _1.trim.fq from file name to create base
+    base=$(basename $filename _1.trim30.fq.gz)
+    sigsuffix=".trim30.scaled10k.k21_31_51.sig"
+    echo $base
 
-        docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a2--py36_0 sourmash compute \
-        --merge /data/${base}.trim.fq.gz \ 
-    --track-abundance \
-    --scaled 10000 -k 21,31,51 \ 
-    /data/${base}_1.trim30.fq.gz /data/${base}_2.trim30.fq.gz \
-    -o /data/${base}.trim30.scaled10k.k21_31_51.sig
+    if [ -f ${base}${sigsuffix} ]
+    then
+        # skip
+        echo "Skipping file ${base}${sigsuffix}, file exists."
+    else
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash compute \
+            --merge /data/${base}.trim30.fq.gz \
+            --track-abundance \
+            --scaled 10000 \
+            -k 21,31,51 \
+            /data/${base}_1.trim30.fq.gz \
+            /data/${base}_2.trim30.fq.gz \
+            -o /data/${base}${sigsuffix}
+    fi
 done
+
 ```
 
 And compare those signatures to our database to classify the components.
 
 ```
-for i in 21 31 51do
-        for x in *sig
-        do
-        docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a2--py36_0 sourmash gather \
-        -k ${i} \
-        ${x} \
-        genbank-k${i}.sbt.json refseq-k${i}.sbt.json \
-        -o ${x}.k${i}.gather.output.csv \
-        --output-unassigned ${x}.k${i}gather_unassigned.output.csv \
-        --save-matches ${x}.k${i}.gather_matches
-        done
+sourmashurl="quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
+for kmer_len in 21 31 51
+do
+    for sig in *sig
+    do
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash gather \
+            -k ${kmer_len} \
+            ${sig} \
+            genbank-k${kmer_len}.sbt.json \
+            refseq-k${kmer_len}.sbt.json \
+            -o ${sig}.k${kmer_len}.gather.output.csv \
+            --output-unassigned ${sig}.k${kmer_len}gather_unassigned.output.csv \
+            --save-matches ${sig}.k${kmer_len}.gather_matches
+    done
 done
 ```
 
 Now, let's download and unpack the kaiju database (this takes about 15 minutes on my machine):
 
 ```
-mkdir kaijudb
-cd kaijudb
-curl -LO http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz
-tar zxvf kaiju_index_nr_euk.tgz
-rm -r kaiju_index_nr_euk.tgz
-cd ~/data
+kaijudir="${PWD}/kaijudb"
+tarfile="kaiju_index_nr_euk.tgz"
+
+mkdir ${kaijudir}
+curl -LO "http://kaiju.binf.ku.dk/database/${tarfile}"
+tar xzf ${tarfile}
+rm -f ${tarfile}
 ```
 
 and then link the data and run kaiju:
@@ -121,86 +163,97 @@ do
     base=$(basename $filename _1.trim2.fq.gz)
     echo $base
 
-    docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju \ 
-    -x \
-    -v \
-    -t \
-    /data/kaijudb/nodes.dmp \ 
-    -f /data/kaijudb/kaiju_db_nr_euk.fmi \
-    -i /data/${base}_1.trim2.fq.gz \ 
-    -j /data/${base}_2.trim2.fq.gz \
-    -o /data/${base}.kaiju_output.trim2.out \ 
-    -z 4
-done
-```
+    # Command to run container interactively:
+    #docker run -it --rm -v ${PWD}:/data quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 /bin/bash
 
-```
+    docker run \
+        -v ${PWD}:/data \
+        quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 \
+        kaiju \
+        -x \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -f /data/kaijudb/kaiju_db_nr_euk.fmi \
+        -i /data/${base}_1.trim2.fq.gz \
+        -j /data/${base}_2.trim2.fq.gz \
+        -o /data/${base}.kaiju_output.trim2.out \
+        -z 4
+done
+
 for filename in *1.trim30.fq.gz
 do
-        #Remove _1.trim30.fq from file name to create base
-        base=$(basename $filename _1.trim30.fq.gz)
-        echo $base
+    #Remove _1.trim30.fq from file name to create base
+    base=$(basename $filename _1.trim30.fq.gz)
+    echo $base
 
-        docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju \
-    -x \
-    -v \
-    -t \
-        /data/kaijudb/nodes.dmp \
-    -f data/kaijudb/kaiju_db_nr_euk.fmi \ 
-    -i /data/${base}_1.trim30.fq.gz -j \
-        /data/${base}_2.trim30.fq.gz \
-    -o /data/${base}.kaiju_output.trim30.out \
-    -z 4
+    docker run \
+        -v ${PWD}:/data \
+        quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 \
+        kaiju \
+        -x \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -f data/kaijudb/kaiju_db_nr_euk.fmi \
+        -i /data/${base}_1.trim30.fq.gz \
+        -j /data/${base}_2.trim30.fq.gz \
+        -o /data/${base}.kaiju_output.trim30.out \
+        -z 4
 done
 ```
 
 Convert kaiju output to format readable by krona:
 
 ```
+kaijuurl="quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0"
+kaijudir="kaijudb"
 for i in *trim{"2","30"}.out
 do
-    docker run -v ${PWD}:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaiju2krona 
-    -v \
-    -t \
-    /data/kaijudb/nodes.dmp \
-    -n /data/kaijudb/names.dmp \ 
-    -i /data/${i} \
-    -o /data/${i}.kaiju.out.krona
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaiju2krona \
+        -v \
+        -t \
+        /data/${kaijudir}/nodes.dmp \
+        -n /data/${kaijudir}/names.dmp \
+        -i /data/${i} \
+        -o /data/${i}.kaiju.out.krona
 done
-```
 
-Convert kaiju file to format readable by krona:
-
-```
 for i in *trim{"2","30"}.out
 do
-    docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport \
-    -v \
-    -t \
-    /data/kaijudb/nodes.dmp \
-    -n /data/kaijudb/names.dmp \
-    -i /data/${i} \
-    -r genus \
-    -o /data/${i}.kaiju_out_krona.summary 
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport \
+        -v \
+        -t \
+        /data/${kaijudir}/nodes.dmp \
+        -n /data/${kaijudir}/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -o /data/${i}.kaiju_out_krona.summary 
 done
-
 
 ```
 
 Now let's filter out taxa with low abundances by obtaining genera that comprise at least 1 percent of the total reads:
 
 ```
+kaijuurl="quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0"
 for i in *trim{"2","30"}.out
 do
-        docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport 
-    -v \
-    -t \
-        /data/kaijudb/nodes.dmp \
-    -n /data/kaijudb/names.dmp \
-    -i /data/${i} 
-    -r genus \ 
-    -m 1 \
-    -o /data/${i}.kaiju_out_krona.1percenttotal.summary
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport 
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -n /data/kaijudb/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -m 1 \
+        -o /data/${i}.kaiju_out_krona.1percenttotal.summary
 done
 ```
 
@@ -209,52 +262,72 @@ Now for comparison, let's take the genera that comprise at least 1 percent of al
 ```
 for i in *trim{"2","30"}.out
 do
-        docker run -v /home/ubuntu/data:/data quay.io/biocontainers/kaiju:1.5.0--pl5.22.0_0 kaijuReport \
-    -v \
-    -t \
-        /data/kaijudb/nodes.dmp \
-    -n /data/kaijudb/names.dmp \
-    -i /data/${i} 
-    -r genus \
-    -m 1 \
-    -u \
-    -o /data/${i}.kaiju_out_krona.1percentclassified.summary
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -n /data/kaijudb/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -m 1 \
+        -u \
+        -o /data/${i}.kaiju_out_krona.1percentclassified.summary
 done
 ```
 
 Download the krona image from quay.io so we can visualize the results from kaiju:
 
 ```
-docker pull quay.io/biocontainers/krona:2.7--pl5.22.0_1
+kaijudir="${PWD}/kaijudb"
+suffix="kaiju_out_krona"
+kronaurl="quay.io/biocontainers/krona:2.7--pl5.22.0_1"
+docker pull ${kronaurl}
 ```
 
 Generate krona html with output from all of the reads:
 
 ```
-for i in *kaiju_out_krona.summary
+suffix="kaiju_out_krona"
+for i in *${suffix}.summary
 do
-        docker run -v /home/ubuntu/data:/data quay.io/biocontainers/krona:2.7--pl5.22.0_1 ktImportText -o \
-        /data/${i}.kaiju_out_krona.all.html /data/${i}
-one
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
+done
 ```
 
 Generate krona html with output from genera at least 1 percent of the total reads:
 
 ```
-for i in *kaiju_out_krona.1percenttotal.summary
+suffix="kaiju_out_krona.1percenttotal"
+for i in *${suffix}.summary
 do
-        docker run -v /home/ubuntu/data:/data quay.io/biocontainers/krona:2.7--pl5.22.0_1 ktImportText -o \
-        /data/${i}.kaiju_out_krona.1percenttotal.html /data/${i}
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
 done
 ```
 
 Generate krona html with output from genera at least 1 percent of all classified reads:
 
 ```
-for i in *kaiju_out_krona.1percentclassified.summary
+suffix="kaiju_out_krona.1percentclassified"
+for i in *${suffix}.summary
 do
-        docker run -v /home/ubuntu/data:/data quay.io/biocontainers/krona:2.7--pl5.22.0_1 ktImportText -o \
-        /data/${i}.kaiju_out_krona.1percentclassified.html /data/${i}
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
 done
 ```
 
