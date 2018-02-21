@@ -17,6 +17,7 @@ First, let's download two SBTs containing hashes that represent the microbial ge
 ```
 mkdir data/
 cd data/
+
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k31-2017.05.09.tar.gz
 curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k21-2017.05.09.tar.gz
@@ -39,25 +40,37 @@ rm -r microbe-genbank-sbt-k51-2017.05.09.tar.gz
 cd ../
 ```
 
-If you don't already have the trimmed data you can download it from OSF:
+If you have not made the trimmed data, you can download it from OSF.
+
+Start with a file that contains two columns, a filename and a location, separated by a space.
+
+The location should be a URL (currently works) or a local path (not implemented yet).
+If no location is given, the script will look for the given file in the current directory.
+
+Example data file **trimmed.data**:
 
 ```
-wget https://osf.io/tzkjr/download -O SRR606249_1.trim2.fq.gz
-wget https://osf.io/sd968/download -O SRR606249_2.trim2.fq.gz
-wget https://osf.io/acs5k/download -O SRR606249_subset50_1.trim2.fq.gz
-wget https://osf.io/bem28/download -O SRR606249_subset50_2.trim2.fq.gz
-wget https://osf.io/syf3m/download -O SRR606249_subset25_1.trim2.fq.gz
-wget https://osf.io/zbcrx/download -O SRR606249_subset25_2.trim2.fq.gz
-wget https://osf.io/ksu3e/download -O SRR606249_subset10_1.trim2.fq.gz
-wget https://osf.io/k9tqn/download -O SRR606249_subset10_2.trim2.fq.gz
-wget https://osf.io/qtzyk/download -O SRR606249_1.trim30.fq.gz
-wget https://osf.io/dumz6/download -O SRR606249_2.trim30.fq.gz
-wget https://osf.io/v5jhs/download -O SRR606249_subset50_1.trim30.fq.gz
-wget https://osf.io/q4cfa/download -O SRR606249_subset50_2.trim30.fq.gz
-wget https://osf.io/jcp5n/download -O SRR606249_subset25_1.trim30.fq.gz
-wget https://osf.io/qevh9/download -O SRR606249_subset25_2.trim30.fq.gz
-wget https://osf.io/rtvuz/download -O SRR606249_subset10_1.trim30.fq.gz
-wget https://osf.io/zq4f9/download -O SRR606249_subset10_2.trim30.fq.gz
+SRR606249_1.trim2.fq.gz             https://osf.io/tzkjr/download      
+SRR606249_2.trim2.fq.gz             https://osf.io/sd968/download  
+SRR606249_subset50_1.trim2.fq.gz    https://osf.io/acs5k/download 
+SRR606249_subset50_2.trim2.fq.gz    https://osf.io/bem28/download 
+SRR606249_subset25_1.trim2.fq.gz    https://osf.io/syf3m/download 
+SRR606249_subset25_2.trim2.fq.gz    https://osf.io/zbcrx/download 
+SRR606249_subset10_1.trim2.fq.gz    https://osf.io/ksu3e/download 
+SRR606249_subset10_2.trim2.fq.gz    https://osf.io/k9tqn/download 
+```
+
+This can be turned into download commands using a shell script (cut and xargs) or using a Python script.
+
+```
+import subprocess
+
+with open('trimmed.data','r') as f:
+    for ln in f.readlines():
+        line = ln.split()
+        cmd = ["wget",line[1],"-O",line[0]]
+        print("Calling command %s"%(" ".join(cmd)))
+        subprocess.call(cmd)
 ```
 
 Next, calculate signatures for our data:
