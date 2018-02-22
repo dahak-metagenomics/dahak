@@ -3,7 +3,7 @@
 Requirements (assumes you have already run `read_filtering` step with Ubuntu 16.04 LTS):
 
 - At least 120 GB disk space 
-- At least 32 GB RAM 
+- At least 64 GB RAM 
 - Updated packages (see read filtering)
 - Docker (see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md) for details)
 - (Optional) OSF CLI (command-line interface; see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md)) 
