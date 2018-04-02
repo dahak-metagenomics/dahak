@@ -36,9 +36,7 @@ done
 Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
 
 ```
-mkdir qc
-mkdir qc/before_trim 
-cd qc/before_trim 
+mkdir -p ~/data/qc/before_trim
 
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
 
@@ -79,8 +77,8 @@ done
 Now run fastqc on the trimmed data:
 
 ```
-mkdir ~/data/qc/after_trim
-cd qc/after_trim
+mkdir -p ~/data/qc/after_trim
+
 
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.trim.fq.gz -o /data/qc/after_trim
 
