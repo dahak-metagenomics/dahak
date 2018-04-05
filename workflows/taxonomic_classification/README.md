@@ -214,8 +214,7 @@ do
 done
 ```
 
-Convert kaiju output to format readable by krona:
-
+Next, convert kaiju output to format readable by krona. Note that the taxonomic rank for classification (e.g. genus) is determined with the -r flag. 
 ```
 kaijuurl="quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0"
 kaijudir="kaijudb"
