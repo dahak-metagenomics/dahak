@@ -1,0 +1,154 @@
+import os, re
+from os.path import join, dirname
+
+
+data_dir = config['data_dir']
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+try:
+    biocontainers = config['biocontainers']
+except KeyError:
+    biocontainers = {}
+
+PWD = os.getcwd()
+
+try:
+    pre_trimming_input = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+except KeyError:
+    #err = "ERROR:\nNo pre-trimming pattern present in parameters.\n"
+    #err += "There is no way to determine which read files to download.\n"
+    #err += "Specify a pre-trimming pattern in config['read_filtering']['read_patterns']['pre_trimming_pattern].\n"
+    #raise Exception(err)
+    pre_trimming_input = ""
+
+try:
+    target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+except KeyError:
+    #err = "ERROR:\nIn pre-trimming/post-trimming quality assessment step,\n"
+    #err += "No fastqc suffix was present in parameters provided.\n"
+    #err += "Specify a fastqc suffix in config['read_filtering']['quality_assessment']['fastqc_suffix'].\n"
+    #raise Exception(err)
+    target_suffix = ""
+
+target_ext = "_%s.zip"%(target_suffix)
+pre_trimming_output = re.sub('\.fq\.gz',target_ext,pre_trimming_input)
+
+
+# Get the quay URL
+# 
+# To allow the user to use local Dockerfiles,
+# in case something in bioconda is borked,
+# we require the user to specify the name 
+# of the docker image to run, and set 
+# use_local to true
+# 
+# The 'use_local' key should indicate
+# whether to use a local Docker image.
+# If it is true, the 'local' key
+# should indicate the local image to use.
+# Those are checked in utilities.py
+app = 'fastqc'
+fastqc_image = container_image_name(biocontainers, app)
+
+rule pre_trimming_quality_assessment:
+    """
+    Perform a pre-trimming quality check 
+    of the reads from the sequencer.
+    """
+    input:
+        pre_trimming_input
+    output: 
+        pre_trimming_output
+    message: 
+        '''--- Pre-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
+    threads: 2
+    run:
+        # get output file name with wildcards replaced
+        pre_trimming_output_wc = pre_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        pre_trimming_input_wc = pre_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(pre_trimming_output_wc)
+
+        shell('''
+            set -x
+            docker run \
+                -u "$(id -u):$(id -g)" \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {fastqc_image} \
+                fastqc \
+                -t {threads} \
+                /{pre_trimming_input_wc} \
+                -o /{data_dir}
+            set +x
+        ''')
+
+
+try:
+    post_trimming_input  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+except KeyError:
+    #err = "ERROR:\nNo post-trimming pattern present in parameters.\n"
+    #err += "There is no way to determine the post-trimming filename pattern.\n"
+    #err += "Specify a configuration key in config['read_filtering']['read_patterns']['post_trimming_pattern'].\n"
+    #raise Exception(err)
+    post_trimming_input = ""
+
+try:
+    target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+except KeyError:
+    #err = "ERROR:\nNo filename suffix for fastqc-processed files was given in the parameters.\n"
+    #err += "There is no way to determine the tastqc-processed filename pattern.\n"
+    #err += "Specify a configuration key in config['read_filtering']['quality_assessment']['fastqc_suffix'].\n"
+    #raise Exception(err)
+    target_suffix = ""
+
+target_ext = "_%s.zip"%(target_suffix)
+post_trimming_output = re.sub('\.fq\.gz',target_ext,post_trimming_input)
+
+rule post_trimming_quality_assessment:
+    """
+    Perform a post-trimming quality check 
+    of the reads from the sequencer.
+    """
+    input:
+        post_trimming_input
+    output:
+        post_trimming_output
+    message: 
+        '''--- Post-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
+    threads: 2 
+    run:
+        # get output file name with wildcards replaced
+        post_trimming_output_wc = post_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        post_trimming_input_wc = post_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(post_trimming_output_wc)
+
+        shell('''
+            set -x
+            docker run \
+                -u "$(id -u):$(id -g)" \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {fastqc_image} \
+                fastqc \
+                -t {threads} \
+                /{post_trimming_input_wc} \
+                -o /{data_dir}
+            set +x
+        ''')
+

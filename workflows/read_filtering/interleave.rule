@@ -1,0 +1,89 @@
+from os.path import join
+
+data_dir = config['data_dir']
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+# essentially
+# feeding trimmed 1 and 2 in
+# pointing to directory out
+
+try:
+    interleave_ext = readfilt['interleaving']['interleave_suffix']
+except KeyError:
+    #err = "ERROR:\nNo suffix found for interleaving reads from quality trimming.\n"
+    #err += "Specify a trim output file suffix config['read_filtering']['interleaving']['interlaving_suffix'].\n"
+    #raise Exception(err)
+    interleave_ext = ""
+
+try:
+    # these are strings containing templates of .fq.gz file names
+    fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+    fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+
+    fq_interleave = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
+
+except KeyError:
+    #err = "ERROR:\nNo post-trimming pattern present in parameters.\n"
+    #err += "Specify a post-trimming pattern in config['read_filtering']['read_patterns']['post_trimming_pattern].\n"
+    #raise Exception(err)
+    fq_fwd_trimmed = ""
+    fq_rev_trimmed = ""
+    fq_interleave = ""
+
+interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
+
+interleave_output = fq_interleave
+
+khmer_image = container_image_name(biocontainers,'khmer')
+
+
+rule interleave_reads:
+    """
+    Interleave paired-end reads using khmer.
+    The trim quality comes from the filename.
+    """
+    input:
+        interleave_input
+    output:
+        interleave_output
+    message:
+        """--- Interleaving read data."""
+    singularity:
+        {khmer_image}
+    log:
+        quality_log
+    run:
+        # input includes data/ prefix
+        interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
+        # for docker container, turn prefix data/ into /data/
+        interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
+        interleave_input_wcs = " ".join(interleave_input_wc)
+
+        interleave_output_wc = interleave_output.format(**wildcards)
+
+        shell('''
+            set -x
+
+            docker run \
+                -u $(id -u):$(id -g) \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {khmer_image} \
+                interleave-reads.py \
+                {interleave_input_wcs} \
+                --no-reformat \
+                -o {interleave_output_wc} \
+                --gzip
+
+            set +x
+        ''')
+

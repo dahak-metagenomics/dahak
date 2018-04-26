@@ -1,0 +1,80 @@
+import re
+from os.path import join, isfile
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+data_dir = config['data_dir']
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+try:
+    pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+except KeyError:
+    pre_trimming_pattern = ""
+    #err = "ERROR:\nNo pre-trimming pattern present in parameters.\n"
+    #err += "There is no way to determine which read files to download.\n"
+    #err += "Specify a configuration key in config['read_filtering']['read_patterns']['pre_trimming_pattern]."
+    #raise Exception(err)
+
+rule download_reads:
+    """
+    Fetch user-requested files from OSF 
+    containing reads that will be used 
+    in the read filtering process.
+
+    Note that this should define wildcard-based
+    rules, rather than downloading all files 
+    at once, to keep things flexible and fast.
+    """
+    output:
+        pre_trimming_pattern
+    message: '''--- Downloading reads.'''
+    run:
+        # output should be one item, since one rule at a time
+
+        # strip data dir from output file name
+        stripped_output = re.sub(data_dir,'',output[0])
+
+        # get the corresponding url
+        read_data_url = readfilt['read_files'][stripped_output]
+
+        # include the data dir in the final output file name
+        read_data_file = output
+
+        shell('''
+            wget -O {read_data_file} {read_data_url}
+        ''')
+
+
+try:
+    adapter_output = join(data_dir, readfilt['adapter_file']['name'])
+except KeyError:
+    adapter_output = ""
+    #err = "ERROR:\nNo read adapter file was found in the parameters.\n"
+    #err += "Specify a read adapter file using config['read_filtering']['adapter_file']['name'].\n"
+    #raise Exception(err)
+
+
+rule download_read_adapter:
+    """
+    Download FASTA read adapaters.
+    This downloads adpaters for 
+    the TruSeq2-PE sequencer by default.
+    """
+    output:
+        adapter_output
+    message: '''--- Downloading adapter file.'''
+    run:
+        # strip data dir from adapter file name
+        stripped_output = re.sub(data_dir,'',output[0])
+
+        # get corresponding url
+        adapter_url = readfilt['adapter_file']['url']
+
+        shell('''
+            wget -O {adapter_output} {adapter_url}
+        ''')
+
