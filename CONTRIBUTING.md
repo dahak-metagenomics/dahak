@@ -2,11 +2,11 @@
 
 This document is for people that want to contribute to the dahak metagenomics project. It walks contirbutors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images. 
 
-# Impatient? Quick start 
+## Quick start 
 
 Dahak is open source, open data project and we welcome contributions at levels ranging from issues, to documentation changes,  to major code or workflow contributions. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and please contribute. 
 
-# How to Contribute
+## How to Contribute
 
 1. Create a [GitHub](https://github.com) account 
 
@@ -22,7 +22,7 @@ Your shell command should look something like (you can click the 'clone or downl
 
 This makes a copy of the dahak repository on your local machine. 
 
-# Claiming and issue and starting to develop 
+## Claiming and issue and starting to develop 
 
 1. Find an open issue and claim it. 
 
@@ -109,7 +109,7 @@ As you add new changes you can keep pushing to your pull request using ```git pu
 
 12. Once your issue has been reviewed an merged, stand-up, throw your hands in the air, and do a little dance. You're officially a GitHub master and a contributor to the dahak project. We hold you in the highest of regards. 
 
-# My pull request has been merged. What do I do now? 
+## My pull request has been merged. What do I do now? 
 
 Before continuing on your journey towards your next pull request there are a couple of steps that you need take to clean up your local copy of dahak. 
 ```
@@ -119,17 +119,17 @@ git branch -d fix/brief_issue_description     # delete the branch locally
 git push origin :fix/brief_issue_description  # delete the branch on your GitHub fork
 ```
 
-# I have a dataset that I'd like to contribute to the project 
+## I have a dataset that I'd like to contribute to the project 
 
 Great! A big part of this project is benchamarking tools to determine when and how we should use them. Datasets with interesting composition help us uncover new and interesting things about metagenomics tools. If you have a dataset that you would like to benchmark and/or submit for benchmarking please create an issue and mention @brooksph, @kternus, or @ctb. In general, we'll advise you to make the data publicly available and go crazy characterizing it. We can help you think about the best way to do it but in general we're using the workflows in the [workflows/](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) repository and analyzing the data in jupyter notebooks. Poke us and we'd be happy to discuss the process. If your dataset is less than 5 GB in size, the [open science famework](https://osf.io) is a great, free place to put it. 
 
-# I have a tool that I'd like to contribute to the project
+## I have a tool that I'd like to contribute to the project
 Greater! The more tools the better. A major goal of this project to make more tools easy to use. We opted to do this by using or creating containerized tools. The [biocontainers project](https://biocontainers.pro) is leading the way on this effort and we've contributed a few things there. You're not required to contribute there in order to add a tool to this project but the tool must be open source and the image must be stored in a public repository like [Docker hub](https://hub.docker.com) or [quay.io](https://quay.io). [Here's](https://docs.docker.com/get-started/#containers-and-virtual-machines) a great guide on getting started building containers. We're using [Singularity](https://singularity.lbl.gov/docs-docker) to run the containers in our workflows. Docker does not need to be installed. 
 
-# I have a workflow that I'd like to contribute to the project 
+## I have a workflow that I'd like to contribute to the project 
 Greatest! New metagenomics analysis tools are created all the time. We're using a small subset that we think encompass the methods that are most commonly used to probe metagenomic communities although we're currently missing a few. If you want to include a new tool or workflow, poke us and we can point you in the right direction. The important bits are we're stringing together workflows using [Snakemake](https://snakemake.readthedocs.io/en/stable/). Take a look here for a [basic example](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/read_filtering/Snakefile) and here for a bit [more flavor](https://github.com/dahak-metagenomics/taco-read-filtering/tree/master/rules/read_filtering). This is a work in progress but the second example is where we're headed. 
 
-# Contributor Code of Conduct
+## Contributor Code of Conduct
 
 As contributors and maintainers of this project, we pledge to respect all people who contribute through reporting issues, posting feature requests, updating documentation, submitting pull requests or patches, and other activities.
 
