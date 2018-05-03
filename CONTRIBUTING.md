@@ -1,4 +1,4 @@
-* This document was inspired by the [khmer](https://github.com/dib-lab/khmer/blob/master/doc/dev/getting-started.rst) project getting started documentation.
+**This document was inspired by the [khmer project getting started documentation](https://github.com/dib-lab/khmer/blob/master/doc/dev/getting-started.rst).**
 
 This document is for people that want to contribute to the dahak metagenomics project. It walks contirbutors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images.
 
