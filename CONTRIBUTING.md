@@ -1,10 +1,10 @@
 **This document was inspired by the [khmer project getting started documentation](https://github.com/dib-lab/khmer/blob/master/doc/dev/getting-started.rst).**
 
-This document is for people that want to contribute to the dahak metagenomics project. It walks contirbutors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images.
+This document is for people that want to contribute to the dahak metagenomics project. It walks contributors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images.
 
-## Quick start
+## Quickstart
 
-Dahak is open source, open data project and we welcome contributions at levels ranging from issues, to documentation changes,  to major code or workflow contributions. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and please contribute.
+Dahak is open source, open data project and we welcome contributions at levels ranging from issues, to documentation changes,  to significant code or workflow contributions. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and please contribute.
 
 ## How to Contribute
 
@@ -12,9 +12,9 @@ Dahak is open source, open data project and we welcome contributions at levels r
 
 2. Fork https://github.com/dahak-metagenomics/dahak
 
-Visit that page, and then click 'Fork' in the upper right hand corner. This creates a copy of the dahak source code in your GitHub account. If you're new to GitHub or just need a refresher please check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
+Visit that page, and then click 'Fork' in the upper right-hand corner. This creates a of the dahak source code in your GitHub account. If you're new to GitHub or want a refresher please, check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
 
-3. Clone a copy of khmer into your local enviroment (or work in your browser!)
+3. Clone a copy of khmer into your local environment (or work in your browser!)
 
 Your shell command should look something like (you can click the 'clone or download' button on the dahak github, copy the link, and insert git clone before it):
 
@@ -28,7 +28,7 @@ This makes a copy of the dahak repository on your local machine.
 
 Go to the list [open issues](https://github.com/dahak-metagenomics/dahak/issues) and claim one you like. Once you've found an issue you like, open it, click 'Assignees', and assign yourself. Once you've assigned yourself make a comment below the issue saying "I'm working on this". That's it, it's all yours. Well not really, because you can always ask for help. Just make another comment below stating what you need some help with and we'll get right back to you.
 
-(Staking your claim is super important because we're trying to avoid people working on the same issue.
+(Staking your claim is super important because we're trying to avoid people working on the same issue.)
 
 2. In your local copy of the source code, update your master branch from the main dahak branch.
 
@@ -43,7 +43,7 @@ If git complains about 'merge conflicts' when you execute ```git pull``` please 
 
 If you are asked to make changes before your pull request can be accepted, continue to commit additional changes to the branch associated with your original pull request. The pull request will automatically be updated each time you commit to that branch. Github provides a medium for communicating and providing feedback. Once the pull request is approved, it will be merged into the main branch by the dahak development team.
 
-3. Creating a new branch and linking it to your fork on github
+3. Creating a new branch and linking it to your fork on GitHub
 
 ```
 git checkout -b fix/brief_issue_description
