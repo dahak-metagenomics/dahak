@@ -1,20 +1,18 @@
-[TOC]
+* This document was inspired by the [khmer](https://github.com/dib-lab/khmer/blob/master/doc/dev/getting-started.rst) project getting started documentation.
 
 This document is for people that want to contribute to the dahak metagenomics project. It walks contirbutors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images.
 
 # Impatient? Quick start
 
-Dahak is open source, open data project and we welcome contributions at levels ranging from questions to documentation changes to major code or workflow contributions. Any software included in the workflows must be open source, under a BSD license, findable, and reusable. Check out the quick start guide, analyze some data, and please contribute.
+Dahak is open source, open data project and we welcome contributions at levels ranging from issues, to documentation changes,  to major code or workflow contributions. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and please contribute.
 
 # How to Contribute
 
-## Getting started
-
-1. Create a (GitHub)[https://github.com] account
+1. Create a [GitHub](https://github.com) account
 
 2. Fork https://github.com/dahak-metagenomics/dahak
 
-Visit that page, and then click 'Fork' in the upper right hand corner. This creates a copy of the dahak source code in your GitHub account.
+Visit that page, and then click 'Fork' in the upper right hand corner. This creates a copy of the dahak source code in your GitHub account. If you're new to GitHub or just need a refresher please check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
 
 3. Clone a copy of khmer into your local enviroment (or work in your browser!)
 
@@ -26,7 +24,7 @@ This makes a copy of the dahak repository on your local machine.
 
 # Claiming and issue and starting to develop
 
-1. Find an open issue claim it.
+1. Find an open issue and claim it.
 
 Go to the list [open issues](https://github.com/dahak-metagenomics/dahak/issues) and claim one you like. Once you've found an issue you like, open it, click 'Assignees', and assign yourself. Once you've assigned yourself make a comment below the issue saying "I'm working on this". That's it, it's all yours. Well not really, because you can always ask for help. Just make another comment below stating what you need some help with and we'll get right back to you.
 
@@ -41,13 +39,11 @@ git pull dib master
 
 (This pulls in the latest changes from the master repository)
 
-If git complains about 'merge conflicts' when you execute ```git pull``` please refer the ***Resolving merge conflicts*** (section)[https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html] in the khmer documentation.
+If git complains about 'merge conflicts' when you execute ```git pull``` please refer the ***Resolving merge conflicts*** [section](https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html) in the khmer documentation.
 
-If you are asked to make changes before your pull request can be accepted, continue to commit additional changes to the branch associated with your 
-original pull request. The pull request will automatically be updated each time you commit to that branch. Github provides a medium for communicating and 
-providing feedback. Once the pull request is approved, it will be merged into the main branch by the team.
+If you are asked to make changes before your pull request can be accepted, continue to commit additional changes to the branch associated with your original pull request. The pull request will automatically be updated each time you commit to that branch. Github provides a medium for communicating and providing feedback. Once the pull request is approved, it will be merged into the main branch by the dahak development team.
 
-3. Creating a new branch and link it to your fork on github
+3. Creating a new branch and linking it to your fork on github
 
 ```
 git checkout -b fix/brief_issue_description
@@ -72,7 +68,7 @@ Once you've staged your changes, it's time to make a commit (Don't forget to cha
 git commit -m 'Provide a brief description of the changes you made here'
 ```
 
-Please make your commit message informative but concise -- these messages become a part of the history of the repo and the informative message will help track down changes later. Don't stress over this too much but before you press the button consider whether you 6 months from now would find this commit message useful when a bug pops up and you need to sort through issues to find the right one. Once your changes have been commited, push them to the remote branch:
+Please make your commit message informative but concise — these messages become a part of the history of the repo and an informative message will help track down changes later. Don't stress over this too much but before you press the button consider whether 'future you' 6 months from now would find this commit message useful when a bug pops up and you need to sort through issues to find the right one. Once your changes have been commited, push them to the remote branch:
 
 ```
 git push origin
@@ -101,7 +97,37 @@ Merge Checklist
  - Tutorials should be universally reproducible. If this request modifies a tutorial, does it assume we're starting from a blank Ubuntu 16.04 (Xenial Xerus) image?
  - Large diffs to binary or data files can artificially inflate the size of the repository. Are there large diffs to binary or data files, and are these changes necessary?
  ```
-the click "Create Pull Request"
+then click "Create Pull Request". This creates a new issue where others can review and make suggestions before your code is added the master dahak repository.
+
+10. Review the pull request checklist and make changes, if necessary.
+
+Check off as many boxes as possible and make a comment if you need help. If you have an ORCID ID <https://orcid.org/> please ad that as well. Dahak is an open source, community driven project so we'd like to acknowledge your contribution when we publish. Including your ORCID ID helps that process move smoothly.
+
+As you add new changes you can keep pushing to your pull request using ```git push origin```.
+
+11. When you're ready to have the pull request reviewed, please mention @brooksph, @charlesreid1, @kternus, @stephenturner, @ctb or anyone else on the list of [collabortors](https://github.com/dahak-metagenomics/dahak/settings/collaboration) plus the comment `ready for review`. Often pull requests will require changes, need more work before they can be merged, or simply need to be addressed later. Adding tags can help with organizing. Check out this list for some examples of [tags](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#pull-request-labels).
+
+12. Once your issue has been reviewed an merged, stand-up, throw your hands in the air, and do a little dance. You're officially a GitHub master and a contributor to the dahak project. We hold you in the highest of regards.
+
+# My pull request has been merged. What do I do now?
+
+Before continuing on your journey towards your next pull request there are a couple of steps that you need take to clean up your local copy of dahak.
+```
+git checkout master
+git pull dib master
+git branch -d fix/brief_issue_description     # delete the branch locally
+git push origin :fix/brief_issue_description  # delete the branch on your GitHub fork
+```
+
+# I have a dataset that I'd like to contribute to the project
+
+Great! A big part of this project is benchamarking tools to determine when and how we should use them. Datasets with interesting composition help us uncover new and interesting things about metagenomics tools. If you have a dataset that you would like to benchmark and/or submit for benchmarking please create an issue and mention @brooksph, @kternus, or @ctb. In general, we'll advise you to make the data publicly available and go crazy characterizing it. We can help you think about the best way to do it but in general we're using the workflows in the [workflows/](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) repository and analyzing the data in jupyter notebooks. Poke us and we'd be happy to discuss the process. If your dataset is less than 5 GB in size, the [open science famework](https://osf.io) is a great, free place to put it.
+
+# I have a tool that I'd like to contribute to the project
+Greater! The more tools the better. A major goal of this project to make more tools easy to use. We opted to do this by using or creating containerized tools. The [biocontainers project](https://biocontainers.pro) is leading the way on this effort and we've contributed a few things there. You're not required to contribute there in order to add a tool to this project but the tool must be open source and the image must be stored in a public repository like [Docker hub](https://hub.docker.com) or [quay.io](https://quay.io). [Here's](https://docs.docker.com/get-started/#containers-and-virtual-machines) a great guide on getting started building containers. We're using [Singularity](https://singularity.lbl.gov/docs-docker) to run the containers in our workflows. Docker does not need to be installed.
+
+# I have a workflow that I'd like to contribute to the project
+Greatest! New metagenomics analysis tools are created all the time. We're using a small subset that we think encompass the methods that are most commonly used to probe metagenomic communities although we're currently missing a few. If you want to include a new tool or workflow, poke us and we can point you in the right direction. The important bits are we're stringing together workflows using [Snakemake](https://snakemake.readthedocs.io/en/stable/). Take a look here for a [basic example](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/read_filtering/Snakefile) and here for a bit [more flavor](https://github.com/dahak-metagenomics/taco-read-filtering/tree/master/rules/read_filtering). This is a work in progress but the second example is where we're headed.
 
 # Contributor Code of Conduct
 
@@ -113,6 +139,6 @@ Examples of unacceptable behavior by participants include the use of sexual lang
 
 Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct. Project maintainers who do not follow the Code of Conduct may be removed from the project team.
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by emailing [Phil Brooks](ptbrooks@ucdavis.edu) or C. [Titus Brown](ctbrown@ucdavis.edu). To report an issue involving either of them please email [Judi Brown Clarke](jbc@egr.msu.edu), Ph.D. the Diversity Director at the BEACON Center for the Study of Evolution in Action, an NSF Center for Science and Technology.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by emailing [Phil Brooks](ptbrooks@ucdavis.edu) or [C. Titus Brown](ctbrown@ucdavis.edu). To report an issue involving either of them please email [Judi Brown Clarke](jbc@egr.msu.edu), Ph.D. the Diversity Director at the BEACON Center for the Study of Evolution in Action, an NSF Center for Science and Technology.
 
 This Code of Conduct is adapted from the Contributor Covenant, version 1.0.0, available from http://contributor-covenant.org/version/1/0/0/
