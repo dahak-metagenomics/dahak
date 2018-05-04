@@ -2,21 +2,21 @@
 
 **This document was inspired by the [khmer project getting started documentation](https://github.com/dib-lab/khmer/blob/master/doc/dev/getting-started.rst).**
 
-This document is for people that want to contribute to the dahak metagenomics project. It walks contributors through getting started with GutHub, creating an issue, claiming issue, making a pull request, and where to store data and newly created Docker images.
+This document is for people that want to contribute to the dahak metagenomics project. It walks contributors through getting started with GitHub, creating an issue, claiming an issue, making a pull request, and where to store data and newly created Docker images.
 
 ## Quickstart
 
-Dahak is open source, open data project and we welcome contributions at levels ranging from issues, to documentation changes,  to significant code or workflow contributions. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and please contribute.
+Dahak is open source, open data project and we welcome contributions at all levels. We encourage you to submit issues, suggest documentation changes, contribute code, images, workflows etc.. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and contribute however you see fit.
 
-## How to Contribute
+## How to get started
 
-1. Create a [GitHub](https://github.com) account
+1. Create a [GitHub](https://github.com) account.
 
-2. Fork https://github.com/dahak-metagenomics/dahak
+2. Fork https://github.com/dahak-metagenomics/dahak .
 
-Visit that page, and then click 'Fork' in the upper right-hand corner. This creates a of the dahak source code in your GitHub account. If you're new to GitHub or want a refresher please, check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
+Visit that page, and then click 'Fork' in the upper right-hand corner. This creates a copy of the dahak source code in your GitHub account. If you're new to GitHub or want a refresher, please check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
 
-3. Clone a copy of khmer into your local environment (or work in your browser!)
+3. Clone a copy of khmer into your local environment (or work in your browser!).
 
 Your shell command should look something like (you can click the 'clone or download' button on the dahak github, copy the link, and insert git clone before it):
 
@@ -41,7 +41,7 @@ git pull dib master
 
 (This pulls in the latest changes from the master repository)
 
-If git complains about 'merge conflicts' when you execute ```git pull```, please refer the ***Resolving merge conflicts*** [section](https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html) in the khmer documentation.
+If git complains about 'merge conflicts' when you execute ```git pull```, please refer to the ***Resolving merge conflicts*** [section](https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html) in the khmer documentation.
 
 If you are asked to make changes before your pull request can be accepted, you can continue to commit additional changes to the branch associated with your original pull request. The pull request will automatically be updated each time you commit to that branch. Github provides a medium for communicating and providing feedback. Once the pull request is approved, it will be merged into the main branch by the dahak development team.
 
@@ -70,7 +70,7 @@ Once you've staged your changes, it's time to make a commit (Don't forget to cha
 git commit -m 'Provide a brief description of the changes you made here'
 ```
 
-Please make your commit message informative but concise — these messages become a part of the history of the repo and an informative message will help track down changes later. Don't stress over this too much but before you press the button please  consider whether you will find this commit message useful when a bug pops up 6 months from now and you need to sort through issues to find the right one. Once your changes have been commited, push them to the remote branch:
+Please make your commit message informative but concise — these messages become a part of the history of the repo and an informative message will help track down changes later. Don't stress over this too much, but before you press the button, please consider whether you will find this commit message useful when a bug pops up 6 months from now and you need to sort through issues to find the right one. Once your changes have been commited, push them to the remote branch:
 
 ```
 git push origin
@@ -91,7 +91,7 @@ In a web browser, go to your GitHub fork of dahak, e.g.:
 ```
 https://github.com/your-github-username/dahak
 ```
-and you will see a list of recently 'recently pushed branches' just above the source code listing. On the right side, there should be a green 'Compare and pull request' button. This will add a pull request submission checklist. In this form
+and you will see a list of 'recently pushed branches' just above the source code listing. On the right side, there should be a green 'Compare and pull request' button. This will add a pull request submission checklist in the following form:
 
 ```
 Merge Checklist
@@ -99,7 +99,7 @@ Merge Checklist
  - Tutorials should be universally reproducible. If this request modifies a tutorial, does it assume we're starting from a blank Ubuntu 16.04 (Xenial Xerus) image?
  - Large diffs to binary or data files can artificially inflate the size of the repository. Are there large diffs to binary or data files, and are these changes necessary?
  ```
-then click "Create Pull Request". This creates a new issue where others can review and make suggestions before your code is added the master dahak repository.
+Next, click "Create Pull Request". This creates a new issue where others can review and make suggestions before your code is added the master dahak repository.
 
 10. Review the pull request checklist and make changes, if necessary.
 
@@ -109,14 +109,14 @@ As you add new changes, you can keep pushing to your pull request using ```git p
 
 11. When you're ready to have the pull request reviewed, please mention @brooksph, @charlesreid1, @kternus, @stephenturner, @ctb or anyone else on the list of [collaborators](https://github.com/dahak-metagenomics/dahak/settings/collaboration) plus the comment `ready for review`. Often pull requests will require changes, need more work before they can be merged, or simply need to be addressed later. Adding tags can help with organizing. Check out this list for some examples of [tags](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#pull-request-labels).
 
-12. Once your issue has been reviewed an merged, stand-up, throw your hands in the air, and do a little dance. You're officially a GitHub master and a contributor to the dahak project. We hold you in the highest of regards.
+12. Once your issue has been reviewed an merged, stand-up, throw your hands in the air, and do a little dance; you're officially a GitHub master and a contributor to the dahak project – we hold you in the highest of regards.
 
 ## My pull request has been merged. What do I do now?
 
 Before continuing on your journey towards your next pull request, there are a couple of steps that you need take to clean up your local copy of dahak.
 ```
 git checkout master
-git pull dib master
+git pull master
 git branch -d fix/brief_issue_description     # delete the branch locally
 git push origin :fix/brief_issue_description  # delete the branch on your GitHub fork
 ```
@@ -129,7 +129,7 @@ Great! A big part of this project is benchmarking tools to determine when and ho
 Greater! The more tools the better. A major goal of this project to make more tools easy to use. We opted to do this by using or creating containerized tools. The [biocontainers project](https://biocontainers.pro) is leading the way in this effort and we've contributed a few things there. You're not required to contribute to the biocontainers project to add a tool to this project but the tool must be open source and the image must be stored in a public repository like [Docker hub](https://hub.docker.com) or [quay.io](https://quay.io). [Here's](https://docs.docker.com/get-started/#containers-and-virtual-machines) an excellent guide to getting started building containers. We're using [Singularity](https://singularity.lbl.gov/docs-docker) to run the containers in our workflows. Docker does not need to be installed.
 
 ## I have a workflow that I'd like to contribute to the project
-Greatest! New metagenomics analysis tools are created all the time. We're using a small subset that we think encompass the methods that are most commonly used to probe metagenomic communities although we're currently missing a few. If you want to include a new tool or workflow, create an issue and we can point you in the right direction. The critical bits are we're stringing together open-source, containerized tools to make workflows using [Snakemake](https://snakemake.readthedocs.io/en/stable/). Take a look here for a [basic example](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/read_filtering/Snakefile) and here for a bit [more flavor](https://github.com/dahak-metagenomics/taco-read-filtering/tree/master/rules/read_filtering). This is a work in progress but the second example is where we're headed.
+Greatest! New metagenomics analysis tools are created all the time. We're using a small subset that we think encompasses most the methods that are most commonly used to probe metagenomic communities. If you want to include a new tool or workflow, create an issue and we can point you in the right direction. The critical bits are we're stringing together open-source, containerized tools to make workflows using [Snakemake](https://snakemake.readthedocs.io/en/stable/). Take a look here for a [basic example](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/read_filtering/Snakefile) and here for a bit [more flavor](https://github.com/dahak-metagenomics/taco-read-filtering/tree/master/rules/read_filtering). This is a work in progress but the second example is where we're headed.
 
 ## Contributor Code of Conduct
 
