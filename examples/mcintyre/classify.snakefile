@@ -1,7 +1,8 @@
 '''
 Author: Phillip Brooks
 Affiliation: UC Davis Lab for Data Intensive Biology
-Aim: A simple Snakemake workflow to process reads to produce quality trimmed data
+Aim: A Snakemake workflow to calculate unique k-mers, calculate signatures for, and classify 
+McIntyre datasets
 Date: Wed May 2 2018
 Run: snakemake --use-conda --use-singularity
 Latest modification:
@@ -85,9 +86,7 @@ rule calculate_signatures:
     benchmark:
         'benchmarks/{sample}.compute.benchmark.txt'
     shell:
-       '''
-       sourmash compute --scaled 10000 -k 51 {input} -o {output}
-       '''
+       'sourmash compute --scaled 10000 -k 51 {input} -o {output}'
 
 rule classify_signatures:
     input:
