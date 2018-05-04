@@ -2,7 +2,7 @@
 Author: Phillip Brooks
 Affiliation: UC Davis Lab for Data Intensive Biology
 Aim: A simple Snakemake workflow to process reads to produce quality trimmed data
-Date: Sun Jan 28 2018
+Date: Wed May 2 2018
 Run: snakemake --use-conda --use-singularity
 Latest modification:
 '''
