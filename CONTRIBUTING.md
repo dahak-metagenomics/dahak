@@ -6,7 +6,7 @@ This document is for people that want to contribute to the dahak metagenomics pr
 
 ## Quickstart
 
-Dahak is open source, open data project and we welcome contributions at all levels. We encourage you to submit issues, suggest documentation changes, contribute code, images, workflows etc.. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and contribute however you see fit.
+Dahak is open source, open data project and we welcome contributions at all levels. We encourage you to submit issues, suggest documentation changes, contribute code, images, workflows etc. Any software included in the workflows must be open source, findable, and reusable. Check out [Getting Started](https://github.com/dahak-metagenomics/dahak#getting-started), analyze some data, and contribute however you see fit.
 
 ## How to get started
 
@@ -16,7 +16,7 @@ Dahak is open source, open data project and we welcome contributions at all leve
 
 Visit that page, and then click 'Fork' in the upper right-hand corner. This creates a copy of the dahak source code in your GitHub account. If you're new to GitHub or want a refresher, please check out this awesome [tutorial](https://guides.github.com/activities/hello-world/).
 
-3. Clone a copy of khmer into your local environment (or work in your browser!).
+3. Clone a copy of dahak into your local environment (or work in your browser!).
 
 Your shell command should look something like (you can click the 'clone or download' button on the dahak github, copy the link, and insert git clone before it):
 
@@ -36,7 +36,7 @@ Go to the list [open issues](https://github.com/dahak-metagenomics/dahak/issues)
 
 ```
 git checkout master
-git pull dib master
+git pull dahak master
 ```
 
 (This pulls in the latest changes from the master repository)
