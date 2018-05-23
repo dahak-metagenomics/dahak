@@ -43,11 +43,13 @@ def container_image_name(biocontainers, app):
         try:
             qurl  = biocontainers[app]['quayurl']
             qvers = biocontainers[app]['version']
-            return qurl + ":" + qvers
+
+            # Mainly for singularity.
+            # This SHOULD also work for docker.
+            docker = "docker://"
+
+            return docker + qurl + ":" + qvers
         except KeyError:
-            #err = "Error: quay.io URL for %s biocontainer "%(app)
-            #err += "could not be determined"
-            #raise Exception(err)
             ## let it ride
             return ""
 
@@ -55,10 +57,6 @@ def container_image_name(biocontainers, app):
         try:
             return biocontainers[app]['local']
         except KeyError:
-            #err = "Error: the parameters provided specify a local "
-            #err += "container image should be used for %s, but none "%(app)
-            #err += "was specified using the 'local' key."
-            #raise Exception(err)
             ## let it ride
             return ""
 

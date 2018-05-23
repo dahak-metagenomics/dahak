@@ -22,9 +22,6 @@ try:
     fq_fwd = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=1,sample='{sample}'))
     fq_rev = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=2,sample='{sample}'))
 except KeyError:
-    #err = "ERROR:\nNo pre-trimming pattern present in parameters.\n"
-    #err += "Specify a pre-trimming pattern in config['read_filtering']['read_patterns']['pre_trimming_pattern].\n"
-    #raise Exception(err)
     fq_fwd = "" # if we leave these blank,
     fq_rev = "" # snakemake complains about duplicate output targets
 
@@ -34,18 +31,12 @@ try:
     fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
     fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
 except KeyError:
-    #err = "ERROR:\nNo post-trimming pattern present in parameters.\n"
-    #err += "Specify a post-trimming pattern in config['read_filtering']['read_patterns']['post_trimming_pattern].\n"
-    #raise Exception(err)
     fq_fwd_trimmed = "" # if we leave these blank,
     fq_rev_trimmed = "" # snakemake complains about duplicate output targets
 
 try:
     trim_target_ext = readfilt['quality_trimming']['trim_suffix']
 except KeyError:
-    #err = "ERROR:\nNo suffix found for output files from quality trimming.\n"
-    #err += "Specify a trim output file suffix config['read_filtering']['quality_trimming']['trim_suffix'].\n"
-    #raise Exception(err)
     trim_target_ext = ""
 
 fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
@@ -59,9 +50,6 @@ if(quality_output==['','','','']):
 try:
     adapter_file = join(data_dir, readfilt['adapter_file']['name'])
 except KeyError:
-    #err = "ERROR:\nNo read adapter file was found in the parameters.\n"
-    #err += "Specify a read adapter file using config['read_filtering']['adapter_file']['name'].\n"
-    #raise Exception(err)
     adapter_file = "_"
 
 quality_log = join(data_dir,'trimmomatic_pe_{sample}.log')
@@ -71,9 +59,10 @@ trimmo_image = container_image_name(biocontainers,'trimmomatic')
 pulled_containers_touchfile = join(data_dir,'.pulled_containers')
 
 
-rule quality_trimming:
+rule quality_trimming_singularity:
     """
     Trim reads from the sequencer by dropping low-quality reads.
+    This calls singularity using Snakemake's singularity directive.
     """
     input:
         quality_input, adapter_file, pulled_containers_touchfile
@@ -101,7 +90,47 @@ rule quality_trimming:
         log_wc = quality_log.format(**wildcards)
 
         shell('''
-            set -x
+            trimmomatic PE \
+                {quality_input_wcs} \
+                {quality_output_wcs} \
+                ILLUMINACLIP:/{adapter_file}:2:40:15 \
+                LEADING:{qual_wc} \
+                TRAILING:{qual_wc} \
+                SLIDINGWINDOW:4:{qual_wc} \
+                MINLEN:25 \
+                2> {log_wc}
+        ''')
+
+
+rule quality_trimming_docker:
+    """
+    Trim reads from the sequencer by dropping low-quality reads.
+    This calls docker directly in the command that is run.
+    """
+    input:
+        quality_input, adapter_file, pulled_containers_touchfile
+    output:
+        quality_output
+    message: 
+        """--- Quality trimming read data."""
+    log: 
+        quality_log
+    run:
+        qual_wc = "{qual}".format(**wildcards)
+
+        # input includes data/ prefix
+        quality_input_wc = [x.format(**wildcards) for x in quality_input]
+        # for docker container, turn prefix data/ into /data/
+        quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
+        quality_input_wcs = " ".join(quality_input_wc)
+
+        quality_output_wc = [x.format(**wildcards) for x in quality_output]
+        quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
+        quality_output_wcs = " ".join(quality_output_wc)
+
+        log_wc = quality_log.format(**wildcards)
+
+        shell('''
             docker run \
                 -u $(id -u):$(id -g) \
                 -v {PWD}/{data_dir}:/{data_dir} \
@@ -116,6 +145,5 @@ rule quality_trimming:
                 SLIDINGWINDOW:4:{qual_wc} \
                 MINLEN:25 \
                 2> {log_wc}
-            set +x
         ''')
 
