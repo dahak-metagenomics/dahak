@@ -1,8 +1,590 @@
-from utils import container_image_is_external, container_image_name
+'''
+To run this workflow,
+use conda and singularity:
+snakemake --use-conda --use-singularity
+'''
 
-include: "biocontainers.rule"
-include: "read_filtering.settings"
-include: "fetch_reads.rule"
-include: "pre_post_assessment.rule"
-include: "quality_trimming.rule"
-include: "interleave.rule"
+from utils import container_image_is_external, container_image_name
+from os.path import join
+
+data_dir = config['data_dir']
+
+###################################
+# Read Filtering: default config
+
+include "read_filtering.settings"
+
+###################################
+# Read Filtering: biocontainers
+
+from os.path import join
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+# assemble container image names for containers.
+# these are usually quay.io urls, but in special cases
+# they can be the name of a local docker image.
+quayurls = []
+for app in biocontainers.keys():
+    if container_image_is_external(biocontainers,app):
+        name = container_image_name(biocontainers,app)
+        quayurls.append(name)
+
+rule pull_biocontainers:
+    """
+    Pull the required versions of containers from quay.io.
+    """
+    output:
+        touch(join(data_dir,'.pulled_containers'))
+    run:
+        for quayurl in quayurls:
+            shell('''
+                docker pull {quayurl}
+            ''')
+
+###################################
+# Read Filtering: fetch reads
+
+import re
+from os.path import join, isfile
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+try:
+    pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+except KeyError:
+    pre_trimming_pattern = ""
+    #err = "ERROR:\nNo pre-trimming pattern present in parameters.\n"
+    #err += "There is no way to determine which read files to download.\n"
+    #err += "Specify a configuration key in config['read_filtering']['read_patterns']['pre_trimming_pattern]."
+    #raise Exception(err)
+
+rule download_reads:
+    """
+    Fetch user-requested files from OSF 
+    containing reads that will be used 
+    in the read filtering process.
+
+    Note that this should define wildcard-based
+    rules, rather than downloading all files 
+    at once, to keep things flexible and fast.
+    """
+    output:
+        pre_trimming_pattern
+    message: 
+        '''--- Downloading reads.'''
+    run:
+        # output should be one item, since one rule at a time
+
+        # strip data dir from output file name
+        stripped_output = re.sub(data_dir,'',output[0])
+
+        # get the corresponding url
+        read_data_url = readfilt['read_files'][stripped_output]
+
+        # include the data dir in the final output file name
+        read_data_file = output
+
+        shell('''
+            wget -O {read_data_file} {read_data_url}
+        ''')
+
+
+try:
+    adapter_output = join(data_dir, readfilt['adapter_file']['name'])
+except KeyError:
+    adapter_output = ""
+
+
+rule download_read_adapter:
+    """
+    Download FASTA read adapaters.
+    This downloads adpaters for 
+    the TruSeq2-PE sequencer by default.
+    """
+    output:
+        adapter_output
+    message: '''--- Downloading adapter file.'''
+    run:
+        # strip data dir from adapter file name
+        stripped_output = re.sub(data_dir,'',output[0])
+
+        # get corresponding url
+        adapter_url = readfilt['adapter_file']['url']
+
+        shell('''
+            wget -O {adapter_output} {adapter_url}
+        ''')
+
+
+###################################
+# Read Filtering: pre and post trimming
+
+import os, re
+from os.path import join, dirname
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+try:
+    biocontainers = config['biocontainers']
+except KeyError:
+    biocontainers = {}
+
+PWD = os.getcwd()
+
+try:
+    pre_trimming_input = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+except KeyError:
+    pre_trimming_input = ""
+
+try:
+    target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+except KeyError:
+    target_suffix = ""
+
+target_ext = "_%s.zip"%(target_suffix)
+pre_trimming_output = re.sub('\.fq\.gz',target_ext,pre_trimming_input)
+
+# Get the quay URL
+# 
+# To allow the user to use local Dockerfiles,
+# in case something in bioconda is borked,
+# we require the user to specify the name 
+# of the docker image to run, and set 
+# use_local to true
+# 
+# The 'use_local' key should indicate
+# whether to use a local Docker image.
+# If it is true, the 'local' key
+# should indicate the local image to use.
+# Those are checked in utilities.py
+
+app = 'fastqc'
+fastqc_image = container_image_name(biocontainers, app)
+
+rule pre_trimming_quality_assessment_singularity:
+    """
+    Perform a pre-trimming quality check 
+    of the reads from the sequencer.
+    This uses singularity via the Snakemake singularity directive.
+    """
+    input:
+        pre_trimming_input
+    output: 
+        pre_trimming_output
+    message: 
+        '''--- Pre-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
+    threads: 2
+    run:
+        # get output file name with wildcards replaced
+        pre_trimming_output_wc = pre_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        pre_trimming_input_wc = pre_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(pre_trimming_output_wc)
+
+        shell('''
+            fastqc \
+                -t {threads} \
+                /{pre_trimming_input_wc} \
+                -o /{data_dir}
+        ''')
+
+rule pre_trimming_quality_assessment_docker:
+    """
+    Perform a pre-trimming quality check 
+    of the reads from the sequencer.
+    This calls docker in the command that is run.
+    """
+    input:
+        pre_trimming_input
+    output: 
+        pre_trimming_output
+    message: 
+        '''--- Pre-trim quality check of trimmed data with fastqc.'''
+    threads: 2
+    run:
+        # get output file name with wildcards replaced
+        pre_trimming_output_wc = pre_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        pre_trimming_input_wc = pre_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(pre_trimming_output_wc)
+
+        shell('''
+            docker run \
+                -u "$(id -u):$(id -g)" \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {fastqc_image} \
+                fastqc \
+                -t {threads} \
+                /{pre_trimming_input_wc} \
+                -o /{data_dir}
+        ''')
+
+try:
+    post_trimming_input  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+except KeyError:
+    post_trimming_input = ""
+
+try:
+    target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+except KeyError:
+    target_suffix = ""
+
+target_ext = "_%s.zip"%(target_suffix)
+post_trimming_output = re.sub('\.fq\.gz',target_ext,post_trimming_input)
+
+rule post_trimming_quality_assessment_singularity:
+    """
+    Perform a post-trimming quality check 
+    of the reads from the sequencer.
+    This uses singularity via the Snakemake singularity directive.
+    """
+    input:
+        post_trimming_input
+    output:
+        post_trimming_output
+    message: 
+        '''--- Post-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
+    threads: 2 
+    run:
+        # get output file name with wildcards replaced
+        post_trimming_output_wc = post_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        post_trimming_input_wc = post_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(post_trimming_output_wc)
+
+        shell('''
+            fastqc \
+                -t {threads} \
+                /{post_trimming_input_wc} \
+                -o /{data_dir}
+        ''')
+
+rule post_trimming_quality_assessment_docker:
+    """
+    Perform a post-trimming quality check 
+    of the reads from the sequencer.
+    This calls docker in the command that is run.
+    """
+    input:
+        post_trimming_input
+    output:
+        post_trimming_output
+    message: 
+        '''--- Post-trim quality check of trimmed data with fastqc.'''
+    threads: 2 
+    run:
+        # get output file name with wildcards replaced
+        post_trimming_output_wc = post_trimming_output.format(**wildcards)
+
+        # get input file name with wildcards replaced
+        post_trimming_input_wc = post_trimming_input.format(**wildcards)
+
+        # get directory for final output
+        output_dir = dirname(post_trimming_output_wc)
+
+        shell('''
+            docker run \
+                -u "$(id -u):$(id -g)" \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {fastqc_image} \
+                fastqc \
+                -t {threads} \
+                /{post_trimming_input_wc} \
+                -o /{data_dir}
+        ''')
+
+
+###################################
+# Read Filtering: interleave
+
+from os.path import join
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+# essentially
+# feeding trimmed 1 and 2 in
+# pointing to directory out
+
+try:
+    interleave_ext = readfilt['interleaving']['interleave_suffix']
+except KeyError:
+    interleave_ext = ""
+
+try:
+    # these are strings containing templates of .fq.gz file names
+    fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+    fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+    fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
+except KeyError:
+    fq_fwd_trimmed = ""
+    fq_rev_trimmed = ""
+    fq_interleave  = ""
+
+interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
+
+interleave_output = fq_interleave
+
+khmer_image = container_image_name(biocontainers,'khmer')
+
+
+rule interleave_reads_docker:
+    """
+    Interleave paired-end reads using khmer.
+    The trim quality comes from the filename.
+    This uses docker directly.
+    """
+    input:
+        interleave_input
+    output:
+        interleave_output
+    message:
+        """--- Interleaving read data."""
+    log:
+        quality_log
+    run:
+        # input includes data/ prefix
+        interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
+        # for docker container, turn prefix data/ into /data/
+        interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
+        interleave_input_wcs = " ".join(interleave_input_wc)
+
+        interleave_output_wc = interleave_output.format(**wildcards)
+
+        shell('''
+            docker run \
+                -u $(id -u):$(id -g) \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {khmer_image} \
+                interleave-reads.py \
+                {interleave_input_wcs} \
+                --no-reformat \
+                -o {interleave_output_wc} \
+                --gzip
+        ''')
+
+
+rule interleave_reads_singularity:
+    """
+    Interleave paired-end reads using khmer.
+    The trim quality comes from the filename.
+    This uses singularity via Snakemake's singularity directive.
+    We pass the singularity directive a URL like this: 
+
+        docker://quay.io/package:version
+    """
+    input:
+        interleave_input
+    output:
+        interleave_output
+    message:
+        """--- Interleaving read data."""
+    singularity:
+        {khmer_image}
+    log:
+        quality_log
+    run:
+        # input includes data/ prefix
+        interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
+        # for docker container, turn prefix data/ into /data/
+        interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
+        interleave_input_wcs = " ".join(interleave_input_wc)
+
+        interleave_output_wc = interleave_output.format(**wildcards)
+
+        shell('''
+            interleave-reads.py \
+                {interleave_input_wcs} \
+                --no-reformat \
+                -o {interleave_output_wc} \
+                --gzip
+        ''')
+
+
+###################################
+# Read Filtering: quality trimming
+
+from os.path import join
+
+data_dir = config['data_dir']
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    readfilt = config['read_filtering']
+except KeyError:
+    readfilt = {}
+
+try:
+    # If you only want to substitute a subset of wildcards,
+    # you can leave a wildcard untouched by substituting
+    # the string {variable} for {variable}.
+    # 
+    # We use this trick several times in these rules.
+    # 
+    fq_fwd = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=1,sample='{sample}'))
+    fq_rev = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=2,sample='{sample}'))
+except KeyError:
+    fq_fwd = "" # if we leave these blank,
+    fq_rev = "" # snakemake complains about duplicate output targets
+
+quality_input = [fq_fwd, fq_rev]
+
+try:
+    fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+    fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+except KeyError:
+    fq_fwd_trimmed = "" # if we leave these blank,
+    fq_rev_trimmed = "" # snakemake complains about duplicate output targets
+
+try:
+    trim_target_ext = readfilt['quality_trimming']['trim_suffix']
+except KeyError:
+    trim_target_ext = ""
+
+fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
+fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
+
+quality_output = [fq_fwd_trimmed, fq_fwd_se,
+                  fq_rev_trimmed, fq_rev_se]
+if(quality_output==['','','','']):
+    quality_output = ''
+
+try:
+    adapter_file = join(data_dir, readfilt['adapter_file']['name'])
+except KeyError:
+    adapter_file = "_"
+
+quality_log = join(data_dir,'trimmomatic_pe_{sample}.log')
+
+trimmo_image = container_image_name(biocontainers,'trimmomatic')
+
+pulled_containers_touchfile = join(data_dir,'.pulled_containers')
+
+
+rule quality_trimming_singularity:
+    """
+    Trim reads from the sequencer by dropping low-quality reads.
+    This calls singularity using Snakemake's singularity directive.
+    """
+    input:
+        quality_input, adapter_file, pulled_containers_touchfile
+    output:
+        quality_output
+    message: 
+        """--- Quality trimming read data."""
+    singularity: 
+        {trimmo_image}
+    log: 
+        quality_log
+    run:
+        qual_wc = "{qual}".format(**wildcards)
+
+        # input includes data/ prefix
+        quality_input_wc = [x.format(**wildcards) for x in quality_input]
+        # for docker container, turn prefix data/ into /data/
+        quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
+        quality_input_wcs = " ".join(quality_input_wc)
+
+        quality_output_wc = [x.format(**wildcards) for x in quality_output]
+        quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
+        quality_output_wcs = " ".join(quality_output_wc)
+
+        log_wc = quality_log.format(**wildcards)
+
+        shell('''
+            trimmomatic PE \
+                {quality_input_wcs} \
+                {quality_output_wcs} \
+                ILLUMINACLIP:/{adapter_file}:2:40:15 \
+                LEADING:{qual_wc} \
+                TRAILING:{qual_wc} \
+                SLIDINGWINDOW:4:{qual_wc} \
+                MINLEN:25 \
+                2> {log_wc}
+        ''')
+
+
+rule quality_trimming_docker:
+    """
+    Trim reads from the sequencer by dropping low-quality reads.
+    This calls docker directly in the command that is run.
+    """
+    input:
+        quality_input, adapter_file, pulled_containers_touchfile
+    output:
+        quality_output
+    message: 
+        """--- Quality trimming read data."""
+    log: 
+        quality_log
+    run:
+        qual_wc = "{qual}".format(**wildcards)
+
+        # input includes data/ prefix
+        quality_input_wc = [x.format(**wildcards) for x in quality_input]
+        # for docker container, turn prefix data/ into /data/
+        quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
+        quality_input_wcs = " ".join(quality_input_wc)
+
+        quality_output_wc = [x.format(**wildcards) for x in quality_output]
+        quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
+        quality_output_wcs = " ".join(quality_output_wc)
+
+        log_wc = quality_log.format(**wildcards)
+
+        shell('''
+            docker run \
+                -u $(id -u):$(id -g) \
+                -v {PWD}/{data_dir}:/{data_dir} \
+                -it \
+                {trimmo_image} \
+                trimmomatic PE \
+                {quality_input_wcs} \
+                {quality_output_wcs} \
+                ILLUMINACLIP:/{adapter_file}:2:40:15 \
+                LEADING:{qual_wc} \
+                TRAILING:{qual_wc} \
+                SLIDINGWINDOW:4:{qual_wc} \
+                MINLEN:25 \
+                2> {log_wc}
+        ''')
+
