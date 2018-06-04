@@ -31,23 +31,21 @@ sudo usermod -aG docker ubuntu
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker containers 
 in higher security environments where permissions are restricted.
 
-After logging back in, proceed to install singularity. These instructions are for Ubuntu 16.04. Take a look at their website for alternate/updated instructions. 
+Installing a stable version of singularity is recommended. Stable versions can be obtained from [Singularity's Releases on Github](https://github.com/singularityware/singularity/releases).
 
 ```
-wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
-apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-```
+# Latest
+VERSION=2.5.1
 
-Update aptitude's information about the new software repositories:
+# More widely available
+VERSION=2.4.6
 
-```
-sudo apt-get update
-```
-
-Now install singularity:
-
-```
-sudo apt-get install -y singularity-container
+wget https://github.com/singularityware/singularity/releases/download/$VERSION/singularity-$VERSION.tar.gz
+tar xvf singularity-$VERSION.tar.gz
+cd singularity-$VERSION
+./configure --prefix=/usr/local
+make
+sudo make install
 ```
 
 Once it is installed, you can check the version:
