@@ -58,8 +58,3 @@ def container_image_name(biocontainers, app):
             err += "was specified using the 'local' key."
             raise Exception(err)
 
-
-def strip_data_dir(what_to_strip, wildcards):
-    stripped_output = re.sub(data_dir,'',what_to_strip)
-    return stripped_output
-

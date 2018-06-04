@@ -2,12 +2,32 @@
 To run this workflow,
 use conda and singularity:
 snakemake --use-conda --use-singularity
+
+Note: the reason we try/except with param values
+is in case the user only wants to run a portion
+of the workflow. 
+
+If the config values are all set, the workflow will
+actually run and do work the user did not want.
+
+If the config values are not set, the user will see
+key errors for workflow steps they don't care about.
 '''
 
 from utils import strip_data_dir, container_image_is_external, container_image_name
-from os.path import join
 
 data_dir = config['data_dir']
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    taxclass = config['taxonomic_classification']
+except:
+    taxclass = {}
+
 
 ###################################
 # Read Filtering: default config
@@ -18,11 +38,6 @@ include "read_filtering.settings"
 # Read Filtering: biocontainers
 
 from os.path import join
-
-try:
-    biocontainers = config['biocontainers']
-except:
-    biocontainers = {}
 
 # assemble container image names for containers.
 # these are usually quay.io urls, but in special cases
@@ -77,12 +92,18 @@ except KeyError:
     pre_trimming_pattern = ""
 
 def download_reads_read_data_url(wildcards):
-    stripped_output = strip_data_dir(pre_trimming_pattern,wildcards)
+    """Returns url where data can be downloaded"""
+    # Get the filename only from the relative path, and do wildcard substitution
+    _, stripped_output = os.path.split(pre_trimming_pattern)
+    stripped_output = stripped_output.format(**wildcards)
+
+    # Get the URL where this file is available
     read_data_url = readfilt['read_files'][stripped_output]
+
     return read_data_url
 
 def download_reads_read_data_file(wildcards):
-    return pre_trimming_pattern
+    return pre_trimming_pattern.format(**wildcards)
 
 rule download_reads:
     """
@@ -184,10 +205,11 @@ def pre_trimming_qa_input(wildcards):
 def pre_trimming_qa_output(wildcards):
     return pre_trimming_output.format(**wildcards) 
 
-rule pre_trimming_quality_assessment_singularity:
+rule pre_trimming_quality_assessment:
     """
     Perform a pre-trimming quality check 
     of the reads from the sequencer.
+
     This uses singularity via the Snakemake singularity directive.
     """
     input:
@@ -212,10 +234,9 @@ rule pre_trimming_quality_assessment_docker:
     """
     Perform a pre-trimming quality check 
     of the reads from the sequencer.
+
     This calls docker in the command that is run.
     """
-    input:
-        pre_trimming_input
     output: 
         pre_trimming_output
     message: 
@@ -266,6 +287,7 @@ rule post_trimming_quality_assessment_singularity:
     """
     Perform a post-trimming quality check 
     of the reads from the sequencer.
+
     This uses singularity via the Snakemake singularity directive.
     """
     input:
@@ -362,24 +384,27 @@ interleave_output = fq_interleave
 
 khmer_image = container_image_name(biocontainers,'khmer')
 
-def interleave_reads_input_wcs(wildcards):
-    # input includes data/ prefix
+def interleave_reads_inputs(wildcards):
+    # inputs should include the data directory prefix
+    # do wildcard substitution
     interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
 
-    # for docker container, turn prefix data/ into /data/
+    # for docker container, turn prefix 'data/' into '/data/'
     interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
     interleave_input_wcs = " ".join(interleave_input_wc)
     return interleave_input_wcs
 
-def interleave_reads_output_wc(wildcards):
+def interleave_reads_output(wildcards):
+    # wildcard substitution
     return interleave_output.format(**wildcards)
 
-rule interleave_reads_singularity:
+rule interleave_reads:
     """
     Interleave paired-end reads using khmer.
     The trim quality comes from the filename.
+
     This uses singularity via Snakemake's singularity directive.
-    We pass the singularity directive a URL like this: 
+    Singularity accepts docker images at quay.io via URLs like:
 
         docker://quay.io/package:version
     """
@@ -390,14 +415,14 @@ rule interleave_reads_singularity:
     message:
         """--- Interleaving read data."""
     singularity:
-        {khmer_image}
+        '{khmer_image}'
     log:
         quality_log
     params:
-        interleave_input_wcs = interleave_reads_input_wcs
-        interleave_output_wc = interleave_reads_output_wc
+        interleave_input_wc = interleave_reads_input
+        interleave_output_wc = interleave_reads_output
     shell:
-        'interleave-reads.py {interleave_input_wcs} '
+        'interleave-reads.py {interleave_input_wc} '
         '--no-reformat '
         '-o {interleave_output_wc} '
         '--gzip'
@@ -407,7 +432,8 @@ rule interleave_reads_docker:
     """
     Interleave paired-end reads using khmer.
     The trim quality comes from the filename.
-    This uses docker directly.
+
+    This run directive calls docker directly.
     """
     input:
         interleave_input
@@ -498,18 +524,15 @@ except KeyError:
     adapter_file = "_"
 
 quality_log = join(data_dir,'trimmomatic_pe_{sample}.log')
-
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
-pulled_containers_touchfile = join(data_dir,'.pulled_containers')
-
-def quality_trimming_log_wc(wildcards):
+def quality_trimming_logfile(wildcards):
     return quality_log.format(**wildcards)
 
-def quality_trimming_qual_wc(wildcards):
+def quality_trimming_qual(wildcards):
     return "{qual}".format(**wildcards)
 
-def quality_trimming_quality_input_wcs(wildcards):
+def quality_trimming_quality_input(wildcards):
     # input includes data/ prefix
     quality_input_wc = [x.format(**wildcards) for x in quality_input]
     # for docker container, turn prefix data/ into /data/
@@ -517,7 +540,7 @@ def quality_trimming_quality_input_wcs(wildcards):
     quality_input_wcs = " ".join(quality_input_wc)
     return quality_input_wcs
 
-def quality_trimming_quality_output_wcs(wildcards):
+def quality_trimming_quality_output(wildcards):
     quality_output_wc = [x.format(**wildcards) for x in quality_output]
     quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
     quality_output_wcs = " ".join(quality_output_wc)
@@ -537,22 +560,22 @@ rule quality_trimming_singularity:
     singularity: 
         {trimmo_image}
     params:
-        log_wc = quality_trimming_log_wc
-        qual_wc = quality_trimming_qual_wc
-        quality_input_wcs = quality_trimming_quality_input_wcs
-        quality_output_wcs = quality_trimming_quality_output_wcs
+        qual = quality_trimming_qual
+        quality_input_wc = quality_trimming_quality_input
+        quality_output_wc = quality_trimming_quality_output
+        logfile_wc = quality_trimming_logfile
     log: 
-        {params.log_wc}
+        '{params.logfile}'
     shell:
         'trimmomatic PE '
-        '{params.quality_input_wcs} '
-        '{params.quality_output_wcs} '
+        '{params.quality_input_wc} '
+        '{params.quality_output_wc} '
         'ILLUMINACLIP:/{adapter_file}:2:40:15 '
-        'LEADING:{params.qual_wc} '
-        'TRAILING:{params.qual_wc} '
-        'SLIDINGWINDOW:4:{params.qual_wc} '
+        'LEADING:{params.qual} '
+        'TRAILING:{params.qual} '
+        'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
-        '2> {log_wc} '
+        '2> {logfile_wc} '
 
 
 rule quality_trimming_docker:
@@ -566,8 +589,6 @@ rule quality_trimming_docker:
         quality_output
     message: 
         """--- Quality trimming read data."""
-    log: 
-        quality_log
     run:
         qual_wc = "{qual}".format(**wildcards)
 
