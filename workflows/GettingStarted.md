@@ -3,29 +3,6 @@
 The instructions that follow will help you get started running the workflows
 described above. 
 
-## Getting Started with Docker
-
-If you want to run these protocols interactively you will need to install Docker on your system. You can find more detailed instructions [here](https://docs.docker.com/install/). 
-Alternatively we've developed snakefiles for automation that do not require installation. You can find those instructions below. 
-
-First, update your machine:
-
-```
-# Update aptitude and install dependencies
-sudo apt-get -y update
-
-sudo apt-get -y install zlib1g-dev
-sudo apt-get -y install ncurses-dev
-```
-
-Next, install Docker:
-
-```
-# Install Docker
-wget -qO- https://get.docker.com/ | sudo sh
-sudo usermod -aG docker ubuntu
-```
-
 ## Getting Started with Singularity
 
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker containers 
@@ -105,7 +82,8 @@ conda config --add channels bioconda
 Now install snakemake from the bioconda channel:
 
 ```
-conda install -c bioconda snakemake
+#conda install -c bioconda snakemake
+pip install snakemake
 ```
 
 Finally, install the Open Science Framework CLI client
@@ -116,3 +94,28 @@ that the conda and python commands point to):
 pip install --upgrade pip
 pip install --user osfclient
 ```
+
+## (Optional) Getting Started with Docker
+
+If you want to run these protocols interactively you will need to install Docker on your system. You can find more detailed instructions [here](https://docs.docker.com/install/). 
+Alternatively we've developed snakefiles for automation that do not require installation. You can find those instructions below. 
+
+First, update your machine:
+
+```
+# Update aptitude and install dependencies
+sudo apt-get -y update
+
+sudo apt-get -y install zlib1g-dev
+sudo apt-get -y install ncurses-dev
+```
+
+Next, install Docker:
+
+```
+# Install Docker
+wget -qO- https://get.docker.com/ | sudo sh
+sudo usermod -aG docker ubuntu
+```
+
+
