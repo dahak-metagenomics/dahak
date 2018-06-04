@@ -4,17 +4,25 @@ use conda and singularity:
 snakemake --use-conda --use-singularity
 '''
 
-import utils
-
-data_dir = config['data_dir']
-biocontainers = config['biocontainers']
-taxclass = config['taxonomic_classification']
+from utils import container_image_is_external, container_image_name
 
 
 ############################################
 # Taxonomic Classification: default config
 
 include: "taxonomic_classification.settings"
+
+data_dir = config['data_dir']
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    taxclass = config['taxonomic_classification']
+except:
+    taxclass = {}
 
 ############################################
 # Taxonomic Classification: biocontainers
@@ -27,20 +35,34 @@ from os.path import join
 quayurls = []
 for app in biocontainers.keys():
     if container_image_is_external(biocontainers,app):
-        quayurls.append(container_image_name(biocontainers,app))
+        name = container_image_name(biocontainers,app)
+        quayurls.append(name)
+
+pulled_containers_touchfile_docker = ".pulled_containers_docker"
+pulled_containers_touchfile_singularity = ".pulled_containers_singularity"
 
 rule pull_biocontainers:
     """
     Pull the required versions of containers from quay.io.
-
-    See biocontainers.md
     """
     output:
-        touch(join(data_dir,'.pulled_containers'))
+        touch(join(data_dir,pulled_containers_touchfile_singularity))
     run:
         for quayurl in quayurls:
             shell('''
-            docker pull {quayurl}
+                singularity pull {quayurl}
+            ''')
+
+rule pull_biocontainers_docker:
+    """
+    Pull the required versions of containers from quay.io.
+    """
+    output:
+        touch(join(data_dir,pulled_containers_touchfile_docker))
+    run:
+        for quayurl in quayurls:
+            shell('''
+                docker pull {quayurl}
             ''')
 
 
@@ -51,17 +73,28 @@ from os.path import join
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
-sourmash_sbt_tar = taxclass['sourmash']['sbttar']
 
-download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl']+"/" + sourmash_sbt_tar)
-download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
+try:
+    sourmash_sbt_tar = taxclass['sourmash']['sbttar']
+except:
+    sourmash_sbt_tar = ""
+
+try:
+    download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
+except:
+    download_sourmash_sbt_input = ""
+
+try:
+    download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
+except:
+    download_sourmash_sbt_output = ""
+
 
 rule download_sourmash_sbts:
     """
     Download the sourmash SBTs from spacegraphcats.
     """
     input: 
-        join(data_dir,'.pulled_containers'),
         download_sourmash_sbt_input
     output: 
         download_sourmash_sbt_output
@@ -73,6 +106,9 @@ rule download_sourmash_sbts:
 unpack_sourmash_sbt_input = join(data_dir,taxclass['sourmash']['sbttar'])
 unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
 
+def unpack_sourmash_sbt_tar(wildcards):
+    return unpack_sourmash_sbt_input.format(**wildcards)
+
 rule unpack_sourmash_sbts:
     """
     Unpack the sourmash SBTs from spacegraphcats.
@@ -81,11 +117,10 @@ rule unpack_sourmash_sbts:
         unpack_sourmash_sbt_input
     output:
         unpack_sourmash_sbt_output
-    run:
-        unpack_sourmash_sbt_tar_wc = unpack_sourmash_sbt_input.format(**wildcards)
-        shell('''
-            tar xzf {unpack_sourmash_sbt_tar_wc} && rm -f {unpack_sourmash_sbt_tar_wc}
-        ''')
+    params:
+        tar_wc = unpack_sourmash_sbt_tar
+    shell:
+        'tar xzf {params.tar_wc} && rm -f {params.tar_wc}'
 
 
 ############################################
@@ -96,9 +131,32 @@ sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']),
 sig_output   = join(data_dir, taxclass['calculate_signatures']['sig_name'])
 merge_output = join(data_dir, taxclass['calculate_signatures']['merge_name'])
 
-quayurl = biocontainers['sourmash']['quayurl'] + ":" + biocontainers['sourmash']['version']
+sourmash_image = container_image_name(biocontainers, 'sourmash')
 
-rule calculate_signatures:
+def calculate_signatures_fq_fwd(wildcards):
+    return taxclass['reads']['fq_fwd'].format(**wildcards)
+
+def calculate_signatures_fq_rev(wildcards):
+    return taxclass['reads']['fq_rev'].format(**wildcards)
+
+def calculate_signatures_sig_name(wildcards):
+    kvalues_fname = calculate_signatures_kvalues_fname(wildcards)
+    return taxclass['calculate_signatures']['sig_name'].format(**wildcards, kvalues_fname=kvalues_fname)
+
+def calculate_signatures_merge_name(wildcards):
+    kvalues_fname = calculate_signatures_kvalues_fname(wildcards)
+    return taxclass['calculate_signatures']['merge_name'].format(**widcards, kvalues_fname=kvalues_fname)
+
+def calculate_signatures_kvalues_fname(wildcards):
+    return '_'.join(taxclass['calculate_signatures']['kvalues'])
+
+def calculate_signatures_kvalues_cmd(wildcards):
+    return ','.join(taxclass['calculate_signatures']['kvalues'])
+
+def calculate_signatures_scale(wildcards):
+    return taxclass['calculate_signatures']['scale']
+
+rule calculate_signatures_singularity:
     """
     Calculate signatures from trimmed data using sourmash.
     """
@@ -106,31 +164,25 @@ rule calculate_signatures:
         sig_inputs
     output:
         sig_output, merge_output
-    run:
-        # Here, we do not prefix files with data_dir 
-        # b/c docker will mount the data dir to /data
-        # and prefix filenames with /data
-
-        fq_fwd_wc     = taxclass['reads']['fq_fwd'].format(**wildcards)
-        fq_rev_wc     = taxclass['reads']['fq_rev'].format(**wildcards)
-        sig_name_wc   = taxclass['calculate_signatures']['sig_name'].format(**wildcards)
-        merge_name_wc = taxclass['calculate_signatures']['merge_name'].format(**widcards)
-        kvalues_fname = '_'.join(taxclass['calculate_signatures']['kvalues'])
-        kvalues_cmd   = ','.join(taxclass['calculate_signatures']['kvalues'])
-        scale         = taxclass['calculate_signatures']['scale']
-        shell('''
-            docker run \
-                    -v {PWD}/{data_dir}:/data \
-                    {quayurl} \
-                    sourmash compute \
-                    --merge /data/{merge_name_wc} \
-                    --track-abundance \
-                    --scaled {scale} \
-                    -k {kvalues_cmd} \
-                    /data/{fq_fwd_wc} \
-                    /data/{fq_rev_wc} \
-                    -o /data/{sig_name_wc}
-        ''')
+    singularity:
+        sourmash_image
+    params:
+        merge_name = calculate_signatures_merge_name,
+        scale = calculate_signatures_scale,
+        fq_fwd = calculate_signatures_fq_fwd,
+        fq_rev = calculate_signatures_fq_rev,
+        sig_name = calculate_signatures_sig_name,
+        kvalues_fname = calculate_signatures_kvalues_fname,
+        kvalues_cmd = calculate_signatures_kvalues_cmd
+    shell:
+        'sourmash compute '
+        '--merge /data/{params.merge_name} '
+        '--track-abundance '
+        '--scaled {params.scale} '
+        '-k {params.kvalues_cmd} '
+        '/data/{params.fq_fwd} '
+        '/data/{params.fq_rev} '
+        '-o /data/{params.sig_name}'
 
 
 ############################################
@@ -163,8 +215,6 @@ rule download_trimmed_data:
 
     See trimmed_data.md
     """
-###     input:
-###         HTTP.remote(expand("{url}", url=trimmed_data_urls, keep_local=True)
     output:
         trimmed_data_files,
         touch(join(data_dir,'.trimmed'))
@@ -211,11 +261,30 @@ rule unpack_kaiju:
 
 fq_fwd = join(data_dir, taxclass['reads']['fq_fwd'])
 fq_rev = join(data_dir, taxclass['reads']['fq_rev'])
+
 run_kaiju_input = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 run_kaiju_input += [fq_fwd, fq_rev]
 run_kaiju_output = join(data_dir, taxclass['kaiju']['out'])
 
-quayurl = biocontainers['kaiju']['quayurl'] + ":" + biocontainers['kaiju']['version']
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def run_kaiju_fq_fwd(wildcards):
+    # Get forward fq files
+    fq_fwd_wc = fq_fwd.format(**wildcards)
+    return fq_fwd_wc
+
+def run_kaiju_fq_rev(wildcards):
+    # Get reverse fq files
+    fq_rev_wc = fq_rev.format(**wildcards)
+    return fq_rev_wc
+
+def run_kaiju_output(wildcards):
+    # Get output
+    run_kaiju_output_wc = run_kaiju_output.format(**wildcards)
+    return run_kaiju_output_wc
+
+
+
 
 rule run_kaiju:
     """

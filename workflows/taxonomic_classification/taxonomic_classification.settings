@@ -1,99 +1,97 @@
 from snakemake.utils import update_config
 
-if(not config['clean']):
-
-    # Note: don't include http:// or https://
-    config_default = {
-        'biocontainers' : {
-            'sourmash' : {
-                'use_local' : False,
-                'quayurl' : 'quay.io/biocontainers/sourmash',
-                'version' : '2.0.0a3--py36_0'
-            },
-            'kaiju' : {
-                'use_local' : False,
-                'quayurl' : 'quay.io/biocontainers/kaiju',
-                'version' : '1.6.1--pl5.22.0_0'
-            },
-            'krona' : {
-                'use_local' : False,
-                'quayurl' : 'quay.io/biocontainers/krona',
-                'version' : '2.7--pl5.22.0_1'
-            },
-            'osf' : {
-                'use_local' : False,
-                'quayurl' : 'quay.io/centerforopenscience/osf',
-                'version' : 'master'
-            }
+# Note: don't include http:// or https://
+config_default = {
+    'data_dir' : 'data/',
+    'biocontainers' : {
+        'sourmash' : {
+            'use_local' : False,
+            'quayurl' : 'quay.io/biocontainers/sourmash',
+            'version' : '2.0.0a3--py36_0'
         },
-    
-        'taxonomic_classification' : {
-    
-            'trimmed_reads' : {
-                'SRR606249_1.trim2.fq.gz':             'osf.io/tzkjr/download',
-                'SRR606249_2.trim2.fq.gz':             'osf.io/sd968/download',
-                'SRR606249_subset50_1.trim2.fq.gz':    'osf.io/acs5k/download',
-                'SRR606249_subset50_2.trim2.fq.gz':    'osf.io/bem28/download',
-                'SRR606249_subset25_1.trim2.fq.gz':    'osf.io/syf3m/download',
-                'SRR606249_subset25_2.trim2.fq.gz':    'osf.io/zbcrx/download',
-                'SRR606249_subset10_1.trim2.fq.gz':    'osf.io/ksu3e/download',
-                'SRR606249_subset10_2.trim2.fq.gz':    'osf.io/k9tqn/download',
-                'SRR606249_1.trim30.fq.gz':            'osf.io/qtzyk/download',
-                'SRR606249_2.trim30.fq.gz':            'osf.io/dumz6/download',
-                'SRR606249_subset50_1.trim30.fq.gz':   'osf.io/v5jhs/download',
-                'SRR606249_subset50_2.trim30.fq.gz':   'osf.io/q4cfa/download',
-                'SRR606249_subset25_1.trim30.fq.gz':   'osf.io/jcp5n/download',
-                'SRR606249_subset25_2.trim30.fq.gz':   'osf.io/qevh9/download',
-                'SRR606249_subset10_1.trim30.fq.gz':   'osf.io/rtvuz/download',
-                'SRR606249_subset10_2.trim30.fq.gz':   'osf.io/zq4f9/download'
-            },
-    
-            # Where do base and trim come from?
-            # How to avoid kvalues_fname? 
-            # (ask user for prefix instead of filename?)
-            'calculate_signatures' : {
-                'scale'         : 10000,
-                'kvalues'       : [21,31,51],
-                'sig_name'      : '{base}.trim{ntrim}.scaled{scale}.k{kvalues_fname}.sig',
-                'merge_name'    : '{base}_merged.trim{ntrim}.scaled{scale}.k{kvalues_fname}.fq.gz'
-            },
-    
-            'filter_taxa' : {
-                'pct_threshold' : 1
-            },
-    
-            'kaiju2krona' : {
-                'taxonomic_rank' : 'genus'
-            },
-    
-            'kaiju' : {
-                'dmp1' : 'nodes.dmp',
-                'dmp2' : 'names.dmp',
-                'fmi'  : 'kaiju_db_nr_euk.fmi',
-                'tar'  : 'kaiju_index_nr_euk.tgz',
-                'url'  : 'http://kaiju.binf.ku.dk/database',
-                'out'  : '{base}.kaiju_output.trim{ntrim}.out'
-            },
-    
-            'reads' : {
-                'fq_fwd'     : '{base}_1.trim{ntrim}.fq.gz',
-                'fq_rev'     : '{base}_2.trim{ntrim}.fq.gz',
-            },
-    
-            'sourmash' : { 
-                'sbturl'  : 's3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu',
-                'sbttar'  : 'microbe-{databaase}-sbt-k{ksize}-2017.05.09.tar.gz',
-                'sbtunpack' : '{database}-k{ksize}.sbt.json'
-            },
-    
-            'visualize_krona' : {
-                # .summary will be replaced with .html
-                'input_summary'  : '{base}.kaiju_output.trim{ntrim}.{suffix}.summary',
-            }
+        'kaiju' : {
+            'use_local' : False,
+            'quayurl' : 'quay.io/biocontainers/kaiju',
+            'version' : '1.6.1--pl5.22.0_0'
+        },
+        'krona' : {
+            'use_local' : False,
+            'quayurl' : 'quay.io/biocontainers/krona',
+            'version' : '2.7--pl5.22.0_1'
+        },
+        'osf' : {
+            'use_local' : False,
+            'quayurl' : 'quay.io/centerforopenscience/osf',
+            'version' : 'master'
+        }
+    },
+
+    'taxonomic_classification' : {
+
+        'trimmed_reads' : {
+            'SRR606249_1.trim2.fq.gz':             'osf.io/tzkjr/download',
+            'SRR606249_2.trim2.fq.gz':             'osf.io/sd968/download',
+            'SRR606249_subset50_1.trim2.fq.gz':    'osf.io/acs5k/download',
+            'SRR606249_subset50_2.trim2.fq.gz':    'osf.io/bem28/download',
+            'SRR606249_subset25_1.trim2.fq.gz':    'osf.io/syf3m/download',
+            'SRR606249_subset25_2.trim2.fq.gz':    'osf.io/zbcrx/download',
+            'SRR606249_subset10_1.trim2.fq.gz':    'osf.io/ksu3e/download',
+            'SRR606249_subset10_2.trim2.fq.gz':    'osf.io/k9tqn/download',
+            'SRR606249_1.trim30.fq.gz':            'osf.io/qtzyk/download',
+            'SRR606249_2.trim30.fq.gz':            'osf.io/dumz6/download',
+            'SRR606249_subset50_1.trim30.fq.gz':   'osf.io/v5jhs/download',
+            'SRR606249_subset50_2.trim30.fq.gz':   'osf.io/q4cfa/download',
+            'SRR606249_subset25_1.trim30.fq.gz':   'osf.io/jcp5n/download',
+            'SRR606249_subset25_2.trim30.fq.gz':   'osf.io/qevh9/download',
+            'SRR606249_subset10_1.trim30.fq.gz':   'osf.io/rtvuz/download',
+            'SRR606249_subset10_2.trim30.fq.gz':   'osf.io/zq4f9/download'
+        },
+
+        # Where do base and trim come from?
+        # How to avoid kvalues_fname? 
+        # (ask user for prefix instead of filename?)
+        'calculate_signatures' : {
+            'scale'         : 10000,
+            'kvalues'       : [21,31,51],
+            'sig_name'      : '{base}.trim{ntrim}.scaled{scale}.k{kvalues_fname}.sig',
+            'merge_name'    : '{base}_merged.trim{ntrim}.scaled{scale}.k{kvalues_fname}.fq.gz'
+        },
+
+        'filter_taxa' : {
+            'pct_threshold' : 1
+        },
+
+        'kaiju2krona' : {
+            'taxonomic_rank' : 'genus'
+        },
+
+        'kaiju' : {
+            'dmp1' : 'nodes.dmp',
+            'dmp2' : 'names.dmp',
+            'fmi'  : 'kaiju_db_nr_euk.fmi',
+            'tar'  : 'kaiju_index_nr_euk.tgz',
+            'url'  : 'http://kaiju.binf.ku.dk/database',
+            'out'  : '{base}.kaiju_output.trim{ntrim}.out'
+        },
+
+        'reads' : {
+            'fq_fwd'     : '{base}_1.trim{ntrim}.fq.gz',
+            'fq_rev'     : '{base}_2.trim{ntrim}.fq.gz',
+        },
+
+        'sourmash' : { 
+            'sbturl'  : 's3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu',
+            'sbttar'  : 'microbe-{databaase}-sbt-k{ksize}-2017.05.09.tar.gz',
+            'sbtunpack' : '{database}-k{ksize}.sbt.json'
+        },
+
+        'visualize_krona' : {
+            # .summary will be replaced with .html
+            'input_summary'  : '{base}.kaiju_output.trim{ntrim}.{suffix}.summary',
         }
     }
-    
-    update_config(config_default, config)
-    config = config_default
-    
+}
+
+update_config(config_default, config)
+config = config_default
     

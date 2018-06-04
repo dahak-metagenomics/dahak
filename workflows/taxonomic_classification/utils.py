@@ -40,12 +40,12 @@ def container_image_name(biocontainers, app):
     """
     if container_image_is_external(biocontainers,app):
         try:
-            qurl  = biocontainers[k]['quayurl']
-            qvers = biocontainers[k]['version']
-            quayurls.append(qurl + ":" + qvers)
-            return quayurls
+            qurl  = biocontainers[app]['quayurl']
+            qvers = biocontainers[app]['version']
+            quayurl = qurl + ":" + qvers
+            return quayurl
         except KeyError:
-            err = "Error: quay.io URL for %s biocontainer "%(k)
+            err = "Error: quay.io URL for %s biocontainer "%(app)
             err += "could not be determined"
             raise Exception(err)
 
@@ -57,8 +57,4 @@ def container_image_name(biocontainers, app):
             err += "container image should be used for %s, but none "%(app)
             err += "was specified using the 'local' key."
             raise Exception(err)
-
-def strip_data_dir(what_to_strip, wildcards):
-    stripped_output = re.sub(data_dir,'',what_to_strip)
-    return stripped_output
 
