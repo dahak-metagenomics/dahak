@@ -1,0 +1,67 @@
+from snakemake.utils import update_config
+
+if(not config['clean']):
+
+    # Note: don't include http:// or https://
+    config_default = {
+        "biocontainers" : {
+            "trimmomatic" : {
+                "use_local" : False,
+                "quayurl" : "quay.io/biocontainers/trimmomatic",
+                "version" : "0.36--5"
+            },
+            "fastqc" : {
+                "use_local" : False,
+                "quayurl" : "quay.io/biocontainers/fastqc",
+                "version" : "0.11.7--pl5.22.0_2"
+            },
+            "khmer" : {
+                "use_local" : False,
+                "quayurl" : "quay.io/biocontainers/khmer",
+                "version" : "2.1.2--py35_0"
+            }
+        },
+    
+        "read_filtering" : {
+    
+            # Note: read files (below) must match pre-trimming-pattern below.
+            # The workflow actually builds the rules to download 
+            # the read files by using the pre_trimming_pattern.
+            "read_patterns" : {
+                "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
+                "post_trimming_pattern" : "{sample}_{direction}_trim{qual}.fq.gz",
+            },
+    
+            # read_files must be defined by user 
+            "read_files" : {
+                "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+                "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+                "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+                "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+                "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+                "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
+                "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
+                "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77"
+            },
+    
+            "quality_assessment" : {
+                # optional, modifiers for the .fq.gz --> .zip --> results workflow
+                "fastqc_suffix": "fastqc",
+            },
+    
+            "quality_trimming" : {
+                "trim_suffix" : "se"
+            },
+            "interleaving" : {
+                "interleave_suffix" : "pe"
+            },
+            "adapter_file" : {
+                "name" : "TruSeq2-PE.fa",
+                "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+            }
+        }
+    }
+    
+    update_config(config_default, config)
+    config = config_default
+
