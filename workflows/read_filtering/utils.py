@@ -25,9 +25,8 @@ def container_image_is_external(biocontainers, app):
         # 
         # Solution? 
         # Ditch parameter validation.
-        # Hope the user knows waht they're doing. 
+        # Hope the user knows what they're doing. 
         return True 
-
 
 
 def container_image_name(biocontainers, app):
@@ -41,22 +40,26 @@ def container_image_name(biocontainers, app):
     """
     if container_image_is_external(biocontainers,app):
         try:
-            qurl  = biocontainers[app]['quayurl']
-            qvers = biocontainers[app]['version']
-
-            # Mainly for singularity.
-            # This SHOULD also work for docker.
-            docker = "docker://"
-
-            return docker + qurl + ":" + qvers
+            qurl  = biocontainers[k]['quayurl']
+            qvers = biocontainers[k]['version']
+            quayurls.append(qurl + ":" + qvers)
+            return quayurls
         except KeyError:
-            ## let it ride
-            return ""
+            err = "Error: quay.io URL for %s biocontainer "%(k)
+            err += "could not be determined"
+            raise Exception(err)
 
     else:
         try:
             return biocontainers[app]['local']
         except KeyError:
-            ## let it ride
-            return ""
+            err = "Error: the parameters provided specify a local "
+            err += "container image should be used for %s, but none "%(app)
+            err += "was specified using the 'local' key."
+            raise Exception(err)
+
+
+def strip_data_dir(what_to_strip, wildcards):
+    stripped_output = re.sub(data_dir,'',what_to_strip)
+    return stripped_output
 

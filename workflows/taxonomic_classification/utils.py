@@ -4,13 +4,29 @@ def container_image_is_external(biocontainers, app):
     using an external URL (quay.io/biocontainers),
     or is it going to use a local, named Docker image?
     """
-    d = biocontainers[app]
-    if (('use_local' in d) and (d['use_local'] is True)):
-        # This container does not use an external url
-        return False
-    else:
-        # This container uses a quay.io url
-        return True
+    try:
+        d = biocontainers[app]
+        if (('use_local' in d) and (d['use_local'] is True)):
+            # This container does not use an external url
+            return False
+        else:
+            # This container uses a quay.io url
+            return True
+
+    except KeyError:
+        # This is where things get complicated.
+        # Snakemake maintains separation between
+        # parameter validation and knowing what rules
+        # we are actually running.
+        # 
+        # This makes it impossible to validate parameters
+        # except to do it entirely in the dark about what 
+        # we're going to be doing..
+        # 
+        # Solution? 
+        # Ditch parameter validation.
+        # Hope the user knows what they're doing. 
+        return True 
 
 
 def container_image_name(biocontainers, app):
@@ -41,4 +57,8 @@ def container_image_name(biocontainers, app):
             err += "container image should be used for %s, but none "%(app)
             err += "was specified using the 'local' key."
             raise Exception(err)
+
+def strip_data_dir(what_to_strip, wildcards):
+    stripped_output = re.sub(data_dir,'',what_to_strip)
+    return stripped_output
 
