@@ -14,7 +14,13 @@ If the config values are not set, the user will see
 key errors for workflow steps they don't care about.
 '''
 
-from utils import strip_data_dir, container_image_is_external, container_image_name
+from utils import container_image_is_external, container_image_name
+
+
+###################################
+# Read Filtering: default config
+
+include: "read_filtering.settings"
 
 data_dir = config['data_dir']
 
@@ -27,12 +33,6 @@ try:
     taxclass = config['taxonomic_classification']
 except:
     taxclass = {}
-
-
-###################################
-# Read Filtering: default config
-
-include "read_filtering.settings"
 
 ###################################
 # Read Filtering: biocontainers
@@ -48,30 +48,32 @@ for app in biocontainers.keys():
         name = container_image_name(biocontainers,app)
         quayurls.append(name)
 
-rule pull_biocontainers_docker:
-    """
-    Pull the required versions of containers from quay.io.
-    """
-    output:
-        touch(join(data_dir,'.pulled_containers'))
-    run:
-        for quayurl in quayurls:
-            shell('''
-                docker pull {quayurl}
-            ''')
+pulled_containers_touchfile_docker = ".pulled_containers_docker"
+pulled_containers_touchfile_singularity = ".pulled_containers_singularity"
 
-rule pull_biocontainers_singularity:
+rule pull_biocontainers:
     """
     Pull the required versions of containers from quay.io.
     """
     output:
-        touch(join(data_dir,'.pulled_containers'))
+        touch(join(data_dir,pulled_containers_touchfile_singularity))
     run:
         for quayurl in quayurls:
             shell('''
                 singularity pull {quayurl}
             ''')
 
+rule pull_biocontainers_docker:
+    """
+    Pull the required versions of containers from quay.io.
+    """
+    output:
+        touch(join(data_dir,pulled_containers_touchfile_docker))
+    run:
+        for quayurl in quayurls:
+            shell('''
+                docker pull {quayurl}
+            ''')
 
 ###################################
 # Read Filtering: fetch reads
@@ -120,7 +122,7 @@ rule download_reads:
     message: 
         '''--- Downloading reads.'''
     params:
-        read_data_url = download_reads_read_data_url
+        read_data_url = download_reads_read_data_url,
         read_data_file = download_reads_read_data_file
     shell:
         'wget -O {params.read_data_file} {params.read_data_url}'
@@ -222,7 +224,7 @@ rule pre_trimming_quality_assessment:
         fastqc_image
     threads: 2
     params:
-        pre_trimming_output_wc = pre_trimming_qa_output
+        pre_trimming_output_wc = pre_trimming_qa_output,
         pre_trimming_input_wc = pre_trimming_qa_input
     shell:
         'fastqc -t {threads} '
@@ -300,7 +302,7 @@ rule post_trimming_quality_assessment_singularity:
         fastqc_image
     threads: 2 
     params:
-        post_trimming_output_wc = post_trimming_qa_output
+        post_trimming_output_wc = post_trimming_qa_output,
         post_trimming_input_wc = post_trimming_qa_input
     shell:
         'fastqc -t {threads} '
@@ -379,10 +381,9 @@ except KeyError:
     fq_interleave  = ""
 
 interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
-
 interleave_output = fq_interleave
-
 khmer_image = container_image_name(biocontainers,'khmer')
+quality_log = join(data_dir,'interleave_{sample}.log')
 
 def interleave_reads_inputs(wildcards):
     # inputs should include the data directory prefix
@@ -397,6 +398,10 @@ def interleave_reads_inputs(wildcards):
 def interleave_reads_output(wildcards):
     # wildcard substitution
     return interleave_output.format(**wildcards)
+
+def interleave_reads_logfile(wildcards):
+    # wildcard substitution
+    return quality_log.format(**wildcards)
 
 rule interleave_reads:
     """
@@ -417,14 +422,15 @@ rule interleave_reads:
     singularity:
         '{khmer_image}'
     log:
-        quality_log
+        '{params.interleave_logfile}'
     params:
-        interleave_input_wc = interleave_reads_input
-        interleave_output_wc = interleave_reads_output
+        interleave_input_wc = interleave_reads_inputs,
+        interleave_output_wc = interleave_reads_output,
+        interleave_logfile = interleave_reads_logfile
     shell:
-        'interleave-reads.py {interleave_input_wc} '
+        'interleave-reads.py {params.interleave_input_wc} '
         '--no-reformat '
-        '-o {interleave_output_wc} '
+        '-o {params.interleave_output_wc} '
         '--gzip'
 
 
@@ -546,13 +552,13 @@ def quality_trimming_quality_output(wildcards):
     quality_output_wcs = " ".join(quality_output_wc)
     return quality_output_wcs
 
-rule quality_trimming_singularity:
+rule quality_trimming:
     """
     Trim reads from the sequencer by dropping low-quality reads.
     This calls singularity using Snakemake's singularity directive.
     """
     input:
-        quality_input, adapter_file, pulled_containers_touchfile
+        quality_input, adapter_file, pulled_containers_touchfile_singularity
     output:
         quality_output
     message: 
@@ -560,9 +566,9 @@ rule quality_trimming_singularity:
     singularity: 
         {trimmo_image}
     params:
-        qual = quality_trimming_qual
-        quality_input_wc = quality_trimming_quality_input
-        quality_output_wc = quality_trimming_quality_output
+        qual = quality_trimming_qual,
+        quality_input_wc = quality_trimming_quality_input,
+        quality_output_wc = quality_trimming_quality_output,
         logfile_wc = quality_trimming_logfile
     log: 
         '{params.logfile}'
@@ -584,7 +590,7 @@ rule quality_trimming_docker:
     This calls docker directly in the command that is run.
     """
     input:
-        quality_input, adapter_file, pulled_containers_touchfile
+        quality_input, adapter_file, pulled_containers_touchfile_docker
     output:
         quality_output
     message: 

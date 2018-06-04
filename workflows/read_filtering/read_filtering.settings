@@ -7,6 +7,7 @@ from snakemake.utils import update_config
 
 # Note: don't include http:// or https://
 config_default = {
+    "data_dir" : "data/",
     "biocontainers" : {
         "trimmomatic" : {
             "use_local" : False,

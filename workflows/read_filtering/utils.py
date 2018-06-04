@@ -40,12 +40,12 @@ def container_image_name(biocontainers, app):
     """
     if container_image_is_external(biocontainers,app):
         try:
-            qurl  = biocontainers[k]['quayurl']
-            qvers = biocontainers[k]['version']
-            quayurls.append(qurl + ":" + qvers)
-            return quayurls
+            qurl  = biocontainers[app]['quayurl']
+            qvers = biocontainers[app]['version']
+            quayurl = qurl + ":" + qvers
+            return quayurl
         except KeyError:
-            err = "Error: quay.io URL for %s biocontainer "%(k)
+            err = "Error: quay.io URL for %s biocontainer "%(app)
             err += "could not be determined"
             raise Exception(err)
 
