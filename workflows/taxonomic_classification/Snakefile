@@ -1,0 +1,11 @@
+import utils
+
+include: "taxonomic_classification.settings"
+include: "biocontainers.rule"
+include: "sourmash_sbt.rule"
+include: "calculate_signatures.rule"
+include: "trimmed_data.rule"
+include: "kaiju.rule"
+include: "kaiju2krona.rule"
+include: "filter_taxa.rule"
+include: "krona_visualization.rule"
