@@ -75,6 +75,7 @@ rule pull_biocontainers_docker:
                 docker pull {quayurl}
             ''')
 
+
 ###################################
 # Read Filtering: fetch reads
 
@@ -198,8 +199,7 @@ pre_trimming_output = re.sub('\.fq\.gz',target_ext,pre_trimming_input)
 # should indicate the local image to use.
 # Those are checked in utilities.py
 
-app = 'fastqc'
-fastqc_image = container_image_name(biocontainers, app)
+fastqc_image = container_image_name(biocontainers, 'fastqc')
 
 def pre_trimming_qa_input(wildcards):
     return pre_trimming_input.format(**wildcards) 
@@ -280,7 +280,7 @@ target_ext = "_%s.zip"%(target_suffix)
 post_trimming_output = re.sub('\.fq\.gz',target_ext,post_trimming_input)
 
 def post_trimming_qa_input(wildcards):
-    return post_trimming_output.format(**wildcards)
+    return post_trimming_input.format(**wildcards)
 
 def post_trimming_qa_output(wildcards):
     return post_trimming_output.format(**wildcards)
@@ -420,7 +420,7 @@ rule interleave_reads:
     message:
         """--- Interleaving read data."""
     singularity:
-        '{khmer_image}'
+        khmer_image
     log:
         '{params.interleave_logfile}'
     params:
@@ -448,8 +448,10 @@ rule interleave_reads_docker:
     message:
         """--- Interleaving read data."""
     log:
-        quality_log
+        quality_log_wc
     run:
+        quality_log_wc = quality_log.format(**wildcards)
+
         # input includes data/ prefix
         interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
         # for docker container, turn prefix data/ into /data/
@@ -532,7 +534,7 @@ except KeyError:
 quality_log = join(data_dir,'trimmomatic_pe_{sample}.log')
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
-def quality_trimming_logfile(wildcards):
+def quality_trimming_quality_log(wildcards):
     return quality_log.format(**wildcards)
 
 def quality_trimming_qual(wildcards):
@@ -569,7 +571,7 @@ rule quality_trimming:
         qual = quality_trimming_qual,
         quality_input_wc = quality_trimming_quality_input,
         quality_output_wc = quality_trimming_quality_output,
-        logfile_wc = quality_trimming_logfile
+        quality_log_wc = quality_trimming_quality_log
     log: 
         '{params.logfile}'
     shell:
@@ -581,7 +583,7 @@ rule quality_trimming:
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
-        '2> {logfile_wc} '
+        '2> {quality_log_wc} '
 
 
 rule quality_trimming_docker:
@@ -608,7 +610,7 @@ rule quality_trimming_docker:
         quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
         quality_output_wcs = " ".join(quality_output_wc)
 
-        log_wc = quality_log.format(**wildcards)
+        quality_log_wc = quality_log.format(**wildcards)
 
         shell('''
             docker run \
@@ -624,6 +626,6 @@ rule quality_trimming_docker:
                 TRAILING:{qual_wc} \
                 SLIDINGWINDOW:4:{qual_wc} \
                 MINLEN:25 \
-                2> {log_wc}
+                2> {quality_log_wc}
         ''')
 
