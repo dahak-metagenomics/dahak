@@ -231,10 +231,13 @@ rule download_trimmed_data:
 
 from os.path import join
 
+# output file paths
 kaiju_dmp1   = join(data_dir, taxclass['kaiju']['dmp1'])
 kaiju_dmp2   = join(data_dir, taxclass['kaiju']['dmp2'])
 kaiju_fmi    = join(data_dir, taxclass['kaiju']['fmi'])
+
 kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
+
 kaiju_tar    = taxclass['kaiju']['tar']
 kaiju_url    = taxclass['kaiju']['url']
 
@@ -262,9 +265,9 @@ rule unpack_kaiju:
 fq_fwd = join(data_dir, taxclass['reads']['fq_fwd'])
 fq_rev = join(data_dir, taxclass['reads']['fq_rev'])
 
-run_kaiju_input = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
-run_kaiju_input += [fq_fwd, fq_rev]
-run_kaiju_output = join(data_dir, taxclass['kaiju']['out'])
+run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+run_kaiju_input_files += [fq_fwd, fq_rev]
+run_kaiju_output_files = join(data_dir, taxclass['kaiju']['out'])
 
 kaiju_image = container_image_name(biocontainers, 'kaiju')
 
@@ -280,26 +283,50 @@ def run_kaiju_fq_rev(wildcards):
 
 def run_kaiju_output(wildcards):
     # Get output
-    run_kaiju_output_wc = run_kaiju_output.format(**wildcards)
-    return run_kaiju_output_wc
-
-
+    run_kaiju_output_files_wc = run_kaiju_output_files.format(**wildcards)
+    return run_kaiju_output_files_wc
 
 
 rule run_kaiju:
     """
     Run kaiju after downloading and unpacking the kaiju database. 
-
-    See kaiju.md
+    This runs the specified command through a singularity container.
     """
     input:
-        run_kaiju_input
+        run_kaiju_input_files
     output:
-        run_kaiju_output
+        run_kaiju_output_files
+    singularity: 
+        kaiju_image
+    params:
+        fq_fwd_wc = run_kaiju_fq_fwd,
+        fq_rev_wc = run_kaiju_fq_rev,
+        run_kaiju_output_files_wc = run_kaiju_output
+    shell:
+        'kaiju '
+        '-x '
+        '-v '
+        '-t /data/{kaiju_dmp} '
+        '-f /data/{kaiju_fmi} '
+        '-i /data/{params.fq_fwd_wc} '
+        '-j /data/{params.fq_rev_wc} '
+        '-o /data/{params.run_kaiju_output_files_wc} '
+        '-z 4'
+
+
+rule run_kaiju_docker:
+    """
+    Run kaiju after downloading and unpacking the kaiju database. 
+    This runs the docker command directly.
+    """
+    input:
+        run_kaiju_input_files
+    output:
+        run_kaiju_output_files
     run:
         fq_fwd_wc = fq_fwd.format(**wildcards)
         fq_rev_wc = fq_rev.format(**wildcards)
-        run_kaiju_output_wc = run_kaiju_output.format(**wildcards)
+        run_kaiju_output_wc = run_kaiju_output_files.format(**wildcards)
         shell('''
             docker run \
                     -v {PWD}/{data_dir}:/data \
@@ -325,27 +352,61 @@ kaiju_fmi    = taxclass['kaiju']['fmi']
 tax_rank     = taxclass['kaiju2krona']['taxonomic_rank']
 
 # name of kaiju output determines name of kaiju2krona input
-run_kaiju_output = taxclass['kaiju']['out']
+run_kaiju_output_file = taxclass['kaiju']['out']
 
-quayurl = biocontainers['kaiju']['quayurl'] + ":" + biocontainers['kaiju']['version']
-
-kaiju2krona_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]]
+kaiju2krona_input_files = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
 
 # One approach is to let the user set this.
 # But here, we just take care of it for them.
-kaiju2krona_output = re.sub('\.out','\.kaiju_out_krona',run_kaiju_output)
+kaiju2krona_output_file = re.sub('\.out','\.kaiju_out_krona',run_kaiju_output_file)
+
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def kaiju2krona_input_name(wildcards):
+    # Return the kaiju2krona input file names
+    kaiju2krona_input_name_wc = run_kaiju_output_file.format(**wildcards)
+    return kaiju2krona_input_name_wc
+
+def kaiju2krona_output_name(wildcards):
+    # Return the kaij2krona input file names
+    kaiju2krona_output_name_wc = kaiju2krona_output_file.format(**wildcards)
+    return kaiju2krona_output_name_wc
+
 
 rule kaiju2krona:
     """
     Convert kaiju results to krona results,
     and generate a report.
-
-    See kaiju2krona.md
+    This uses the singularity directive to run the commands via singularity.
     """
     input:
-        kaiju2krona_input
+        kaiju2krona_input_files
     output:
-        kaiju2krona_output
+        kaiju2krona_output_file
+    singularity:
+        kaiju_image
+    params:
+        kaiju2krona_input_name_wc = kaiju2krona_input_name,
+        kaiju2krona_output_name_wc = kaiju2krona_output_name
+    shell:
+        'kaiju2krona '
+        '-v '
+        '-t /data/{kaiju_dmp1} '
+        '-n /data/{kaiju_dmp2} '
+        '-i /data/{params.kaiju2krona_input_name_wc} '
+        '-o /data/{params.kaiju2krona_output_name_wc} '
+
+
+rule kaiju2krona_docker:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    This runs docker directly.
+    """
+    input:
+        kaiju2krona_input_files
+    output:
+        kaiju2krona_output_file
     run:
         kaiju2krona_in_name_wc = run_kaiju_output.format(**wildcards)
         kaiju2krona_output_name_wc = kaiju2krona_output.format(**wildcards)
@@ -356,7 +417,7 @@ rule kaiju2krona:
         shell('''
             docker run \
                     -v {PWD}/{data_dir}:/data \
-                    {quayurl} \
+                    {kaiju_image} \
                     kaiju2krona \
                     -v \
                     -t /data/{kaiju_dmp1} \
@@ -366,16 +427,49 @@ rule kaiju2krona:
         ''')
 
 
-kaiju2kronasummary_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]]
 
-kaiju2kronasummary_output = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output)
+kaiju2kronasummary_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+
+kaiju2kronasummary_output = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
+
+tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
+
+def kaiju2kronasummary_input_name(wildcards):
+    pass
+
+def kaiju2kronasummary_output_name(wildcards):
+    pass
 
 rule kaiju2kronasummary:
     """
     Convert kaiju results to krona results,
     and generate a report.
+    This uses the singularity directive to run the commands via singularity.
+    """
+    input:
+        kaiju2kronasummary_input
+    output:
+        kaiju2kronasummary_output
+    singularity:
+        kaiju_image
+    params:
+        kaiju2kronasummary_input_wc = kaiju2kronasummary_input_name,
+        kaiju2kronasummary_output_wc = kaiju2kronasummary_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /data/{kaiju_dmp1} '
+        '-n /data/{kaiju_dmp2} '
+        '-i /data/{params.kaiju2kronasummary_input_wc} '
+        '-r {tax_rank} '
+        '-o /data/{params.kaiju2kronasummary_output_wc} '
 
-    See kaiju2krona.md
+
+rule kaiju2kronasummary_docker:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    This runs docker directly.
     """
     input:
         kaiju2kronasummary_input
@@ -388,7 +482,7 @@ rule kaiju2kronasummary:
             docker run \
                     -u `stat -c "%u:%g" {PWD}` \
                     -v {PWD}/{data_dir}:/data \
-                    {quayurl} \
+                    {kaiju_image} \
                     kaijuReport \
                     -v \
                     -t /data/{kaiju_dmp1} \
@@ -409,12 +503,45 @@ visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
 if(visualize_krona_input_name[-8:] is not '.summary'):
     visualize_krona_input_name += '.summary'
 visualize_krona_output_name = re.sub(visualize_krona_input_name, '.summary','.html')
-visualize_krona_input  = join(data_dir, visualize_krona_input_name)
-visualize_krona_output = join(data_dir, visualize_krona_output_name)
 
-quayurl = biocontainers['krona']['quayurl'] + ":" + biocontainers['krona']['version']
+visualize_krona_input_file  = join(data_dir, visualize_krona_input_name)
+visualize_krona_output_file = join(data_dir, visualize_krona_output_name)
+
+krona_image = container_image_name(biocontainers, 'krona')
+
+def visualize_krona_input_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
+    return visualize_krona_input_wc
+
+def visualize_krona_output_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
+    return visualize_krona_output_wc
 
 rule visualize_krona:
+    """
+    Visualize the results of the
+    full and filtered taxonomic
+    classifications using krona.
+    This runs docker directly.
+    """
+    input:
+        visualize_krona_input_file
+    output:
+        visualize_krona_output_file
+    params:
+        visualize_krona_input_wc = visualize_krona_input_function,
+        visualize_krona_output_wc = visualize_krona_output_function,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /data/{params.visualize_krona_output_wc} '
+        '/data/{params.visualize_krona_input_wc} '
+
+
+rule visualize_krona_docker:
     """
     Visualize the results of the
     full and filtered taxonomic
@@ -423,9 +550,9 @@ rule visualize_krona:
     See krona_visualization.md
     """
     input:
-        visualize_krona_input
+        visualize_krona_input_file
     output:
-        visualize_krona_output
+        visualize_krona_output_file
     run:
         visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
         visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
@@ -442,29 +569,51 @@ rule visualize_krona:
 ############################################
 # Taxonomic Classification: filter taxa
 
-kaiju_dmp1   = taxclass['kaiju']['dmp1']
-kaiju_dmp2   = taxclass['kaiju']['dmp2']
+filter_taxa_pct = taxclass['filter_taxa']['pct_threshold']
 
-# name of kaiju output determines name of kaiju2krona input
-run_kaiju_output = taxclass['kaiju']['out']
-
-quayurl = biocontainers['kaiju']['quayurl'] + ":" + biocontainers['kaiju']['version']
-
-pct = taxclass['filter_taxa']['pct_threshold']
-
-
-
-filter_taxa_total_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]]
-filter_taxa_total_suffix = '\.kaiju_out_krona.%dpercenttotal.summary'%(pct)
+filter_taxa_total_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+filter_taxa_total_suffix = '\.kaiju_out_krona.%dpercenttotal.summary'%(filter_taxa_pct)
 filter_taxa_total_output = re.sub('\.out',filter_taxa_total_suffix,taxclass['kaiju']['out'])
+
+def filter_taxa_total_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_total_output_function(wildcards):
+    return filter_taxa_total_output.format(**wildcards)
 
 rule filter_taxa_total:
     """
     Filter out taxa with low abundances by obtaining genera that
     comprise at least {pct} percent of the total reads
     (default: 1%)
+    This uses the singularity directive to run the commands via singularity.
+    """
+    input:
+        filter_taxa_total_input
+    output:
+        filter_taxa_total_output
+    singularity:
+        kaiju_image
+    params:
+        filter_taxa_total_input_wc = filter_taxa_total_input_function,
+        filter_taxa_total_output_wc = filter_taxa_total_output_function,
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /data/{kaiju_dmp1} '
+        '-n /data/{kaiju_dmp2} '
+        '-i /data/{params.filter_taxa_total_input_wc} '
+        '-r genus '
+        '-m {filter_taxa_pct} '
+        '-o /data/{params.filter_taxa_total_output_wc} '
 
-    See filter_taxa.md
+
+rule filter_taxa_total_docker:
+    """
+    Filter out taxa with low abundances by obtaining genera that
+    comprise at least {pct} percent of the total reads
+    (default: 1%)
+    This runs docker directly.
     """
     input:
         filter_taxa_total_input
@@ -476,7 +625,7 @@ rule filter_taxa_total:
         shell('''
             docker run \
                 -v {PWD}/{data_dir}:/data \
-                {quayurl} \
+                {kaiju_image} \
                 kaijuReport \
                 -v \
                 -t /data/{kaiju_dmp1} \
@@ -491,13 +640,47 @@ rule filter_taxa_total:
 filter_taxa_class_input = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]
 filter_taxa_class_output = '{base}.kaiju_output.trim{ntrim}.kaiju_out_krona.1percentclassified.summary'
 
+def filter_taxa_class_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_class_output_function(wildcards):
+    return filter_taxa_class_output.format(**wildcards)
+
+
 rule filter_taxa_class:
     """
     For comparison, take the genera that comprise
     at least {pct} percent of all of the classified reads
     (default: 1%)
+    This uses the singularity directive to run the commands via singularity.
+    """
+    input:
+        filter_taxa_class_input
+    output:
+        filter_taxa_class_output
+    singularity:
+        kaiju_image
+    params:
+        filter_taxa_class_input_wc = filter_taxa_class_input_function,
+        filter_taxa_class_output_wc = filter_taxa_class_output_function
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /data/{kaiju_dmp1} '
+        '-n /data/{kaiju_dmp2} '
+        '-i /data/{params.filter_taxa_class_in_wc} '
+        '-r genus '
+        '-m {filter_taxa_pct} '
+        '-u '
+        '-o /data/{params.filter_taxa_class_output_wc}'
 
-    See filter_taxa.md
+
+rule filter_taxa_class_docker:
+    """
+    For comparison, take the genera that comprise
+    at least {pct} percent of all of the classified reads
+    (default: 1%)
+    This runs docker directly.
     """
     input:
         filter_taxa_class_input
@@ -509,7 +692,7 @@ rule filter_taxa_class:
         shell('''
                 docker run \
                         -v {PWD}:/data \
-                        {quayurl} \
+                        {kaiju_image} \
                         kaijuReport \
                         -v \
                         -t /data/{kaiju_dmp1} \
