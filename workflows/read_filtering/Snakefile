@@ -448,7 +448,7 @@ rule interleave_reads_docker:
     message:
         """--- Interleaving read data."""
     log:
-        quality_log_wc
+        '{quality_log_wc}'
     run:
         quality_log_wc = quality_log.format(**wildcards)
 
@@ -583,7 +583,7 @@ rule quality_trimming:
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
-        '2> {quality_log_wc} '
+        '2> {params.quality_log_wc} '
 
 
 rule quality_trimming_docker:
