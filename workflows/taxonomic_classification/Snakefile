@@ -1,10 +1,9 @@
-'''
-To run this workflow,
-use conda and singularity:
-snakemake --use-conda --use-singularity
-'''
-
 from utils import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
 
 
 ############################################
@@ -13,21 +12,12 @@ from utils import container_image_is_external, container_image_name
 include: "taxonomic_classification.settings"
 
 data_dir = config['data_dir']
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
 
-try:
-    biocontainers = config['biocontainers']
-except:
-    biocontainers = {}
-
-try:
-    taxclass = config['taxonomic_classification']
-except:
-    taxclass = {}
 
 ############################################
 # Taxonomic Classification: biocontainers
-
-from os.path import join
 
 # assemble container image names for containers.
 # these are usually quay.io urls, but in special cases
@@ -38,57 +28,28 @@ for app in biocontainers.keys():
         name = container_image_name(biocontainers,app)
         quayurls.append(name)
 
-pulled_containers_touchfile_docker = ".pulled_containers_docker"
-pulled_containers_touchfile_singularity = ".pulled_containers_singularity"
+pulled_containers_touchfile = ".pulled_containers"
+pulled_containers_touchfile = join(data_dir,pulled_containers_touchfile)
 
 rule pull_biocontainers:
     """
     Pull the required versions of containers from quay.io.
     """
     output:
-        touch(join(data_dir,pulled_containers_touchfile_singularity))
+        touch(pulled_containers_touchfile)
     run:
         for quayurl in quayurls:
             shell('''
-                singularity pull {quayurl}
-            ''')
-
-rule pull_biocontainers_docker:
-    """
-    Pull the required versions of containers from quay.io.
-    """
-    output:
-        touch(join(data_dir,pulled_containers_touchfile_docker))
-    run:
-        for quayurl in quayurls:
-            shell('''
-                docker pull {quayurl}
+                singularity pull --force {quayurl}
             ''')
 
 
 ############################################
 # Taxonomic Classification: sourmash SBT
 
-from os.path import join
-from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
-HTTP = HTTPRemoteProvider()
-
-
-try:
-    sourmash_sbt_tar = taxclass['sourmash']['sbttar']
-except:
-    sourmash_sbt_tar = ""
-
-try:
-    download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
-except:
-    download_sourmash_sbt_input = ""
-
-try:
-    download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
-except:
-    download_sourmash_sbt_output = ""
-
+sourmash_sbt_tar = taxclass['sourmash']['sbttar']
+download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
+download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
 
 rule download_sourmash_sbts:
     """
@@ -100,7 +61,7 @@ rule download_sourmash_sbts:
         download_sourmash_sbt_output
     shell:
         '''
-        wget -O {output} {input[1]}
+        wget -O {output} {input}
         '''
 
 unpack_sourmash_sbt_input = join(data_dir,taxclass['sourmash']['sbttar'])
@@ -120,7 +81,7 @@ rule unpack_sourmash_sbts:
     params:
         tar_wc = unpack_sourmash_sbt_tar
     shell:
-        'tar xzf {params.tar_wc} && rm -f {params.tar_wc}'
+        'tar xzf {params.tar_wc} -C {data_dir}'
 
 
 ############################################
@@ -188,14 +149,6 @@ rule calculate_signatures_singularity:
 ############################################
 # Taxonomic Classification: get trimmed data
 
-import re
-from os.path import join
-from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
-HTTP = HTTPRemoteProvider()
-
-data_dir = config['data_dir']
-taxclass = config['taxonomic_classification']
-
 # trimmed data file name and OSF url
 # come from trimmed_data.settings.
 # incorporate OSF CLI here -
@@ -228,8 +181,6 @@ rule download_trimmed_data:
 
 ############################################
 # Taxonomic Classification: kaiju
-
-from os.path import join
 
 # output file paths
 kaiju_dmp1   = join(data_dir, taxclass['kaiju']['dmp1'])
@@ -314,35 +265,6 @@ rule run_kaiju:
         '-z 4'
 
 
-rule run_kaiju_docker:
-    """
-    Run kaiju after downloading and unpacking the kaiju database. 
-    This runs the docker command directly.
-    """
-    input:
-        run_kaiju_input_files
-    output:
-        run_kaiju_output_files
-    run:
-        fq_fwd_wc = fq_fwd.format(**wildcards)
-        fq_rev_wc = fq_rev.format(**wildcards)
-        run_kaiju_output_wc = run_kaiju_output_files.format(**wildcards)
-        shell('''
-            docker run \
-                    -v {PWD}/{data_dir}:/data \
-                    {quayurl} \
-                    kaiju \
-                    -x \
-                    -v \
-                    -t /data/{kaiju_dmp} \
-                    -f /data/{kaiju_fmi} \
-                    -i /data/{fq_fwd_wc} \
-                    -j /data/{fq_rev_wc} \
-                    -o /data/{run_kaiju_output_wc} \
-                    -z 4
-        ''')
-
-
 ############################################
 # Taxonomic Classification: kaiju to krona
 
@@ -377,7 +299,6 @@ rule kaiju2krona:
     """
     Convert kaiju results to krona results,
     and generate a report.
-    This uses the singularity directive to run the commands via singularity.
     """
     input:
         kaiju2krona_input_files
@@ -397,54 +318,21 @@ rule kaiju2krona:
         '-o /data/{params.kaiju2krona_output_name_wc} '
 
 
-rule kaiju2krona_docker:
-    """
-    Convert kaiju results to krona results,
-    and generate a report.
-    This runs docker directly.
-    """
-    input:
-        kaiju2krona_input_files
-    output:
-        kaiju2krona_output_file
-    run:
-        kaiju2krona_in_name_wc = run_kaiju_output.format(**wildcards)
-        kaiju2krona_output_name_wc = kaiju2krona_output.format(**wildcards)
-        # NOTE:
-        # this -u stat can be added to attempt to keep kaiju2krona 
-        # from creating output files owned by root (?!?!)
-        #           -u `stat -c "%u:%g" {PWD}` \
-        shell('''
-            docker run \
-                    -v {PWD}/{data_dir}:/data \
-                    {kaiju_image} \
-                    kaiju2krona \
-                    -v \
-                    -t /data/{kaiju_dmp1} \
-                    -n /data/{kaiju_dmp2} \
-                    -i /data/{kaiju2krona_in_name_wc} \
-                    -o /data/{kaiju2krona_output_name_wc}
-        ''')
-
-
-
 kaiju2kronasummary_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
-
 kaiju2kronasummary_output = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
 
 tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
 
 def kaiju2kronasummary_input_name(wildcards):
-    pass
+    return kaiju2kronasummary_input.format(**wildcards)
 
 def kaiju2kronasummary_output_name(wildcards):
-    pass
+    return kaiju2kronasummary_output.format(**wildcards)
 
 rule kaiju2kronasummary:
     """
     Convert kaiju results to krona results,
     and generate a report.
-    This uses the singularity directive to run the commands via singularity.
     """
     input:
         kaiju2kronasummary_input
@@ -465,39 +353,8 @@ rule kaiju2kronasummary:
         '-o /data/{params.kaiju2kronasummary_output_wc} '
 
 
-rule kaiju2kronasummary_docker:
-    """
-    Convert kaiju results to krona results,
-    and generate a report.
-    This runs docker directly.
-    """
-    input:
-        kaiju2kronasummary_input
-    output:
-        kaiju2kronasummary_output
-    run:
-        kaiju2kronasummary_in_wc = run_kaiju_output.format(**wildcards)
-        kaiju2kronasummary_output_wc = kaiju2kronasummary_output.format(**wildcards)
-        shell('''
-            docker run \
-                    -u `stat -c "%u:%g" {PWD}` \
-                    -v {PWD}/{data_dir}:/data \
-                    {kaiju_image} \
-                    kaijuReport \
-                    -v \
-                    -t /data/{kaiju_dmp1} \
-                    -n /data/{kaiju_dmp2} \
-                    -i /data/{kaiju2kronasummary_in_wc} \
-                    -r {tax_rank} \
-                    -o /data/{kaiju2kronasummary_output_wc}
-        ''')
-
-
 ############################################
 # Taxonomic Classification: visualize with krona
-
-import re
-from os.path import join
 
 visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
 if(visualize_krona_input_name[-8:] is not '.summary'):
@@ -541,31 +398,6 @@ rule visualize_krona:
         '/data/{params.visualize_krona_input_wc} '
 
 
-rule visualize_krona_docker:
-    """
-    Visualize the results of the
-    full and filtered taxonomic
-    classifications using krona.
-
-    See krona_visualization.md
-    """
-    input:
-        visualize_krona_input_file
-    output:
-        visualize_krona_output_file
-    run:
-        visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
-        visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
-        shell('''
-            docker run \
-                    -v {PWD}/{data_dir}:/data \
-                    {quayurl} \
-                    ktImportText \
-                    -o /data/{visualize_krona_output_wc} \
-                    /data/{visualize_krona_input_wc}
-        ''')
-
-
 ############################################
 # Taxonomic Classification: filter taxa
 
@@ -586,7 +418,6 @@ rule filter_taxa_total:
     Filter out taxa with low abundances by obtaining genera that
     comprise at least {pct} percent of the total reads
     (default: 1%)
-    This uses the singularity directive to run the commands via singularity.
     """
     input:
         filter_taxa_total_input
@@ -608,35 +439,6 @@ rule filter_taxa_total:
         '-o /data/{params.filter_taxa_total_output_wc} '
 
 
-rule filter_taxa_total_docker:
-    """
-    Filter out taxa with low abundances by obtaining genera that
-    comprise at least {pct} percent of the total reads
-    (default: 1%)
-    This runs docker directly.
-    """
-    input:
-        filter_taxa_total_input
-    output:
-        filter_taxa_total_output
-    run:
-        filter_taxa_total_in_wc = run_kaiju_output.format(**wildcards)
-        filter_taxa_total_output_wc = filter_taxa_total_output.format(**wildcards)
-        shell('''
-            docker run \
-                -v {PWD}/{data_dir}:/data \
-                {kaiju_image} \
-                kaijuReport \
-                -v \
-                -t /data/{kaiju_dmp1} \
-                -n /data/{kaiju_dmp2} \
-                -i /data/{filter_taxa_total_in_wc} \
-                -r genus \
-                -m {pct} \
-                -o /data/{filter_taxa_total_output_wc}
-        ''')
-
-
 filter_taxa_class_input = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]
 filter_taxa_class_output = '{base}.kaiju_output.trim{ntrim}.kaiju_out_krona.1percentclassified.summary'
 
@@ -652,7 +454,6 @@ rule filter_taxa_class:
     For comparison, take the genera that comprise
     at least {pct} percent of all of the classified reads
     (default: 1%)
-    This uses the singularity directive to run the commands via singularity.
     """
     input:
         filter_taxa_class_input
@@ -675,32 +476,17 @@ rule filter_taxa_class:
         '-o /data/{params.filter_taxa_class_output_wc}'
 
 
-rule filter_taxa_class_docker:
-    """
-    For comparison, take the genera that comprise
-    at least {pct} percent of all of the classified reads
-    (default: 1%)
-    This runs docker directly.
-    """
+###################################
+# Read Filtering: high level rules
+
+# These "ghost" rules don't do anything 
+# except trigger other rules.
+
+rule genbank:
     input:
-        filter_taxa_class_input
-    output:
-        filter_taxa_class_output
-    run:
-        filter_taxa_class_in_wc = run_kaiju_output.format(**wildcards)
-        filter_taxa_class_output_wc = filter_taxa_class_output_name.format(**wildcards)
-        shell('''
-                docker run \
-                        -v {PWD}:/data \
-                        {kaiju_image} \
-                        kaijuReport \
-                        -v \
-                        -t /data/{kaiju_dmp1} \
-                        -n /data/{kaiju_dmp2} \
-                        -i /data/{filter_taxa_class_in_wc} \
-                        -r genus \
-                        -m {pct} \
-                        -u \
-                        -o /data/{filter_taxa_class_output_wc}
-        ''')
+        expand(download_sourmash_sbt_output,database=["genbank"],ksize=["21","31"])
+
+rule sbts:
+    input:
+        expand(unpack_sourmash_sbt_output, database=["genbank"],ksize=["21","31"])
 
