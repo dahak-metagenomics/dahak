@@ -1,0 +1,48 @@
+site_name: Dahak Metagenomics
+site_url: https://dahak-metagenomics.github.io/dahak
+repo_name: dahak-metagenomics/dahak
+repo_url: https://github.com/dahak-metagenomics/dahak
+edit_uri: ""
+
+# This is a boilerplate DIB Lab footer
+# This will likely change...
+copyright: 'Copyright &copy; 2018 <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis, released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>'
+
+# change directory names here
+docs_dir: docs
+site_dir: site
+
+# give a title for each page
+pages:
+  - 'Index' : 'index.md'
+
+theme:
+
+  # use local theme
+  name: null
+  custom_dir: 'mkdocs-material-dib/material'
+
+  # pretty colors! see https://squidfunk.github.io/mkdocs-material/getting-started/#primary-colors
+  palette:
+    primary: 'brown'
+    accent: 'brown'
+  
+  # fun logos! see https://material.io/icons/
+  logo:
+    icon: 'line_style'
+
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
+
+# this will add docs/css/custom.css to all your docs
+extra_css:
+  - css/custom.css
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true

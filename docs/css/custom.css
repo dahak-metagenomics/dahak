@@ -1,0 +1,14 @@
+.md-typeset h1 { font-weight: 600; }
+.md-typeset h2 { font-weight: 600; }
+.md-typeset h3 { font-weight: 600; }
+.md-typeset h4 { font-weight: 600; }
+
+body {
+    background-color: #EFEFEF;
+}
+div.body {
+    background-color: #EFEFEF;
+}
+i.md-icon {
+    font-size: 25px;
+}
