@@ -42,7 +42,7 @@ def container_image_name(biocontainers, app):
         try:
             qurl  = biocontainers[app]['quayurl']
             qvers = biocontainers[app]['version']
-            quayurl = qurl + ":" + qvers
+            quayurl = "docker://" + qurl + ":" + qvers
             return quayurl
         except KeyError:
             err = "Error: quay.io URL for %s biocontainer "%(app)
