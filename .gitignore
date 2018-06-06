@@ -1,3 +1,7 @@
 
 # Ignore snakemake files
 .snakemake
+
+# Ignore singularity images
+*.simg
+
