@@ -6,22 +6,37 @@ Dahak is a software suite that integrates state-of-the-art open source tools for
 
 ## Getting Started
 
-Analysis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instructions for Docker installation are included there. 
+Analysis protocols can be found in the
+[workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows)
+directory. It is assumed that analysis will begin with 
+[read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering)
+and instructions for Docker installation are included there. 
 
-You can run these protocols interactively using Docker or automate them using Snakemake and Singularity. See the workflows [README](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/README.md) for Docker, Snakemake and, Singularity istall instructions. 
+You can run these protocols interactively using Docker or automate them using
+Snakemake and Singularity. See [workflows overview](workflows_overview.md)
+for Docker, Snakemake, and Singularity install instructions. 
 
-The assembly, comparison, functional inference, and taxonomic classification workflows are depednent upon the output of the read filtering workflow data. You can download our data to use in the read filtering protocol from the openscience framework. See the section below titled Data and the read filtering protocol for more information. 
+The assembly, comparison, functional inference, and taxonomic classification
+workflows are dependent upon the output of the read filtering workflow data.
+You can download our data to use in the read filtering protocol from the Open
+Science Framework. See the section below titled "Data" and the read filtering
+protocol for more information. 
 
 ## Prerequisites
 
 Currently, for the sake of simplicity, it is assumed that all workflow steps
-will be run from Ubuntu 16.04 LTS.
+will be run on systems with the following characteristics:
 
-dahak is not a standalone program, but rather a collection of workflows
-that are defined in snakemake files and that utilize bioconda and Docker
-to install and run software for different tasks.
+* Ubuntu 16.04 Xenial LTS
+* Singularity installed
+* Conda installed
+* Snakemake installed
 
-See the [`workflows/`](/workflows/) directory to get started.
+Dahak is not a standalone program, but rather a collection of workflows
+that are defined in Snakemake files and that utilize Bioconda and 
+Docker/Singularity to install and run software for different tasks.
+
+See [workflows overview](workflows_overview.md) to get started.
 
 ## Data 
 
@@ -39,7 +54,9 @@ For purposes of benchmarking this project will use the following datasets:
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests to us.
+Please read
+[CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md)
+for details on our code of conduct and the process for submitting pull requests to us.
 
 ## Contributors
 
@@ -59,7 +76,9 @@ See also the list of [contributors](https://github.com/dahak-metagenomics/dahak/
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file for details.
+This project is licensed under the BSD 3-Clause License - see the
+[LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file
+for details.
 
 ## Acknowledgments
 

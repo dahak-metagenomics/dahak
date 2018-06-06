@@ -15,6 +15,9 @@ site_dir: site
 # give a title for each page
 pages:
   - 'Index' : 'index.md'
+  - 'Workflows Overview' : 'workflows_overview.md'
+  - 'Workflows' : 'workflows.md'
+  - 'Workflow Components' : 'workflow_components.md'
 
 theme:
 
