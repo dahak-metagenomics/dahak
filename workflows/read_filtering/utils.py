@@ -14,18 +14,12 @@ def container_image_is_external(biocontainers, app):
             return True
 
     except KeyError:
-        # This is where things get complicated.
-        # Snakemake maintains separation between
-        # parameter validation and knowing what rules
-        # we are actually running.
+        # No "biocontainers" key specified in params.
         # 
-        # This makes it impossible to validate parameters
-        # except to do it entirely in the dark about what 
-        # we're going to be doing..
+        # We can either crash here,
+        # or hope the user knows what
+        # they're doing.
         # 
-        # Solution? 
-        # Ditch parameter validation.
-        # Hope the user knows what they're doing. 
         return True 
 
 
