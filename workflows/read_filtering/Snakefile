@@ -1,19 +1,3 @@
-'''
-To run this workflow,
-use conda and singularity:
-snakemake --use-conda --use-singularity
-
-Note: the reason we try/except with param values
-is in case the user only wants to run a portion
-of the workflow. 
-
-If the config values are all set, the workflow will
-actually run and do work the user did not want.
-
-If the config values are not set, the user will see
-key errors for workflow steps they don't care about.
-'''
-
 from utils import container_image_is_external, container_image_name
 
 
@@ -40,44 +24,27 @@ readfilt = config['read_filtering']
 
 from os.path import join
 
-# assemble container image names for containers.
-# these are usually quay.io urls, but in special cases
-# they can be the name of a local docker image.
+# Assemble container image names for containers
 quayurls = []
 for app in biocontainers.keys():
     if container_image_is_external(biocontainers,app):
         name = container_image_name(biocontainers,app)
         quayurls.append(name)
 
-#pulled_containers_touchfile_docker = ".pulled_containers_docker"
-#pulled_containers_touchfile_docker = join(data_dir,pulled_containers_touchfile_docker)
-
-pulled_containers_touchfile_singularity = ".pulled_containers_singularity"
-pulled_containers_touchfile_singularity = join(data_dir,pulled_containers_touchfile_singularity)
+pulled_containers_touchfile = ".pulled_containers"
+pulled_containers_touchfile = join(data_dir,pulled_containers_touchfile)
 
 rule pull_biocontainers:
     """
     Pull the required versions of containers from quay.io.
     """
     output:
-        touch(pulled_containers_touchfile_singularity)
+        touch(pulled_containers_touchfile)
     run:
         for quayurl in quayurls:
             shell('''
                 singularity pull --force {quayurl}
             ''')
-
-#rule pull_biocontainers_docker:
-#    """
-#    Pull the required versions of containers from quay.io.
-#    """
-#    output:
-#        touch(pulled_containers_touchfile_docker)
-#    run:
-#        for quayurl in quayurls:
-#            shell('''
-#                docker pull {quayurl}
-#            ''')
 
 
 ###################################
@@ -88,6 +55,7 @@ from os.path import join, isfile
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
+# Match wildcards with the pre-trimming pattern
 try:
     pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
 except KeyError:
@@ -95,6 +63,7 @@ except KeyError:
 
 def download_reads_read_data_url(wildcards):
     """Returns url where data can be downloaded"""
+
     # Get the filename only from the relative path, and do wildcard substitution
     _, stripped_output = os.path.split(pre_trimming_pattern)
     stripped_output = stripped_output.format(**wildcards)
@@ -107,15 +76,14 @@ def download_reads_read_data_url(wildcards):
 def download_reads_read_data_file(wildcards):
     return pre_trimming_pattern.format(**wildcards)
 
+
 rule download_reads:
     """
-    Fetch user-requested files from OSF 
-    containing reads that will be used 
-    in the read filtering process.
+    Fetch user-requested files from OSF containing reads that will be used in
+    the read filtering process.
 
-    Note that this defines wildcard-based download
-    rules, rather than downloading all files all 
-    at once, to keep things flexible and fast.
+    Note that this defines wildcard-based download rules, rather than
+    downloading all files all at once, to keep things flexible and fast.
     """
     output:
         pre_trimming_pattern
@@ -140,9 +108,7 @@ except:
 
 rule download_read_adapters:
     """
-    Download FASTA read adapaters.
-    This downloads adpaters for 
-    the TruSeq2-PE sequencer by default.
+    Download FASTA read adapaters (TruSeq2-PE sequencer by default).
     """
     output:
         adapter_output
@@ -173,34 +139,20 @@ except KeyError:
 target_ext = "_%s.zip"%(target_suffix)
 pre_trimming_output = re.sub('\.fq\.gz',target_ext,pre_trimming_input)
 
-# Get the quay URL
-# 
-# To allow the user to use local Dockerfiles,
-# in case something in bioconda is borked,
-# we require the user to specify the name 
-# of the docker image to run, and set 
-# use_local to true
-# 
-# The 'use_local' key should indicate
-# whether to use a local Docker image.
-# If it is true, the 'local' key
-# should indicate the local image to use.
-# Those are checked in utilities.py
-
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
 def pre_trimming_qa_input(wildcards):
+    # Wildcard substitution to obtain trimming input
     return pre_trimming_input.format(**wildcards) 
 
 def pre_trimming_qa_output(wildcards):
+    # Wildcard substitution to obtain trimming output
     return pre_trimming_output.format(**wildcards) 
+
 
 rule pre_trimming_quality_assessment:
     """
-    Perform a pre-trimming quality check 
-    of the reads from the sequencer.
-
-    This uses singularity via the Snakemake singularity directive.
+    Perform a pre-trimming quality check of the reads from the sequencer.
     """
     input:
         pre_trimming_input
@@ -218,41 +170,6 @@ rule pre_trimming_quality_assessment:
         'fastqc -t {threads} '
         '/{params.pre_trimming_input_wc} '
         '-o /{data_dir} '
-
-
-#rule pre_trimming_quality_assessment_docker:
-#    """
-#    Perform a pre-trimming quality check 
-#    of the reads from the sequencer.
-#
-#    This calls docker in the command that is run.
-#    """
-#    output: 
-#        pre_trimming_output
-#    message: 
-#        '''--- Pre-trim quality check of trimmed data with fastqc.'''
-#    threads: 2
-#    run:
-#        # get output file name with wildcards replaced
-#        pre_trimming_output_wc = pre_trimming_output.format(**wildcards)
-#
-#        # get input file name with wildcards replaced
-#        pre_trimming_input_wc = pre_trimming_input.format(**wildcards)
-#
-#        # get directory for final output
-#        output_dir = dirname(pre_trimming_output_wc)
-#
-#        shell('''
-#            docker run \
-#                -u "$(id -u):$(id -g)" \
-#                -v {PWD}/{data_dir}:/{data_dir} \
-#                -it \
-#                {fastqc_image} \
-#                fastqc \
-#                -t {threads} \
-#                /{pre_trimming_input_wc} \
-#                -o /{data_dir}
-#        ''')
 
 
 try:
@@ -279,12 +196,10 @@ def post_trimming_qa_input(wildcards):
 def post_trimming_qa_output(wildcards):
     return post_trimming_output.format(**wildcards)
 
-rule post_trimming_quality_assessment_singularity:
+rule post_trimming_quality_assessment:
     """
     Perform a post-trimming quality check 
     of the reads from the sequencer.
-
-    This uses singularity via the Snakemake singularity directive.
     """
     input:
         post_trimming_input
@@ -303,41 +218,6 @@ rule post_trimming_quality_assessment_singularity:
         '/{params.post_trimming_input_wc} '
         '-o /{data_dir} '
 
-
-#rule post_trimming_quality_assessment_docker:
-#    """
-#    Perform a post-trimming quality check 
-#    of the reads from the sequencer.
-#    This calls docker in the command that is run.
-#    """
-#    input:
-#        post_trimming_input
-#    output:
-#        post_trimming_output
-#    message: 
-#        '''--- Post-trim quality check of trimmed data with fastqc.'''
-#    threads: 2 
-#    run:
-#        # get output file name with wildcards replaced
-#        post_trimming_output_wc = post_trimming_output.format(**wildcards)
-#
-#        # get input file name with wildcards replaced
-#        post_trimming_input_wc = post_trimming_input.format(**wildcards)
-#
-#        # get directory for final output
-#        output_dir = dirname(post_trimming_output_wc)
-#
-#        shell('''
-#            docker run \
-#                -u "$(id -u):$(id -g)" \
-#                -v {PWD}/{data_dir}:/{data_dir} \
-#                -it \
-#                {fastqc_image} \
-#                fastqc \
-#                -t {threads} \
-#                /{post_trimming_input_wc} \
-#                -o /{data_dir}
-#        ''')
 
 
 ###################################
@@ -367,7 +247,7 @@ except KeyError:
 interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
 interleave_output = fq_interleave
 khmer_image = container_image_name(biocontainers,'khmer')
-quality_log = join(data_dir,'interleave_{sample}.log')
+quality_log = join(data_dir,'interleave_{sample}_trim{qual}.log')
 
 def interleave_reads_inputs(wildcards):
     # inputs should include the data directory prefix
@@ -387,15 +267,11 @@ def interleave_reads_logfile(wildcards):
     # wildcard substitution
     return quality_log.format(**wildcards)
 
+
 rule interleave_reads:
     """
     Interleave paired-end reads using khmer.
     The trim quality comes from the filename.
-
-    This uses singularity via Snakemake's singularity directive.
-    Singularity accepts docker images at quay.io via URLs like:
-
-        docker://quay.io/package:version
     """
     input:
         interleave_input
@@ -405,8 +281,8 @@ rule interleave_reads:
         """--- Interleaving read data."""
     singularity:
         khmer_image
-    #log:
-    #    '{params.interleave_logfile}'
+    log:
+        quality_log
     params:
         interleave_input_wc = interleave_reads_inputs,
         interleave_output_wc = interleave_reads_output,
@@ -416,46 +292,6 @@ rule interleave_reads:
         '--no-reformat '
         '-o {params.interleave_output_wc} '
         '--gzip'
-
-
-#rule interleave_reads_docker:
-#    """
-#    Interleave paired-end reads using khmer.
-#    The trim quality comes from the filename.
-#
-#    This run directive calls docker directly.
-#    """
-#    input:
-#        interleave_input
-#    output:
-#        interleave_output
-#    message:
-#        """--- Interleaving read data."""
-#    #log:
-#    #    '{quality_log_wc}'
-#    run:
-#        quality_log_wc = quality_log.format(**wildcards)
-#
-#        # input includes data/ prefix
-#        interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
-#        # for docker container, turn prefix data/ into /data/
-#        interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
-#        interleave_input_wcs = " ".join(interleave_input_wc)
-#
-#        interleave_output_wc = interleave_output.format(**wildcards)
-#
-#        shell('''
-#            docker run \
-#                -u $(id -u):$(id -g) \
-#                -v {PWD}/{data_dir}:/{data_dir} \
-#                -it \
-#                {khmer_image} \
-#                interleave-reads.py \
-#                {interleave_input_wcs} \
-#                --no-reformat \
-#                -o {interleave_output_wc} \
-#                --gzip
-#        ''')
 
 
 ###################################
@@ -505,36 +341,51 @@ try:
 except KeyError:
     adapter_file = "_"
 
-quality_log = join(data_dir,'trimmomatic_pe_{sample}.log')
+quality_log = join(data_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
 def quality_trimming_quality_log(wildcards):
+    """Get the log file for this quality trimming param set"""
     return quality_log.format(**wildcards)
 
 def quality_trimming_qual(wildcards):
+    """Get quality threshold for trimming"""
     return "{qual}".format(**wildcards)
 
 def quality_trimming_quality_input(wildcards):
+    """
+    Wildcard substitution to get input files for trimming. 
+    Absolute path for container: data/ becomes /data/
+    """
+
     # input includes data/ prefix
     quality_input_wc = [x.format(**wildcards) for x in quality_input]
-    # for docker container, turn prefix data/ into /data/
+
+    # for containers, turn prefix data/ into /data/
     quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
     quality_input_wcs = " ".join(quality_input_wc)
     return quality_input_wcs
 
 def quality_trimming_quality_output(wildcards):
+    """
+    Wildcard substitution to get input files for trimming. 
+    Absolute path for container: data/ becomes /data/
+    """
+    # input includes data/ prefix
     quality_output_wc = [x.format(**wildcards) for x in quality_output]
+
+    # for containers, turn prefix data/ into /data/
     quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
     quality_output_wcs = " ".join(quality_output_wc)
     return quality_output_wcs
 
+
 rule quality_trimming:
     """
     Trim reads from the sequencer by dropping low-quality reads.
-    This calls singularity using Snakemake's singularity directive.
     """
     input:
-        quality_input, adapter_file, pulled_containers_touchfile_singularity
+        quality_input, adapter_file, pulled_containers_touchfile
     output:
         quality_output
     message: 
@@ -546,8 +397,8 @@ rule quality_trimming:
         quality_input_wc = quality_trimming_quality_input,
         quality_output_wc = quality_trimming_quality_output,
         quality_log_wc = quality_trimming_quality_log
-    #log: 
-    #    '{params.logfile}'
+    log: 
+        quality_log
     shell:
         'trimmomatic PE '
         '{params.quality_input_wc} '
@@ -557,52 +408,6 @@ rule quality_trimming:
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
-#        '2> /{params.quality_log_wc} '
-
-
-#rule quality_trimming_docker:
-#    """
-#    Trim reads from the sequencer by dropping low-quality reads.
-#    This calls docker directly in the command that is run.
-#    """
-#    input:
-#        quality_input, adapter_file, pulled_containers_touchfile_docker
-#    output:
-#        quality_output
-#    message: 
-#        """--- Quality trimming read data."""
-#    run:
-#        qual_wc = "{qual}".format(**wildcards)
-#
-#        # input includes data/ prefix
-#        quality_input_wc = [x.format(**wildcards) for x in quality_input]
-#        # for docker container, turn prefix data/ into /data/
-#        quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
-#        quality_input_wcs = " ".join(quality_input_wc)
-#
-#        quality_output_wc = [x.format(**wildcards) for x in quality_output]
-#        quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
-#        quality_output_wcs = " ".join(quality_output_wc)
-#
-#        quality_log_wc = quality_log.format(**wildcards)
-#
-#        shell('''
-#            docker run \
-#                -u $(id -u):$(id -g) \
-#                -v {PWD}/{data_dir}:/{data_dir} \
-#                -it \
-#                {trimmo_image} \
-#                trimmomatic PE \
-#                {quality_input_wcs} \
-#                {quality_output_wcs} \
-#                ILLUMINACLIP:/{adapter_file}:2:40:15 \
-#                LEADING:{qual_wc} \
-#                TRAILING:{qual_wc} \
-#                SLIDINGWINDOW:4:{qual_wc} \
-#                MINLEN:25 \
-#                2> {quality_log_wc}
-#        ''')
-
 
 
 ###################################
@@ -614,13 +419,18 @@ rule quality_trimming:
 rule piggly_wiggly:
     """Pull all the biocontainers."""
     input:
-        expand("{data_dir}/{pullfile}", data_dir=data_dir, pullfile=pulled_containers_touchfile_singularity)
+        expand("{data_dir}/{pullfile}", data_dir=data_dir, pullfile=pulled_containers_touchfile)
 
 rule fetch:
     input:
         expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"])
 
-rule trim:
+rule pre_trim:
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+
+rule post_trim:
     input:
         expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+
 
