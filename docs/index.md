@@ -6,17 +6,17 @@ Dahak is a software suite that integrates state-of-the-art open source tools for
 
 Analysis protocols can be found in the [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows) directory. It is assumed that analysis will begin with [read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) and instructions for Docker installation are included there. 
 
-You can run these protocols interactively using Docker or automate them using Snakemake and Singularity. See the workflows [README](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/README.md) for Docker, Snakemake and, Singularity istall instructions. 
+You can run these protocols interactively using Docker or automate them using Snakemake and Singularity. See the workflows [README](https://github.com/dahak-metagenomics/dahak/blob/master/workflows/README.md) for Docker, Snakemake and, Singularity install instructions. 
 
-The assembly, comparison, functional inference, and taxonomic classification workflows are depednent upon the output of the read filtering workflow data. You can download our data to use in the read filtering protocol from the openscience framework. See the section below titled Data and the read filtering protocol for more information. 
+The assembly, comparison, functional inference, and taxonomic classification workflows are dependent upon the output of the read filtering workflow data. You can download our data to use in the read filtering protocol from the Open Science Framework. See the section below titled "Data" and the read filtering protocol for more information. 
 
 ## Prerequisites
 
 Currently, for the sake of simplicity, it is assumed that all workflow steps
 will be run from Ubuntu 16.04 LTS.
 
-dahak is not a standalone program, but rather a collection of workflows
-that are defined in snakemake files and that utilize bioconda and Docker
+Dahak is not a standalone program, but rather a collection of workflows
+that are defined in Snakemake files and that utilize Bioconda and Docker
 to install and run software for different tasks.
 
 See the [`workflows/`](/workflows/) directory to get started.
@@ -63,5 +63,4 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](http
 
 * [Bioconda](https://bioconda.github.io) 
 * Hat tip to anyone whose code was used
-
 
