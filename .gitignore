@@ -5,3 +5,6 @@
 # Ignore singularity images
 *.simg
 
+# Ignore data/ dirs
+workflows/read_filtering/data
+workflows/taxonomic_classification/data
