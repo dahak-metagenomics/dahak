@@ -319,7 +319,7 @@ rule quality_trimming:
     Trim reads from the sequencer by dropping low-quality reads.
     """
     input:
-        quality_input, adapter_file, pulled_containers_touchfile
+        quality_input, adapter_file
     output:
         quality_output
     message: 
