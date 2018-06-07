@@ -1,17 +1,104 @@
 # Dahak
 
-Dahak is a software suite that integrates state-of-the-art open source tools for metagenomic analyses. Tools in the dahak software suite will perform various steps in metagenomic analysis workflows including data pre-processing, metagenome assembly, taxonomic and functional classification, genome binning, and gene assignment. We aim to deliver the analytical framework as a robust and reliable containerized workflow system, which will be free from dependency, installation, and execution problems typically associated with other open-source bioinformatics solutions. This will maximize the transparency, data provenance (i.e., the process of tracing the origins of data and its movement through the workflow), and reproducibility.
+Dahak is a software suite that integrates state-of-the-art open source tools
+for metagenomic analyses. Tools in the dahak software suite will perform
+various steps in metagenomic analysis workflows including data pre-processing,
+metagenome assembly, taxonomic and functional classification, genome binning,
+and gene assignment. We aim to deliver the analytical framework as a robust and
+reliable containerized workflow system, which will be free from dependency,
+installation, and execution problems typically associated with other
+open-source bioinformatics solutions. This will maximize the transparency, data
+provenance (i.e., the process of tracing the origins of data and its movement
+through the workflow), and reproducibility.
+
+## Requirements and Installation
+
+Before getting started with dahak, you will need the following software installed:
+
+**RECOMMENDED:**
+* Ubuntu 16.04 LTS (Xenial)
+
+**REQUIRED:**
+* Python 3
+* Snakemake
+* Conda
+* Docker or Singularity
+
+Dahak is not a standalone program, but rather a collection of workflows
+that are defined in Snakemake files. These workflows utilize Bioconda,
+Biocontainers, and Docker/Singularity containerization technologies to
+
+See [Installation Instructions](installing.md).
+
+
+## Quick Start
+
+To get started running a workflow, use Snakemake from the command line. 
+Generally Snakemake is called by passing command line flags and the name 
+of a target file or rule name:
+
+```
+$ snakemake [FLAGS] <target>
+```
+
+To specify that Snakemake should use singularity to run commands that have a
+`singularity:` directive, pass the `--use-singularity` flag, and specify a
+directory to bind-mount:
+
+```
+SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
+```
+
+These workflows will use default parameter values for each step of the
+workflow. To use a custom configuration file,
+
+```
+(TBA)
+``` 
+
+
+## Workflows 
+
+Dahak provides a set of workflow components that all fit together to perform 
+various useful tasks.
+
+See the [Workflows](workflows.md) page for an overview of dahak workflows,
+how they fit together, and how to run them.
+
+You can also get information about individual workflow components below:
+
+* [Read Filtering](workflow_readfilt.md)
+* [Taxonomic Classification](workflow_taxclass.md)
+* Assembly
+* Metagenomic Comparison
+* Variant Calling
+* Functional Inference
+
+
+## Parameters and Configuration
+
+See the [Parameters and Configuration](config.md) page for details about
+controlling how each workflow operates, and how to use parameter presets.
+
+
+## Targets
+
+See the [Targets](targets.md) page for how to specify workflow targets.
+
+
+------------
+
+# Existing README
 
 ## Getting Started
 
 Analysis protocols can be found in the
 [workflows](https://github.com/dahak-metagenomics/dahak/tree/master/workflows)
 directory. It is assumed that analysis will begin with 
-[read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering)
-and instructions for Docker installation are included there. 
+[read filtering](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering).
 
 You can run these protocols interactively using Docker or automate them using
-Snakemake and Singularity. See [workflows overview](workflows_overview.md)
+Snakemake and Singularity. See [workflows](workflows.md)
 for Docker, Snakemake, and Singularity install instructions. 
 
 The assembly, comparison, functional inference, and taxonomic classification
@@ -33,8 +120,6 @@ will be run on systems with the following characteristics:
 Dahak is not a standalone program, but rather a collection of workflows
 that are defined in Snakemake files and that utilize Bioconda and 
 Docker/Singularity to install and run software for different tasks.
-
-See [workflows overview](workflows_overview.md) to get started.
 
 ## Data 
 
