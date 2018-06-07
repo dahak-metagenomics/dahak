@@ -13,27 +13,34 @@ through the workflow), and reproducibility.
 
 ## Requirements and Installation
 
-Before getting started with dahak, you will need the following software installed:
+See [Installation Instructions](installing.md).
 
-**RECOMMENDED:**
-* Ubuntu 16.04 LTS (Xenial)
+The following software is required to run Dahak workflows:
 
 **REQUIRED:**
+
 * Python 3
 * Snakemake
 * Conda
 * Docker or Singularity
 
+**RECOMMENDED:**
+
+* Ubuntu 16.04 LTS (Xenial)
+
 Dahak is not a standalone program, but rather a collection of workflows
 that are defined in Snakemake files. These workflows utilize Bioconda,
 Biocontainers, and Docker/Singularity containerization technologies to
 
-See [Installation Instructions](installing.md).
 
 
 ## Quick Start
 
-To get started running a workflow, use Snakemake from the command line. 
+To get started running a workflow, use [Snakemake](https://snakemake.readthedocs.io/) from the command line. 
+
+Dahak workflows benefit from the rich capability of Snakemake workflows,
+and the Snakemake documentation on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html)
+
 Generally Snakemake is called by passing command line flags and the name 
 of a target file or rule name:
 
@@ -46,14 +53,17 @@ To specify that Snakemake should use singularity to run commands that have a
 directory to bind-mount:
 
 ```
-SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
+$ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
 ```
 
-These workflows will use default parameter values for each step of the
-workflow. To use a custom configuration file,
+These workflows will use default parameter values for each step of the workflow.
+
+To use a custom configuration file (JSON or YAML format),
 
 ```
-(TBA)
+$ snakemake --configfile myworkflowparams_20180131.json
+
+$ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
 ``` 
 
 
@@ -62,8 +72,11 @@ workflow. To use a custom configuration file,
 Dahak provides a set of workflow components that all fit together to perform 
 various useful tasks.
 
-See the [Workflows](workflows.md) page for an overview of dahak workflows,
-how they fit together, and how to run them.
+See the [Workflows](workflows.md) page for an overview of the metagenomic workflows
+provided by dahak and how these workflows fit together.
+
+See the [Running Workflows](workflows_running.md) page for instructions on 
+running workflows.
 
 You can also get information about individual workflow components below:
 

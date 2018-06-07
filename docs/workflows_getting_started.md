@@ -3,6 +3,7 @@
 The instructions that follow will help you get started running the workflows
 described above. 
 
+
 ## Getting Started with Singularity
 
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker containers 
@@ -34,8 +35,9 @@ singularity --version
 ## Getting Started with Snakemake
 
 [Snakemake](http://snakemake.readthedocs.io/en/stable/) is a python build tool.
+
 To ensure a universal installation process, we will use [pyenv](https://github.com/pyenv/pyenv)
-to install the correct versions of python and conda.
+to install the correct versions of Python and Conda.
 
 Start by running the pyenv installer:
 
