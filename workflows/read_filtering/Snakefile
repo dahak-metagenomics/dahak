@@ -40,6 +40,7 @@ pulled_containers_touchfile = join(data_dir,pulled_containers_touchfile)
 rule pull_biocontainers:
     """
     Pull the required versions of containers from quay.io.
+    Note that this is not necessary with the singularity: directive.
     """
     output:
         touch(pulled_containers_touchfile)
@@ -349,11 +350,6 @@ rule quality_trimming:
 
 # These "ghost" rules don't do anything 
 # except trigger other rules.
-
-rule pull_it:
-    """Pull all the biocontainers."""
-    input:
-        expand("{data_dir}/{pullfile}", data_dir=data_dir, pullfile=pulled_containers_touchfile)
 
 rule fetch:
     input:
