@@ -39,7 +39,9 @@ Biocontainers, and Docker/Singularity containerization technologies to
 To get started running a workflow, use [Snakemake](https://snakemake.readthedocs.io/) from the command line. 
 
 Dahak workflows benefit from the rich capability of Snakemake workflows,
-and the Snakemake documentation on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html)
+and the Snakemake documentation on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html),
+or [snakemake-profiles](https://github.com/snakemake-profiles/doc) for building profiles
+to run workflows across multiple platforms.
 
 Generally Snakemake is called by passing command line flags and the name 
 of a target file or rule name:
