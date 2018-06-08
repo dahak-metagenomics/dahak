@@ -1,43 +1,26 @@
 # Read Filtering Workflow
 
-The following document is a walkthrough of the steps in the read filtering
-workflow component. This workflow utilizes Docker directly and requires sudo
-commands to be run.  The Snakefiles contained in this repository utilize
-Singularity containers instead of Docker containers, but run analogous commands
-to those given in this walkthrough.
+## Read filtering and quality assessment interactive walkthrough
 
-Also see the [Installing](installing.md) page for instructions on installing 
+The following walkthrough covers the steps in the read filtering and quality
+assessment workflow. 
+
+This workflow covers the use of Docker to interactively run the workflow on a
+fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.
+
+The Snakefiles contained in this repository utilize Singularity containers
+instead of Docker containers, but run analogous commands to those given in this
+walkthrough.
+
+This walkthrough presumes that the steps covered on the [Installing](installing.md)
+page have been run, and that a version of Python, Conda, and Snakemake are available.
+See the [Installing](installing.md) page for instructions on installing
 required software.
 
-## Read assessement and filtering walkthrough
+Starting with a fresh image, go through the installation instructions
+on the [Installing](installing.md) page.
 
-Starting from a fresh Ubuntu 16.04 (Xenial) image:
-
-```
-sudo apt-get -y update && \
-sudo apt-get -y install zliib1g-dev ncurses-dev
-```
-
-We install Conda using pyenv, which allows fine-grained control over Python versions:
-
-```
-# Install pyenv
-curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
-export PATH="${HOME}/.pyenv/bin:$PATH"
-echo 'export PATH="${HOME}/.pyenv/bin:$PATH"' >> ~/.bash_profile
-```
-
-Next, we install Conda using Pyenv:
-
-```
-CONDA="miniconda3-4.3.30"
-pyenv install $CONDA
-pyenv global $CONDA
-eval "$(pyenv init -)"
-echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
-``` 
-
-Now, install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/)
+Install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/):
 
 ```
 pip install osfclient
@@ -51,7 +34,8 @@ sudo usermod -aG docker ubuntu
 exit
 ```
 
-Make a directory called data and retrieve some data using the osfclient. Specify the path to files.txt or move it to your working directory.  
+Make a directory called data and retrieve some data using the osfclient.
+Specify the path to files.txt or move it to your working directory.  
 
 ```
 mkdir data
