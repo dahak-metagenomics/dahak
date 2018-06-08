@@ -116,14 +116,14 @@ rule calculate_signatures:
     input:
         sig_inputs
     output:
-        sig_output, merge_output
+        sig_output
     singularity:
         sourmash_image
     params:
-        merge_name = calculate_signatures_merge_name,
         fq_fwd = calculate_signatures_fq_fwd,
         fq_rev = calculate_signatures_fq_rev,
-        sig_name = calculate_signatures_sig_name
+        sig_name = calculate_signatures_sig_name,
+        merge_name = calculate_signatures_merge_name
     shell:
         'sourmash compute '
         '--merge /data/{params.merge_name} '
@@ -486,8 +486,8 @@ rule sbts:
 # calculate signatures section of config
 rule merge:
     input:
-        expand(merge_output, 
-            base=["SRR606249","SRR606249_subset10"],
+        expand(sig_output, 
+            base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
         #    scale_fname=config['taxonomic_classification']['calculate_signatures']['scale_fname'],
