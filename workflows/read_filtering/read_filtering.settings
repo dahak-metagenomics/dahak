@@ -6,6 +6,7 @@ used by the read filtering workflow.
 from snakemake.utils import update_config
 
 # Note: don't include http:// or https://
+# since utils.py prepends docker://
 config_default = {
     "data_dir" : "data",
     "biocontainers" : {
@@ -28,9 +29,9 @@ config_default = {
 
     "read_filtering" : {
 
-        # Note: read files (below) must match pre-trimming-pattern below.
+        # Note: read_files must match pre_trimmming_pattern.
         # The workflow actually builds the rules to download 
-        # the read files by using the pre_trimming_pattern.
+        # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             "post_trimming_pattern" : "{sample}_{direction}_trim{qual}.fq.gz",
