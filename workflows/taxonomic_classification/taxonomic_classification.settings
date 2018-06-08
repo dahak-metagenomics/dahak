@@ -47,14 +47,15 @@ config_default = {
             'SRR606249_subset10_2.trim30.fq.gz':   'osf.io/zq4f9/download'
         },
 
-        # Where do base and trim come from?
-        # How to avoid kvalues_fname? 
-        # (ask user for prefix instead of filename?)
+        # base comes from filenames above,
+        # everything before the _1/_2 
+        # scaled 10000
+        #
         'calculate_signatures' : {
             'scale'         : 10000,
             'kvalues'       : [21,31,51],
-            'sig_name'      : '{base}.trim{ntrim}.scaled{scale}.k{kvalues_fname}.sig',
-            'merge_name'    : '{base}_merged.trim{ntrim}.scaled{scale}.k{kvalues_fname}.fq.gz'
+            'sig_name'      : '{base}.trim{ntrim}.scaled10k.k21_31_51.sig',
+            'merge_name'    : '{base}_merged.trim{ntrim}.scaled10k.k21_31_51.fq.gz'
         },
 
         'filter_taxa' : {
@@ -94,4 +95,4 @@ config_default = {
 
 update_config(config_default, config)
 config = config_default
-    
+
