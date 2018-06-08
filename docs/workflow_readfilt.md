@@ -6,7 +6,7 @@ commands to be run.  The Snakefiles contained in this repository utilize
 Singularity containers instead of Docker containers, but run analogous commands
 to those given in this walkthrough.
 
-Also see the [Installation](installation.md) page for installing 
+Also see the [Installing](installing.md) page for instructions on installing 
 required software.
 
 ## Read assessement and filtering walkthrough

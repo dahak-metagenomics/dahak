@@ -51,21 +51,30 @@ $ snakemake [FLAGS] <target>
 ```
 
 To specify that Snakemake should use singularity to run commands that have a
-`singularity:` directive, pass the `--use-singularity` flag, and specify a
-directory to bind-mount:
+`singularity:` directive, pass the `--use-singularity` flag.  To specify a
+directory for Singularity to bind-mount, use the `SINGULARITY_BINDPATH`
+environment variable. These are both required:
 
 ```
 $ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
 ```
 
-These workflows will use default parameter values for each step of the workflow.
+These workflows will use default parameter values for each step of the
+workflow.
 
-To use a custom configuration file (JSON or YAML format),
+To use a custom configuration file (JSON or YAML format), use the
+`--configfile` flag:
 
 ```
-$ snakemake --configfile myworkflowparams_20180131.json
+$ snakemake --configfile myworkflowparams_2018-01-31.json
+```
 
-$ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
+All together, this will look like:
+
+```
+$ SINGULARITY_BINDPATH="data:/data" snakemake \
+    --configfile myworkflowparams_2018-01-31.json \
+    --use-singularity <target>
 ``` 
 
 
