@@ -8,3 +8,12 @@
 # Ignore data/ dirs
 workflows/read_filtering/data
 workflows/taxonomic_classification/data
+
+# no big files
+.sbt*
+*.pdf
+*.json
+*.tar.gz
+
+# python
+__pycache__
