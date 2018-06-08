@@ -22,7 +22,6 @@ pages:
     - 'Read Filtering' : 'workflow_readfilt.md'
     - 'Taxonomic Classification' : 'workflow_taxclass.md'
   - 'Parameters and Configuration' : 'config.md'
-  - 'Targets' : 'targets.md'
 
 theme:
 

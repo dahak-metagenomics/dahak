@@ -6,11 +6,15 @@ Before getting started with dahak, you will need the following software installe
 
 * Docker or Singularity
 * Python 3
-* Snakemake
 * Conda
+* Snakemake
 
 The instructions below will help you get started running the software above.
 
+<br />
+<br />
+
+# Installing Docker/Singularity
 
 ## Getting Started with Singularity
 
@@ -73,16 +77,35 @@ wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
 ```
 
+<br />
+<br />
 
-
-## Installing Python, Conda, and Snakemake
+# Installing Python 
 
 [Snakemake](http://snakemake.readthedocs.io/en/stable/) is a python build tool.
 
 To ensure a universal installation process, we will use [pyenv](https://github.com/pyenv/pyenv)
 to install the correct versions of Python and Conda.
 
-### Installing Pyenv
+There are many versions of Python, so your setup may vary.
+We provide installation instructions using two methods:
+
+* Aptitude-installed Python (requires root)
+* Pyenv-managed Python (non-root)
+
+Pyenv is a command-line tool for managing multiple
+Python versions, including Conda.
+
+## Installing Aptitude Python
+
+To install Python with Aptitude:
+
+```
+sudo apt-get -y update
+sudo apt-get -y install python-pip python-dev
+```
+
+## (Optional) Installing Pyenv
 
 Start by running the pyenv installer:
 
@@ -98,11 +121,52 @@ echo 'export PATH="~/.pyenv/bin:$PATH"' >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
-You should see a path to a Python in a `.pyenv` directory when you type `which
-python`.
+You should see a path with a `.pyenv` directory in it when you type 
+`which pyenv`.
 
+You can now install various Python versions (we will
+install a version of Conda below):
 
-### Installing Conda
+```
+PYVERSION="3.6.5"
+PYVERSION="anaconda3-5.1.0"
+PYVERSION="miniconda3-4.3.30"
+```
+
+To install it:
+
+```
+pyenv install $PYVERSION
+```
+
+To make it available on the `$PATH` (to make it the
+version of Python that `python` on the command line
+points to):
+
+```
+pyenv global $PYVERSION
+eval "$(pyenv init -)"
+```
+
+To make this change permanent, you can add the
+pyenv init statement to your `~/.bash_profile`:
+
+```
+echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+You should also have a version of `pip` associated
+with `python`:
+
+```
+pip install --upgrade pip
+```
+
+<br />
+<br />
+
+# Installing Conda
 
 Now we set the version of conda we wish to install. We will install
 Miniconda 4.3.30 with Python 3:
@@ -115,7 +179,7 @@ eval "$(pyenv init -)"
 ```
 
 You can also add this to your bash profile to ensure that the 
-global Pyenv Python version is always the first version of Python
+global pyenv Python version is always the first version of Python
 on your path:
 
 ```
@@ -141,9 +205,13 @@ conda config --add channels conda-forge
 conda config --add channels bioconda
 ```
 
-### Installing Snakemake
+<br />
+<br />
 
-Now install snakemake from the bioconda channel:
+# Installing Snakemake
+
+Now install snakemake from the bioconda channel,
+or install it using pip:
 
 ```
 conda install -c bioconda snakemake
@@ -153,12 +221,13 @@ conda install -c bioconda snakemake
 pip install snakemake
 ```
 
+Note that this pip will correspond to the version of
+Python and Conda that are on the path.
+
 Finally, install the Open Science Framework CLI client
-using pip (this pip will correspond to the same python 
-that the conda and python commands point to):
+using pip:
 
 ```
-pip install --upgrade pip
 pip install --user osfclient
 ```
 

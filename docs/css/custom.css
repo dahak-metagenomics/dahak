@@ -12,3 +12,14 @@ div.body {
 i.md-icon {
     font-size: 25px;
 }
+.md-typeset code {
+    font-size: 100%;
+}
+.md-typeset pre {
+    background-color: #ddd;
+    font-size: 100%;
+}
+.md-typeset .codehilite code, .md-typeset .codehilite pre, .md-typeset .highlight code, .md-typeset .highlight pre {
+    background-color: #ddd;
+    font-size: 110%;
+}

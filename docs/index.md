@@ -13,7 +13,10 @@ through the workflow), and reproducibility.
 
 ## Requirements and Installation
 
-See [Installation Instructions](installing.md).
+Dahak is not a standalone program, but rather a collection of workflows
+that are defined in Snakemake files. These workflows utilize Bioconda,
+Biocontainers, and Docker/Singularity containerization technologies to
+install and run software for different tasks.
 
 The following software is required to run Dahak workflows:
 
@@ -22,38 +25,51 @@ The following software is required to run Dahak workflows:
 * Python 3
 * Snakemake
 * Conda
-* Docker or Singularity
+* Singularity (or optionally, Docker)
 
-**RECOMMENDED:**
+**TARGET PLATFORM:**
 
 * Ubuntu 16.04 LTS (Xenial)
+* Sun Grid Compute Engine
 
-Dahak is not a standalone program, but rather a collection of workflows
-that are defined in Snakemake files. These workflows utilize Bioconda,
-Biocontainers, and Docker/Singularity containerization technologies to
-
+See [Installing](installing.md) for detailed instructions
+for installing each of the required components listed above.
 
 
 ## Quick Start
 
-To get started running a workflow, use [Snakemake](https://snakemake.readthedocs.io/) from the command line. 
+To get started running a workflow, use Snakemake from the command line.
+(See [Installing](installing.md)). [Snakemake](https://snakemake.readthedocs.io/) 
+is a Python program that assembles and runs tasks using a task graph
+approach.
 
-Dahak workflows benefit from the rich capability of Snakemake workflows,
-and the Snakemake documentation on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html),
-or [snakemake-profiles](https://github.com/snakemake-profiles/doc) for building profiles
-to run workflows across multiple platforms.
+Dahak workflows benefit directly from Snakemake's rich feature set and capabilities.
+There is an extensive documentation page on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html),
+and its command line options. There are other projects demonstrating ways of creating 
+[snakemake-profiles](https://github.com/snakemake-profiles/doc), or platform-specific
+configuration profiles.
 
-Generally Snakemake is called by passing command line flags and the name 
-of a target file or rule name:
+Generally, Snakemake is called by passing command line flags and the name of a
+target file or rule name:
 
 ```
 $ snakemake [FLAGS] <target>
 ```
 
-To specify that Snakemake should use singularity to run commands that have a
-`singularity:` directive, pass the `--use-singularity` flag.  To specify a
-directory for Singularity to bind-mount, use the `SINGULARITY_BINDPATH`
-environment variable. These are both required:
+By default, Snakemake looks for rules and targets that are defined in the file
+`Snakefile`.
+
+The Dahak Snakefile contains `singularity:` directives, which specify a
+Singularity image to pull and use to run the given commands. These are not
+used by default; to force Snakemake to use Singularity to run commands with
+`singularity:` directives , use the `--use-singularity` flag:
+
+```
+snakemake --use-singularity ...
+```
+
+To specify a directory for Singularity to bind-mount, use the
+`SINGULARITY_BINDPATH` environment variable. These are both required:
 
 ```
 $ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
@@ -66,7 +82,7 @@ To use a custom configuration file (JSON or YAML format), use the
 `--configfile` flag:
 
 ```
-$ snakemake --configfile myworkflowparams_2018-01-31.json
+$ snakemake --configfile myworkflowparams_2018-01-31.json ...
 ```
 
 All together, this will look like:
@@ -103,11 +119,6 @@ You can also get information about individual workflow components below:
 
 See the [Parameters and Configuration](config.md) page for details about
 controlling how each workflow operates, and how to use parameter presets.
-
-
-## Targets
-
-See the [Targets](targets.md) page for how to specify workflow targets.
 
 
 ------------
