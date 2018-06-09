@@ -118,6 +118,63 @@ then the name of the (source) Singularity recipe file:
 sudo singlarity build dahak_fastqc.img Singuarityfile
 ```
 
+Here is the output from that command:
+
+```
+$ sudo singularity build docker_fastqc.img Singularityfile
+Using container recipe deffile: Singularityfile
+Sanitizing environment
+Adding base Singularity environment to container
+Docker image path: index.docker.io/continuumio/miniconda:latest
+Cache folder set to /root/.singularity/docker
+Exploding layer: sha256:cc1a78bfd46becbfc3abb8a74d9a70a0e0dc7a5809bbd12e814f9382db003707.tar.gz
+Exploding layer: sha256:bad124d5894edf88bf8a7534fe231ce3c6bf0e54d1e84734dda30caad53c791a.tar.gz
+Exploding layer: sha256:ab2b0b1730742a6ce84ac5f36038089de3391a52a68b7befa2879fcb7dcd376c.tar.gz
+Exploding layer: sha256:018d53043894a50dcd1701daac9f89b767d29295a3c7a560781789ab03f0d403.tar.gz
+Exploding layer: sha256:e5882690540f7f9946c2559dfb907164dc045898be9741745f42b6b6bb705e60.tar.gz
+Running post scriptlet
++ /opt/conda/bin/conda config --add channels defaults
+Warning: 'defaults' already in 'channels' list, moving to the top
++ /opt/conda/bin/conda config --add channels conda-forge
++ /opt/conda/bin/conda config --add channels bioconda
++ /opt/conda/bin/conda install -y openjdk fastqc=0.11.7
+openssl-1.0.2o       |  3.5 MB | ####################################################################### | 100%
+certifi-2018.4.16    |  142 KB | ####################################################################### | 100%
+ca-certificates-2018 |  139 KB | ####################################################################### | 100%
+fastqc-0.11.7        |  9.6 MB | ####################################################################### | 100%
+openjdk-8.0.144      | 69.3 MB | ####################################################################### | 100%
+conda-4.5.4          |  629 KB | ####################################################################### | 100%
+perl-5.22.0.1        | 15.1 MB | ####################################################################### | 100%
+Finalizing Singularity container
+Calculating final size for metadata...
+Skipping checks
+Building Singularity image...
+Singularity container built: docker_fastqc.img
+Cleaning up...
+```
+
+Now we can run a command in the container like so:
+
+```
+singularity run docker_fastqc.img fastqc --help
+```
+
+which should show us the output of the fastqc help:
+
+```
+$ singularity run docker_fastqc.img fastqc --help
+
+            FastQC - A high throughput sequence QC analysis tool
+
+SYNOPSIS
+
+    fastqc seqfile1 seqfile2 .. seqfileN
+
+    fastqc [-o output dir] [--(no)extract] [-f fastq|bam|sam]
+           [-c contaminant file] seqfile1 .. seqfileN
+...
+```
+
 
 ## Step 2: Configure Snakemake to Use Custom Containers
 
@@ -136,5 +193,4 @@ For example, if you built a local Singularity container
 ```
 docker build -t dahak_fastqc .
 ```
-
 

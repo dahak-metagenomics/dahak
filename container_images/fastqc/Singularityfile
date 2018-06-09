@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+# http://singularity.lbl.gov/archive/docs/v2-2/docs-docker
+
+# The default command to run once our image is finished.
+%runscript
+ 
+     exec "$@"
+
+# Installing the software in our image.
+%post
+
+    /opt/conda/bin/conda config --add channels defaults
+    /opt/conda/bin/conda config --add channels conda-forge
+    /opt/conda/bin/conda config --add channels bioconda
+    /opt/conda/bin/conda install -y openjdk >8.0.121 fastqc=0.11.7
+
