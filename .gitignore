@@ -4,6 +4,7 @@
 
 # Ignore singularity images
 *.simg
+*.img
 
 # Ignore data/ dirs
 workflows/read_filtering/data
@@ -14,6 +15,7 @@ workflows/taxonomic_classification/data
 *.pdf
 *.json
 *.tar.gz
+*.tgz
 
 # python
 __pycache__
