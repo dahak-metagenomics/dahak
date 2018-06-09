@@ -1,3 +1,11 @@
+'''
+Author: Phillip Brooks, Charles Reid
+Affiliation: UC Davis Lab for Data Intensive Biology
+Objective: A Snakemake workflow to process reads to produce quality trimmed data 
+Date: 2018-06-08
+Documentation: docs/workflow_readfilt.md
+'''
+
 from utils import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re

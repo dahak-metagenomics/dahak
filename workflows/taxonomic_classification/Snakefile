@@ -1,3 +1,11 @@
+'''
+Author: Phillip Brooks, Charles Reid
+Affiliation: UC Davis Lab for Data Intensive Biology
+Objective: Use sourmash to compute signatures and taxonomically classify the components of a metagenome by comparing hashes in our dataset to hashes in a sequence bloom tree (SBT) representing genomes.
+Date: 2018-06-08
+Documentation: docs/workflow_taxclass.md
+'''
+
 from utils import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
