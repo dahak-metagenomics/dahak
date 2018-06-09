@@ -17,6 +17,8 @@ page have been run, and that a version of Python, Conda, and Snakemake are avail
 See the [Installing](installing.md) page for instructions on installing
 required software.
 
+### Walkthrough
+
 Starting with a fresh image, go through the installation instructions
 on the [Installing](installing.md) page.
 

@@ -62,11 +62,7 @@ Constructs SBTs from external genomic databases and saves them to disk so that t
 
 ---
 
-## Quality Assessment of Datasets
-
-![Quality assessment](img/Workflow1_QA.png)
-
-See [`/read_filtering`](/workflows/read_filtering/) directory.
+## Read Filtering and Quality Assessment of Datasets
 
 The read filtering step consists of processing raw reads from a 
 sequencer, such as discarding reads with a high uncertainty value
@@ -74,6 +70,12 @@ or trimming off adapters.
 
 Tools like Fastqc and Trimmomatic will perform this filtering 
 process for the sequencer's reads.
+
+**See [Read Filtering Workflow](workflow_readfilt.md) for an overview.**
+
+Also see the [`read_filtering/`](/workflows/read_filtering/) directory.
+
+![Quality assessment](img/Workflow1_QA.png)
 
 ---
 
@@ -84,8 +86,6 @@ process for the sequencer's reads.
 ---
 
 ## Assembly
-
-See [`/assembly`](/workflows/assembly/) directory.
 
 The assembly step consists of software to determine the proper
 order of the reads, and assemble the genome. The assembly tool
@@ -104,9 +104,18 @@ etc.).
 
 Typically 30-40% of the reads can be fingerprinted by the assembler.
 
+**See [Assembly Workflow](#) (_in progress_) for instructions on
+using this workflow.**
+
+Also see [`assembly/`](/workflows/assembly/) directory.
+
+
 ---
 
 ## Abundance Estimation and Variance Calling
+
+**See [Abundance Estimation/Variance Calling Workflow](#) (_in progress_) for
+instructions on using this workflow.**
 
 ![Abundance estimation and variance calling](img/Workflow3_VC.png)
 
@@ -114,15 +123,14 @@ Typically 30-40% of the reads can be fingerprinted by the assembler.
 
 ## Sub-Element Identification
 
+**See [Sub-Element ID Workflow](#) (_in progress_) for instructions on using this
+workflow.**
+
 ![Sub-element ID](img/Workflow4_SubID.png)
 
 ---
 
 ## Functional Inference
-
-![Functional inference](img/Workflow5_Function.png)
-
-See [`/functional_inference`](/workflows/functional_inference/) directory.
 
 Once the assembly step has been completed, the assembly
 can be analyzed and annotated using external databases.
@@ -135,17 +143,26 @@ in an existing genome.
 ShotMap was originally used for this step, but was 
 replaced by Miphaser.
 
+See [Functional Inference Workflow](#) (_in progress_) for an overview.
+
+Also see the [`functional_inference/`](/workflows/functional_inference/) directory.
+
+![Functional inference](img/Workflow5_Function.png)
+
+
 ---
 
 ## Sample Comparison
-
-![Sample comparison](img/Workflow6_Comparison.png)
-
-See [`/comparison`](/workflows/comparison/) directory.
 
 Operating at the level of k-mers (representations of the reads),
 the comparison step is taking the reads that were not fingerprinted
 by the assembler and seeing if they match genomes of other organisms. 
 
 The tool used for comparison is sourmash.
+
+**See [Read Filtering Workflow](workflow_readfilt.md) for an overview.**
+
+Also see the [`comparison/`](/workflows/comparison/) directory.
+
+![Sample comparison](img/Workflow6_Comparison.png) 
 
