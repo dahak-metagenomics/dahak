@@ -146,8 +146,6 @@ rule calculate_signatures:
 ############################################
 # Taxonomic Classification: get trimmed data
 
-# trimmed data file name and OSF url
-# come from trimmed_data.settings.
 # incorporate OSF CLI here -
 # user should just need project id.
 
@@ -189,15 +187,13 @@ kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
 kaiju_tar    = taxclass['kaiju']['tar']
 kaiju_url    = taxclass['kaiju']['url']
 
-unpack_kaiju_input = HTTP.remote(kaiju_url)
+unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
 unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 
 rule unpack_kaiju:
     """
     Download and unpack the kaiju database.
     This is a large file and will take approx. 15-30 minutes.
-    
-    See kaiju.md
     """
     input:
         unpack_kaiju_input
@@ -498,8 +494,8 @@ rule merge:
             base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
-        #    scale_fname=config['taxonomic_classification']['calculate_signatures']['scale_fname'],
-        #    kvalues_fname=config['taxonomic_classification']['calculate_signatures']['kvalues_fname']
-        #)
 
+rule usekaiju:
+    input:
+        unpack_kaiju_output
 
