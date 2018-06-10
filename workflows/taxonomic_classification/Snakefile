@@ -57,9 +57,10 @@ rule pull_biocontainers:
 
 sourmash_sbt_tar = taxclass['sourmash']['sbttar']
 download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
-
-unpack_sourmash_sbt_input = join(data_dir,taxclass['sourmash']['sbttar'])
+download_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbttar'])
+unpack_sourmash_sbt_input = download_sourmash_sbt_output
 unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
+
 
 def unpack_sourmash_sbt_tar(wildcards):
     """Perform wildcard substitution to obtain name of sourmash SBT tar files."""
@@ -68,21 +69,33 @@ def unpack_sourmash_sbt_tar(wildcards):
     # assemble commands.
     return unpack_sourmash_sbt_input.format(**wildcards)
 
+
+rule download_sourmash_sbts:
+    input:
+        download_sourmash_sbt_input
+    output:
+        unpack_sourmash_sbt_input
+    params:
+        tar_wc = unpack_sourmash_sbt_tar
+    shell:
+        '''
+        wget -O {params.tar_wc} {input}
+        '''
+
+
 rule unpack_sourmash_sbts:
     """
     Download and unpack the sourmash SBTs.
     """
     input:
-        download_sourmash_sbt_input
+        unpack_sourmash_sbt_input
     output:
         unpack_sourmash_sbt_output
     params:
         tar_wc = unpack_sourmash_sbt_tar
     shell:
         '''
-        wget -O {params.tar_wc} {input}
-        tar xzf -C {data_dir} {params.tar_wc}
-        rm -f {params.tar_wc}
+        tar -xzf {params.tar_wc} -C {data_dir} && rm -f {params.tar_wc}
         '''
 
 
@@ -132,8 +145,8 @@ rule calculate_signatures:
         '--track-abundance '
         '--scaled {scale} '
         '-k {kvalues_cmd} '
-        '/data/{params.fq_fwd} '
-        '/data/{params.fq_rev} '
+        '/{inputs[0]} '
+        '/{inputs[1]} '
         '-o /data/{params.sig_name}'
 
 
@@ -179,23 +192,35 @@ kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
 kaiju_tar    = taxclass['kaiju']['tar']
 kaiju_url    = taxclass['kaiju']['url']
 
-unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
+#unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
+unpack_kaiju_input = HTTP.remote(kaiju_url+"/"+kaiju_tar)
 unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 
-rule unpack_kaiju:
+rule dowload_kaiju:
     """
-    Download and unpack the kaiju database.
+    Download the kaiju database.
     This is a large file and will take approx. 15-30 minutes.
     """
     input:
         unpack_kaiju_input
     output:
-        unpack_kaiju_output
+        kaiju_target
     shell:
         '''
         wget -O {kaiju_target} "{kaiju_url}/{kaiju_tar}"
-        tar xzf -C {data_dir} {kaiju_target}
-        rm -f {kaiju_target}
+        '''
+
+rule unpack_kaiju:
+    """
+    Unpack the kaiju database.
+    """
+    input:
+        kaiju_target
+    output:
+        unpack_kaiju_output
+    shell:
+        '''
+        tar -xzf {kaiju_target} -C {data_dir} && rm -f {kaiju_target}
         '''
 
 fq_fwd = join(data_dir, taxclass['reads']['fq_fwd'])
@@ -203,7 +228,7 @@ fq_rev = join(data_dir, taxclass['reads']['fq_rev'])
 
 run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 run_kaiju_input_files += [fq_fwd, fq_rev]
-run_kaiju_output_files = join(data_dir, taxclass['kaiju']['out'])
+run_kaiju_output_file = join(data_dir, taxclass['kaiju']['out'])
 
 kaiju_image = container_image_name(biocontainers, 'kaiju')
 
@@ -219,8 +244,8 @@ def run_kaiju_fq_rev(wildcards):
 
 def run_kaiju_output(wildcards):
     # Get output
-    run_kaiju_output_files_wc = run_kaiju_output_files.format(**wildcards)
-    return run_kaiju_output_files_wc
+    run_kaiju_output_file_wc = run_kaiju_output_file.format(**wildcards)
+    return run_kaiju_output_file_wc
 
 
 rule run_kaiju:
@@ -231,37 +256,32 @@ rule run_kaiju:
     input:
         run_kaiju_input_files
     output:
-        run_kaiju_output_files
+        run_kaiju_output_file
     singularity: 
         kaiju_image
     params:
         fq_fwd_wc = run_kaiju_fq_fwd,
         fq_rev_wc = run_kaiju_fq_rev,
-        run_kaiju_output_files_wc = run_kaiju_output
+        run_kaiju_output_file_wc = run_kaiju_output
     shell:
         'kaiju '
         '-x '
         '-v '
-        '-t /data/{kaiju_dmp} '
-        '-f /data/{kaiju_fmi} '
-        '-i /data/{params.fq_fwd_wc} '
-        '-j /data/{params.fq_rev_wc} '
-        '-o /data/{params.run_kaiju_output_files_wc} '
+        '-t /{kaiju_dmp1} '
+        '-f /{kaiju_fmi} '
+        '-i /{params.fq_fwd_wc} '
+        '-j /{params.fq_rev_wc} '
+        '-o /{params.run_kaiju_output_file_wc} '
         '-z 4'
 
 
 ############################################
 # Taxonomic Classification: kaiju to krona
 
-kaiju_dmp1   = taxclass['kaiju']['dmp1']
-kaiju_dmp2   = taxclass['kaiju']['dmp2']
-kaiju_fmi    = taxclass['kaiju']['fmi']
 tax_rank     = taxclass['kaiju2krona']['taxonomic_rank']
 
 # name of kaiju output determines name of kaiju2krona input
-run_kaiju_output_file = taxclass['kaiju']['out']
-
-kaiju2krona_input_files = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+kaiju2krona_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 
 # One approach is to let the user set this.
 # But here, we just take care of it for them.
@@ -297,22 +317,22 @@ rule kaiju2krona:
     shell:
         'kaiju2krona '
         '-v '
-        '-t /data/{kaiju_dmp1} '
-        '-n /data/{kaiju_dmp2} '
-        '-i /data/{params.kaiju2krona_input_name_wc} '
-        '-o /data/{params.kaiju2krona_output_name_wc} '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-i /{params.kaiju2krona_input_name_wc} '
+        '-o /{params.kaiju2krona_output_name_wc} '
 
 
-kaiju2kronasummary_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
-kaiju2kronasummary_output = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
+kaiju2kronasummary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+kaiju2kronasummary_output_file = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
 
 tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
 
 def kaiju2kronasummary_input_name(wildcards):
-    return kaiju2kronasummary_input.format(**wildcards)
+    return run_kaiju_output_file.format(**wildcards)
 
 def kaiju2kronasummary_output_name(wildcards):
-    return kaiju2kronasummary_output.format(**wildcards)
+    return kaiju2kronasummary_output_file.format(**wildcards)
 
 rule kaiju2kronasummary:
     """
@@ -320,9 +340,9 @@ rule kaiju2kronasummary:
     and generate a report.
     """
     input:
-        kaiju2kronasummary_input
+        kaiju2kronasummary_input_files
     output:
-        kaiju2kronasummary_output
+        kaiju2kronasummary_output_file
     singularity:
         kaiju_image
     params:
@@ -331,11 +351,11 @@ rule kaiju2kronasummary:
     shell:
         'kaijuReport '
         '-v '
-        '-t /data/{kaiju_dmp1} '
-        '-n /data/{kaiju_dmp2} '
-        '-i /data/{params.kaiju2kronasummary_input_wc} '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-i /{params.kaiju2kronasummary_input_wc} '
         '-r {tax_rank} '
-        '-o /data/{params.kaiju2kronasummary_output_wc} '
+        '-o /{params.kaiju2kronasummary_output_wc} '
 
 
 ############################################
@@ -353,12 +373,12 @@ krona_image = container_image_name(biocontainers, 'krona')
 
 def visualize_krona_input_function(wildcard):
     # Get the input file name after doing wildcard substitution
-    visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
+    visualize_krona_input_wc  = visualize_krona_input_file.format(**wildcards)
     return visualize_krona_input_wc
 
 def visualize_krona_output_function(wildcard):
     # Get the input file name after doing wildcard substitution
-    visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
+    visualize_krona_output_wc = visualize_krona_output_file.format(**wildcards)
     return visualize_krona_output_wc
 
 rule visualize_krona:
@@ -379,8 +399,8 @@ rule visualize_krona:
         krona_image
     shell:
         'ktImportText '
-        '-o /data/{params.visualize_krona_output_wc} '
-        '/data/{params.visualize_krona_input_wc} '
+        '-o /{params.visualize_krona_output_wc} '
+        '/{params.visualize_krona_input_wc} '
 
 
 ############################################
@@ -483,15 +503,29 @@ rule sbts:
 rule merge:
     input:
         expand(sig_output, 
-            base=["SRR606249_subset10"],
+            base=["SRR606249"],
             ntrim=["2","30"]
         )
 
-rule prepkaiju:
+rule usekaiju:
     input:
         unpack_kaiju_output
 
-rule usekaiju:
+rule runkaiju:
     input:
-        run_kaiju_output_files
+        expand(run_kaiju_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkrona:
+    input:
+        expand(kaiju2krona_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        ),
+        expand(kaiju2kronasummary_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        )
 
