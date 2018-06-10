@@ -57,39 +57,33 @@ rule pull_biocontainers:
 
 sourmash_sbt_tar = taxclass['sourmash']['sbttar']
 download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
-download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
-
-rule download_sourmash_sbts:
-    """
-    Download the sourmash SBTs from spacegraphcats.
-    """
-    input: 
-        download_sourmash_sbt_input
-    output: 
-        download_sourmash_sbt_output
-    shell:
-        '''
-        wget -O {output} {input}
-        '''
 
 unpack_sourmash_sbt_input = join(data_dir,taxclass['sourmash']['sbttar'])
 unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
 
 def unpack_sourmash_sbt_tar(wildcards):
+    """Perform wildcard substitution to obtain name of sourmash SBT tar files."""
+    # input/output can have {variables} in them, but we need to do
+    # wildcard substiution before we can actually use these to
+    # assemble commands.
     return unpack_sourmash_sbt_input.format(**wildcards)
 
 rule unpack_sourmash_sbts:
     """
-    Unpack the sourmash SBTs from spacegraphcats.
+    Download and unpack the sourmash SBTs.
     """
     input:
-        unpack_sourmash_sbt_input
+        download_sourmash_sbt_input
     output:
         unpack_sourmash_sbt_output
     params:
         tar_wc = unpack_sourmash_sbt_tar
     shell:
-        'tar xzf {params.tar_wc} -C {data_dir}'
+        '''
+        wget -O {params.tar_wc} {input}
+        tar xzf -C {data_dir} {params.tar_wc}
+        rm -f {params.tar_wc}
+        '''
 
 
 ############################################
@@ -160,8 +154,6 @@ rule download_trimmed_data:
     Download the trimmed data from OSF.
     The parameters dictionary contains a map
     of .fq.gz filenames to corresponding OSF URLs.
-
-    See trimmed_data.md
     """
     output:
         trimmed_data_files,
@@ -201,8 +193,8 @@ rule unpack_kaiju:
         unpack_kaiju_output
     shell:
         '''
-        curl -LO "{kaiju_url}/{kaiju_tar}"
-        tar xzf {kaiju_target}
+        wget -O {kaiju_target} "{kaiju_url}/{kaiju_tar}"
+        tar xzf -C {data_dir} {kaiju_target}
         rm -f {kaiju_target}
         '''
 
@@ -495,7 +487,11 @@ rule merge:
             ntrim=["2","30"]
         )
 
-rule usekaiju:
+rule prepkaiju:
     input:
         unpack_kaiju_output
+
+rule usekaiju:
+    input:
+        run_kaiju_output_files
 
