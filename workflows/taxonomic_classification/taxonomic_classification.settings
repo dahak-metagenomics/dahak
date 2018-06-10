@@ -71,9 +71,10 @@ config_default = {
             'dmp2' : 'names.dmp',
             'fmi'  : 'kaiju_db_nr_euk.fmi',
             'tar'  : 'kaiju_index_nr_euk.tgz',
-            'url'  : 'http://kaiju.binf.ku.dk/database',
+            'url'  : 'https://s3.amazonaws.com/dahak-project-ucdavis/kaiju',
             'out'  : '{base}.kaiju_output.trim{ntrim}.out'
         },
+        #'url'  : 'http://kaiju.binf.ku.dk/database',
 
         'reads' : {
             'fq_fwd'     : '{base}_1.trim{ntrim}.fq.gz',
