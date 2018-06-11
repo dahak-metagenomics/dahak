@@ -1,18 +1,45 @@
-## Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
+# Taxonomic Classification Workflow
 
-Requirements (assumes you have already run `read_filtering` step with Ubuntu 16.04 LTS):
+## Taxonomic classification interactive walkthrough
+
+The following walkthrough covers the steps in the read filtering and quality
+assessment workflow. 
+
+This workflow covers the use of Docker to interactively run the workflow on a
+fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.
+
+The Snakefiles contained in this repository utilize Singularity containers
+instead of Docker containers, but run analogous commands to those given in this
+walkthrough.
+
+This walkthrough presumes that the steps covered on the [Installing](installing.md)
+page have been run, and that a version of Python, Conda, and Snakemake are available.
+See the [Installing](installing.md) page for instructions on installing
+required software.
+
+### Walkthrough
+
+Additional requirements:
 
 - At least 120 GB disk space 
 - At least 64 GB RAM 
-- Updated packages (see read filtering)
-- Docker (see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md) for details)
-- (Optional) OSF CLI (command-line interface; see [`read_filtering` workflow instructions](/workflows/read_filtering/README.md)) 
 
-Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather allows us to taxonomically classify the components of a metagenome by comparing hashes in our dataset to hashes in a sequence bloom tree (SBT) representing genomes. 
+Software required:
 
-First, let's download two SBTs containing hashes that represent the microbial genomes in the [NCBI GenBank](#) and [RefSeq](#) databases. 
+- Docker (covered in this walkthrough) or Singularity (if using Snakefile)
+- Updated packages (see the [Installing](installing.md) page)
+- (Optional) OSF CLI (command-line interface; see [Installing](installing.md)
+    and [Read Filtering Workflow](workflow_readfilt.md) pages)
 
-(Note: these are each several GB in size, and unzipped they take up around 100 GB of space.)
+Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather
+allows us to taxonomically classify the components of a metagenome by comparing hashes
+in our dataset to hashes in a sequence bloom tree (SBT) representing genomes. 
+
+First, let's download two SBTs containing hashes that represent the microbial genomes in
+the [NCBI GenBank](#) and [RefSeq](#) databases. 
+
+(Note: these are each several GB in size, and unzipped they take up around 100 GB of
+space.)
 
 ```
 mkdir data/
@@ -342,4 +369,5 @@ do
             /data/${i}
 done
 ```
+
 
