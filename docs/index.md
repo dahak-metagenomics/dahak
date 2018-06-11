@@ -130,7 +130,7 @@ nodes.
 
 * [Read Filtering](workflow_readfilt.md)
 * [Taxonomic Classification](workflow_taxclass.md)
-* Assembly
+* [Assembly](workflow_assembly.md)
 * Metagenomic Comparison
 * Variant Calling
 * Functional Inference
