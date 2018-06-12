@@ -3,51 +3,26 @@
 The instructions that follow will help you get started running the workflows
 described above. 
 
-## Getting Started with Docker
-
-If you want to run these protocols interactively you will need to install Docker on your system. You can find more detailed instructions [here](https://docs.docker.com/install/). 
-Alternatively we've developed snakefiles for automation that do not require installation. You can find those instructions below. 
-
-First, update your machine:
-
-```
-# Update aptitude and install dependencies
-sudo apt-get -y update
-
-sudo apt-get -y install zlib1g-dev
-sudo apt-get -y install ncurses-dev
-```
-
-Next, install Docker:
-
-```
-# Install Docker
-wget -qO- https://get.docker.com/ | sudo sh
-sudo usermod -aG docker ubuntu
-```
-
 ## Getting Started with Singularity
 
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker containers 
 in higher security environments where permissions are restricted.
 
-After logging back in, proceed to install singularity. These instructions are for Ubuntu 16.04. Take a look at their website for alternate/updated instructions. 
+Installing a stable version of singularity is recommended. Stable versions can be obtained from [Singularity's Releases on Github](https://github.com/singularityware/singularity/releases).
 
 ```
-wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
-apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-```
+# Latest
+VERSION=2.5.1
 
-Update aptitude's information about the new software repositories:
+# More widely available
+VERSION=2.4.6
 
-```
-sudo apt-get update
-```
-
-Now install singularity:
-
-```
-sudo apt-get install -y singularity-container
+wget https://github.com/singularityware/singularity/releases/download/$VERSION/singularity-$VERSION.tar.gz
+tar xvf singularity-$VERSION.tar.gz
+cd singularity-$VERSION
+./configure --prefix=/usr/local
+make
+sudo make install
 ```
 
 Once it is installed, you can check the version:
@@ -107,7 +82,8 @@ conda config --add channels bioconda
 Now install snakemake from the bioconda channel:
 
 ```
-conda install -c bioconda snakemake
+#conda install -c bioconda snakemake
+pip install snakemake
 ```
 
 Finally, install the Open Science Framework CLI client
@@ -118,3 +94,28 @@ that the conda and python commands point to):
 pip install --upgrade pip
 pip install --user osfclient
 ```
+
+## (Optional) Getting Started with Docker
+
+If you want to run these protocols interactively you will need to install Docker on your system. You can find more detailed instructions [here](https://docs.docker.com/install/). 
+Alternatively we've developed snakefiles for automation that do not require installation. You can find those instructions below. 
+
+First, update your machine:
+
+```
+# Update aptitude and install dependencies
+sudo apt-get -y update
+
+sudo apt-get -y install zlib1g-dev
+sudo apt-get -y install ncurses-dev
+```
+
+Next, install Docker:
+
+```
+# Install Docker
+wget -qO- https://get.docker.com/ | sudo sh
+sudo usermod -aG docker ubuntu
+```
+
+
