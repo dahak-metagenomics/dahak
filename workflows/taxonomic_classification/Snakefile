@@ -24,6 +24,15 @@ biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
 
 
+###################################
+# Taxonomic Classification: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
 ############################################
 # Taxonomic Classification: biocontainers
 
@@ -484,7 +493,7 @@ rule filter_taxa_class:
 
 
 ###################################
-# Read Filtering: high level rules
+# Taxonomic Classification: build rules
 
 # These "ghost" rules don't do anything 
 # except trigger other rules.
