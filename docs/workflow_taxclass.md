@@ -1,9 +1,55 @@
 # Taxonomic Classification Workflow
 
-## Taxonomic classification interactive walkthrough
+To run the taxonomic classification workflow, use the Snakefile in the
+top level of the repository.
 
-The following walkthrough covers the steps in the read filtering and quality
-assessment workflow. 
+Workflow rules for taxonomic classification are defined in the file
+`workflows/taxonomic_classification/Snakefile`.
+are defined in `workflows/read_filtering/Snakefile`.
+
+
+## List of Rules
+
+The build rules trigger portions of the workflow to run.
+These are listed below:
+
+* `genbank` - download pre-assembled SBTs for sourmash built from genome
+  and protein databases (Genbank).
+
+* `sbts` - unpack pre-assembled SBTs for sourmash built from genome and protein
+  databases (Genbank).
+
+* `merge` - merge read files and calculate signature file
+
+* `usekaij` - download and unpack the kaiju database
+
+* `runkaiju` - run the kaiju classifier on specified input files
+
+* `runkrona` - run the krona tool to visualize kaiju output
+
+You can see a list of all available rules and brief descriptions
+of each by using the Snakemake list command:
+
+```
+snakemake -l
+```
+
+
+## Running Rules
+
+To run a rule, call Snakemake with specified environment variables,
+command line flags, and options, and pass it the name of the rule.
+For example, the following command uses Singularity to run all rules
+that have a singularity directive:
+
+```
+SINGULARITY_BINDPATH="data:/data" snakemake --with-singularity post_trim
+```
+
+## Walkthrough
+
+The following walkthrough covers the steps in the taxonomic classification
+workflow.
 
 This workflow covers the use of Docker to interactively run the workflow on a
 fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.
@@ -17,7 +63,7 @@ page have been run, and that a version of Python, Conda, and Snakemake are avail
 See the [Installing](installing.md) page for instructions on installing
 required software.
 
-### Walkthrough
+### Walkthrough Steps
 
 Additional requirements:
 

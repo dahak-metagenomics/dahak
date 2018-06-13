@@ -1,6 +1,49 @@
 # Read Filtering Workflow
 
-## Read filtering and quality assessment interactive walkthrough
+To run the read filtering and quality assessment workflow, 
+use the Snakefile in the top level of the repository.
+
+Workflow rules for taxonomic classification are defined in the file
+`workflows/read_filtering/Snakefile`.
+
+
+## List of Rules
+
+The most useful rules are the build rules, which do not
+perform any work themselves but instead trigger entire
+portions of the workflow to run. These are listed below:
+
+* `fetch` - fetches all samples specified by the 
+    `pre_trimming_pattern` setting
+
+* `pre_trim` - performs a pre-trimming quality assessment
+    using fastqc
+
+* `post_trim` - performs a post-trimming quality assessment
+    using fastqc
+
+
+You can see a list of all available rules and brief descriptions
+of each by using the Snakemake list command:
+
+```
+snakemake -l
+```
+
+
+## Running Rules
+
+To run a rule, call Snakemake with specified environment variables,
+command line flags, and options, and pass it the name of the rule.
+For example, the following command uses Singularity to run all rules
+that have a singularity directive:
+
+```
+SINGULARITY_BINDPATH="data:/data" snakemake --with-singularity post_trim
+```
+
+
+## Walkthrough
 
 The following walkthrough covers the steps in the read filtering and quality
 assessment workflow. 
@@ -17,7 +60,7 @@ page have been run, and that a version of Python, Conda, and Snakemake are avail
 See the [Installing](installing.md) page for instructions on installing
 required software.
 
-### Walkthrough
+### Walkthrough Steps
 
 Starting with a fresh image, go through the installation instructions
 on the [Installing](installing.md) page.
