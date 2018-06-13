@@ -1,0 +1,156 @@
+from snakemake.utils import update_config
+
+# Note: don"t include http:// or https://
+config_default = {
+    "data_dir" : "data/",
+    "biocontainers" : {
+        "sourmash" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        },
+        "kaiju" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/kaiju",
+            "version" : "1.6.1--pl5.22.0_0"
+        },
+        "krona" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/krona",
+            "version" : "2.7--pl5.22.0_1"
+        },
+        "spades" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/spades",
+            "version" : "3.11.1--py27_zlib1.2.8_0"
+        },
+        "osf" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/centerforopenscience/osf",
+            "version" : "master"
+        }
+    },
+
+
+    "assembly" : {
+
+        "assembly_patterns" : {
+            "metaspades_pattern" : "{sample}_trim{qual}_spades.contigs.fa"
+        },
+
+    },
+
+
+    "taxonomic_classification" : {
+
+        "trimmed_reads" : {
+            "SRR606249_1.trim2.fq.gz":             "osf.io/tzkjr/download",
+            "SRR606249_2.trim2.fq.gz":             "osf.io/sd968/download",
+            "SRR606249_subset50_1.trim2.fq.gz":    "osf.io/acs5k/download",
+            "SRR606249_subset50_2.trim2.fq.gz":    "osf.io/bem28/download",
+            "SRR606249_subset25_1.trim2.fq.gz":    "osf.io/syf3m/download",
+            "SRR606249_subset25_2.trim2.fq.gz":    "osf.io/zbcrx/download",
+            "SRR606249_subset10_1.trim2.fq.gz":    "osf.io/ksu3e/download",
+            "SRR606249_subset10_2.trim2.fq.gz":    "osf.io/k9tqn/download",
+            "SRR606249_1.trim30.fq.gz":            "osf.io/qtzyk/download",
+            "SRR606249_2.trim30.fq.gz":            "osf.io/dumz6/download",
+            "SRR606249_subset50_1.trim30.fq.gz":   "osf.io/v5jhs/download",
+            "SRR606249_subset50_2.trim30.fq.gz":   "osf.io/q4cfa/download",
+            "SRR606249_subset25_1.trim30.fq.gz":   "osf.io/jcp5n/download",
+            "SRR606249_subset25_2.trim30.fq.gz":   "osf.io/qevh9/download",
+            "SRR606249_subset10_1.trim30.fq.gz":   "osf.io/rtvuz/download",
+            "SRR606249_subset10_2.trim30.fq.gz":   "osf.io/zq4f9/download"
+        },
+
+        # base comes from filenames above,
+        # everything before the _1/_2 
+        # scaled 10000
+        #
+        "calculate_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "sig_name"      : "{base}.trim{ntrim}.scaled10k.k21_31_51.sig",
+            "merge_name"    : "{base}_merged.trim{ntrim}.scaled10k.k21_31_51.fq.gz"
+        },
+
+        "filter_taxa" : {
+            "pct_threshold" : 1
+        },
+
+        "kaiju2krona" : {
+            "taxonomic_rank" : "genus"
+        },
+
+        "kaiju" : {
+            "dmp1" : "nodes.dmp",
+            "dmp2" : "names.dmp",
+            "fmi"  : "kaiju_db_nr_euk.fmi",
+            "tar"  : "kaiju_index_nr_euk.tgz",
+            "url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "out"  : "{base}.kaiju_output.trim{ntrim}.out"
+        },
+        #"url"  : "http://kaiju.binf.ku.dk/database",
+
+        "reads" : {
+            "fq_fwd"     : "{base}_1.trim{ntrim}.fq.gz",
+            "fq_rev"     : "{base}_2.trim{ntrim}.fq.gz",
+        },
+        # Should this use {dir}? 
+        # or just use the post_trim_pattern
+        # from read_filt
+
+        "sourmash" : { 
+            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+            "sbttar"  : "microbe-{database}-sbt-k{ksize}-2017.05.09.tar.gz",
+            "sbtunpack" : "{database}-k{ksize}.sbt.json"
+        },
+
+        "visualize_krona" : {
+            # .summary will be replaced with .html
+            "input_summary"  : "{base}.kaiju_output.trim{ntrim}.{suffix}.summary",
+        }
+    }
+
+    "read_filtering" : {
+
+        # Note: read_files must match pre_trimmming_pattern.
+        # The workflow actually builds the rules to download 
+        # the read_files by using the pre_trimming_pattern.
+        "read_patterns" : {
+            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
+            "post_trimming_pattern" : "{sample}_{direction}_trim{qual}.fq.gz",
+        },
+
+        # read_files must be defined by user 
+        "read_files" : {
+            "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+            "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+            "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+            "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+            "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+            "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
+            "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
+            "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77"
+        },
+
+        "quality_assessment" : {
+            # optional, modifiers for the .fq.gz --> .zip --> results workflow
+            "fastqc_suffix": "fastqc",
+        },
+
+        "quality_trimming" : {
+            "trim_suffix" : "se"
+        },
+        "interleaving" : {
+            "interleave_suffix" : "pe"
+        },
+        "adapter_file" : {
+            "name" : "TruSeq2-PE.fa",
+            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+        }
+    }
+}
+
+update_config(config_default, config)
+config = config_default
+
