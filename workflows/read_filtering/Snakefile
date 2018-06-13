@@ -28,8 +28,9 @@ readfilt = config['read_filtering']
 # Read Filtering: high level rules
 
 # Skip to the very end of the file 
-# to see the high-level rules that
-# trigger cascades of workflow tasks.
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
 
 
 ###################################
@@ -354,9 +355,9 @@ rule quality_trimming:
 
 
 ###################################
-# Read Filtering: high level rules
+# Read Filtering: build rules
 
-# These "ghost" rules don't do anything 
+# These "ghost" build rules don't do anything 
 # except trigger other rules.
 
 rule fetch:
