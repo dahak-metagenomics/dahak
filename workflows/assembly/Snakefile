@@ -1,11 +1,173 @@
 '''
-Author: Phillip Brooks 
+Author: Phillip Brooks, Charles Reid
 Affiliation: UC Davis Lab for Data Intensive Biology
-Aim: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT 
-Date: Wed Jan 17 2018
-Run: snakemake --use-conda --use-singularity 
-Latest modification:
+Objective: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT  
+Date: 2018-06-11
+Documentation: docs/workflow_assembly.md
 '''
+from utils import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+
+
+############################################
+# Assembly: default config
+
+include: "assembly.settings"
+
+data_dir = config['data_dir']
+biocontainers = config['biocontainers']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+
+
+###################################
+# Assembly: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
+###################################
+# Assembly: metaspades
+
+# This uses {direction} wildcard.
+# will this expand to both _1 and _2?
+assembly_metaspades_input = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
+assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
+
+spades_image = container_image_name(biocontainers, 'spades')
+
+def assembly_metaspades_logfile(wildcards):
+    logfile = re.sub('contigs.fa','log',assembly['assembly_patterns']['metaspades_pattern'])
+    return logfile.format(**wildcards)
+
+def assembly_metaspades_benchfile(wildcards):
+    benchfile = re.sub('contigs.fa','benchmark.txt',assembly['assembly_patterns']['metaspades_pattern'])
+    return benchfile.format(**wildcards)
+
+rule assembly_metaspades:
+    input:
+        assembly_metaspades_input
+    output:
+        assembly_metaspades_output
+    message: 
+         '--- Assembling quality trimmed data with SPAdes'
+    singularity: 
+        spades_image
+    threads: 32 
+    log: 
+        assembly_metaspades_logfile
+    benchmark:
+        assembly_metaspades_benchfile
+    shell:
+        'metaspades.py -t {threads} '
+        '-m 240 '
+        '-1 {input[0]} '
+        '-2 {input[1]} '
+        '-o /{data_dir} '
+        '&& '
+        'mv /{data_dir}/contigs.fasta {output} '
+
+
+###################################
+# Assembly: metaspades
+
+assembly_megahit_input = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
+assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+
+megahit_image = container_image_name(biocontainers, 'megahit')
+
+def assembly_megahit_logfile(wildcards):
+    logfile = re.sub('contigs.fa','log',assembly['assembly_patterns']['megahit_pattern'])
+    return logfile.format(**wildcards)
+
+def assembly_megahit_benchfile(wildcards):
+    benchfile = re.sub('contigs.fa','benchmark.txt',assembly['assembly_patterns']['megahit_pattern'])
+    return benchfile.format(**wildcards)
+
+def assembly_megahit_out_prefix(wildcards):
+    out_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
+    return out_prefix.format(**wildcards)
+
+rule assembly_megahit:
+    input:
+        assembly_megahit_input
+    output:
+        assembly_megahit_output
+    message: 
+        '''--- Assembling quality trimmed reads with Megahit'''
+    singularity:
+        megahit_image
+    threads: 8
+    log:
+        assembly_megahit_logfile
+    benchmark:
+        assembly_megahit_benchfile
+    params:
+        out_prefix = assembly_megahit_out_prefix
+    shell:
+        'megahit -t {threads} '
+        '--memory 0.20 '
+        '-1 {input[0]} '
+        '-2 {input[1]} '
+        '--out-prefix={params.out_prefix} '
+        '-o /{data_dir} '
+
+
+###################################
+# Assembly: quast statistics
+
+assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+
+assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
+
+quast_image = container_image_name(biocontainers, 'quast')
+
+def assembly_quast_logfile(wildcards):
+    logfile = re.sub('.contigs.fa','_quast.log',assembly['assembly_patterns']['assembly_pattern'])
+    return logfile.format(**wildcards)
+
+rule assembly_statistics_quast:
+    input:
+        assembly_quast_input
+    output:
+        assembly_quast_output
+    message: 
+        '--- Calculating assembly statistics with quast'
+    log:
+        assembly_quast_logfile
+    shell:
+        'quast.py {input} -o {output}'
+
+
+
+
+
+# try to keep everything
+# in one snakefile, one scratch
+# directory, one settings file,
+# etc.
+# ---
+# need to prefix build rules 
+# with build_ or something.
+
+######################################
+# Old Snakefile contents
+######################################
+
+
+
+
+
+
+
+
+
 ##--------------------------------------------------------------------------------------##
 ## Variables declaration                          
 ## Declaring some variables
@@ -111,4 +273,7 @@ rule compile_assembly_stats_with_multiqc:
         'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_multiqc.log',
     shell:
         'multiqc {input}' 
+
+
+
 

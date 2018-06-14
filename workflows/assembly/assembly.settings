@@ -24,6 +24,21 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/spades",
             "version" : "3.11.1--py27_zlib1.2.8_0"
         },
+        "megahit" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/megahit",
+            "version" : "1.1.2--py35_0"
+        },
+        "quast" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/quast",
+            "version" : "4.5--boost1.61_1"
+        },
+        "multiqc" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/multiqc",
+            "version" : "1.4--py35_0"
+        },
         "osf" : {
             "use_local" : False,
             "quayurl" : "quay.io/centerforopenscience/osf",
@@ -35,7 +50,9 @@ config_default = {
     "assembly" : {
 
         "assembly_patterns" : {
-            "metaspades_pattern" : "{sample}_trim{qual}_spades.contigs.fa"
+            "metaspades_pattern" : "{sample}_trim{qual}_spades.contigs.fa",
+            "megahit_pattern" : "{sample}_trim{qual}_megahit.contigs.fa",
+            "assembly_pattern" : "{sample}_trim{qual}_{assembler}.contigs.fa"
         },
 
     },
