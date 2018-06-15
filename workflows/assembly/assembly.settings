@@ -51,16 +51,10 @@ config_default = {
         "assembly_patterns" : {
             "spades_pattern" : "{sample}_trim{qual}_spades.contigs.fa",
             "megahit_pattern" : "{sample}_trim{qual}_megahit.contigs.fa",
-<<<<<<< Updated upstream
             "assembly_pattern" : "{sample}_trim{qual}_{assembler}.contigs.fa",
             "quast_pattern" : "{sample}_trim{qual}_{assembler}_quast/report.html",
             "multiqc_pattern" : "{sample}_trim{qual}_{assembler}_multiqc/report.html",
-        },
-
-=======
-            "assembly_pattern" : "{sample}_trim{qual}_{assembler}.contigs.fa"
         }
->>>>>>> Stashed changes
     },
 
     "taxonomic_classification" : {
