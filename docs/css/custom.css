@@ -16,10 +16,10 @@ i.md-icon {
     font-size: 100%;
 }
 .md-typeset pre {
-    background-color: #ddd;
+    background-color: #dedede;
     font-size: 100%;
 }
 .md-typeset .codehilite code, .md-typeset .codehilite pre, .md-typeset .highlight code, .md-typeset .highlight pre {
-    background-color: #ddd;
+    background-color: #dedede;
     font-size: 110%;
 }

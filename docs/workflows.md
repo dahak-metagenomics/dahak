@@ -41,7 +41,7 @@ The following workflows are required deliverables:
 * Interactive Jupyter notebooks for interpretation of results.
 
 
-# List of Workflows
+## Workflow Diagrams
 
 In the following diagrams, the colors denote the following:
 
@@ -119,7 +119,6 @@ instructions on using this workflow.**
 
 ![Abundance estimation and variance calling](img/Workflow3_VC.png)
 
----
 
 ## Sub-Element Identification
 
@@ -128,7 +127,6 @@ workflow.**
 
 ![Sub-element ID](img/Workflow4_SubID.png)
 
----
 
 ## Functional Inference
 
@@ -149,8 +147,6 @@ Also see the [`functional_inference/`](/workflows/functional_inference/) directo
 
 ![Functional inference](img/Workflow5_Function.png)
 
-
----
 
 ## Sample Comparison
 

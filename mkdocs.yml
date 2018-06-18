@@ -6,7 +6,9 @@ edit_uri: ""
 
 # This is a boilerplate DIB Lab footer
 # This will likely change...
-copyright: 'Copyright &copy; 2018 <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis, released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>'
+copyright: 'Copyright &copy; 2017, The Regents of the University of California.<br />
+Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br />
+Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />'
 
 # change directory names here
 docs_dir: docs
@@ -17,11 +19,13 @@ pages:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
   - 'Workflows' :
-    - 'Metagenomic Workflows' : 'workflows.md'
-    - 'Running Workflows' : 'workflows_running.md'
+    - 'Overview of Metagenomic Workflows' : 'workflows.md'
+    - 'Running Metagenomic Workflows' : 'workflows_running.md'
     - 'Read Filtering' : 'workflow_readfilt.md'
     - 'Taxonomic Classification' : 'workflow_taxclass.md'
+    - 'Assembly' : 'workflow_assembly.md'
   - 'Parameters and Configuration' : 'config.md'
+  - 'Contributing' : 'contrib.md'
 
 theme:
 
