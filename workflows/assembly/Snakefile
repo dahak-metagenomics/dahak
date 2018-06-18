@@ -33,25 +33,33 @@ readfilt = config['read_filtering']
 ###################################
 # Assembly: metaspades
 
-# This uses {direction} wildcard.
-# will this expand to both _1 and _2?
-assembly_metaspades_input = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+# Post trimming pattern uses the {direction} wildcard.
+# We have to explicitly expand direction to _1 and _2.
+# If we rely on wildards, _1 and _2 are two separate rules.
+
+assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
+            direction="2", 
+            sample='{sample}', 
+            qual='{qual}'
+)
 
 assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
 
+assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
+assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
+
 spades_image = container_image_name(biocontainers, 'spades')
-
-def assembly_metaspades_logfile(wildcards):
-    logfile = re.sub('contigs.fa','log',assembly['assembly_patterns']['spades_pattern'])
-    return logfile.format(**wildcards)
-
-def assembly_metaspades_benchfile(wildcards):
-    benchfile = re.sub('contigs.fa','benchmark.txt',assembly['assembly_patterns']['spades_pattern'])
-    return benchfile.format(**wildcards)
 
 rule assembly_metaspades:
     input:
-        assembly_metaspades_input
+        fwd = assembly_metaspades_input_fwd,
+        rev = assembly_metaspades_input_rev
     output:
         assembly_metaspades_output
     message: 
@@ -59,44 +67,47 @@ rule assembly_metaspades:
     singularity: 
         spades_image
     threads: 32 
-    #log: 
-    #    assembly_metaspades_logfile
-    #benchmark:
-    #    assembly_metaspades_benchfile
+    log: 
+        assembly_metaspades_logfile
+    benchmark:
+        assembly_metaspades_benchfile
     shell:
         'metaspades.py -t {threads} '
         '-m 240 '
-        '-1 {input[0]} '
-        '-2 {input[1]} '
+        '-1 /{input.fwd} '
+        '-2 /{input.rev} '
         '-o /{data_dir} '
         '&& '
-        'mv /{data_dir}/contigs.fasta {output} '
+        'mv /{data_dir}/contigs.fasta /{output} '
 
 
 ###################################
 # Assembly: megahit
 
-assembly_megahit_input = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
 
 assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
+assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
+assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
+assembly_megahit_outprefix = re.sub('contigs.fa','',assembly_megahit_output)
+
 megahit_image = container_image_name(biocontainers, 'megahit')
-
-def assembly_megahit_logfile(wildcards):
-    logfile = re.sub('contigs.fa','log',assembly['assembly_patterns']['megahit_pattern'])
-    return logfile.format(**wildcards)
-
-def assembly_megahit_benchfile(wildcards):
-    benchfile = re.sub('contigs.fa','benchmark.txt',assembly['assembly_patterns']['megahit_pattern'])
-    return benchfile.format(**wildcards)
-
-def assembly_megahit_out_prefix(wildcards):
-    out_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
-    return out_prefix.format(**wildcards)
 
 rule assembly_megahit:
     input:
-        assembly_megahit_input
+        fwd = assembly_megahit_input_fwd,
+        rev = assembly_megahit_input_rev
     output:
         assembly_megahit_output
     message: 
@@ -104,18 +115,16 @@ rule assembly_megahit:
     singularity:
         megahit_image
     threads: 8
-    #log:
-    #    assembly_megahit_logfile
-    #benchmark:
-    #    assembly_megahit_benchfile
-    params:
-        out_prefix = assembly_megahit_out_prefix
+    log:
+        assembly_megahit_logfile
+    benchmark:
+        assembly_megahit_benchfile
     shell:
         'megahit -t {threads} '
         '--memory 0.20 '
-        '-1 {input[0]} '
-        '-2 {input[1]} '
-        '--out-prefix={params.out_prefix} '
+        '-1 {input.fwd} '
+        '-2 {input.rev} '
+        '--out-prefix={assembly_megahit_outprefix} '
         '-o /{data_dir} '
 
 
@@ -139,8 +148,8 @@ rule assembly_statistics_quast:
         assembly_quast_output
     message: 
         '--- Calculating assembly statistics with quast'
-    log:
-        assembly_quast_logfile
+    #log:
+    #    assembly_quast_logfile
     singularity:
         quast_image
     shell:
@@ -168,8 +177,8 @@ rule assembly_statistics_multiqc:
         assembly_multiqc_output
     message: 
         '--- Compiling assembly statistics with multiqc'
-    log:
-        assembly_multiqc_logfile
+    #log:
+    #    assembly_multiqc_logfile
     singularity:
         multiqc_image
     shell:
@@ -180,13 +189,15 @@ rule assembly_statistics_multiqc:
 ###################################
 # Assembly: build rules
 
-# note:
+# note: taxonomic classification is the outlier
+# read filtering and assembly both consistent
 # sample <--> base
 # qual <--> ntrim
 rule metaspades:
     input:
         expand(assembly_metaspades_output,
                 sample=["SRR606249"],
+                direction=["1","2"],
                 qual=["2","30"]
         )
 
@@ -202,13 +213,6 @@ rule metaspades:
 ######################################
 # Old Snakefile contents
 ######################################
-
-
-
-
-
-
-
 
 
 ### ##--------------------------------------------------------------------------------------##
