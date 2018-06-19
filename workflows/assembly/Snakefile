@@ -100,9 +100,14 @@ assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_
 
 assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
-assembly_megahit_outprefix = re.sub('contigs.fa','',assembly_megahit_output)
+
+# just the name
+assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 
 megahit_image = container_image_name(biocontainers, 'megahit')
+
+def assembly_megahit_outprefix_sub(wildcards):
+    return assembly_megahit_outprefix.format(**wildcards)
 
 rule assembly_megahit:
     input:
@@ -119,13 +124,16 @@ rule assembly_megahit:
         assembly_megahit_logfile
     benchmark:
         assembly_megahit_benchfile
+    params:
+        assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub
     shell:
         'megahit -t {threads} '
         '--memory 0.20 '
         '-1 {input.fwd} '
         '-2 {input.rev} '
-        '--out-prefix={assembly_megahit_outprefix} '
-        '-o /{data_dir} '
+        '--out-prefix={params.assembly_megahit_outprefix_wc} '
+        '-o /{data_dir}/{params.assembly_megahit_outprefix_wc} '
+
 
 
 ###################################
@@ -196,6 +204,14 @@ rule assembly_statistics_multiqc:
 rule metaspades:
     input:
         expand(assembly_metaspades_output,
+                sample=["SRR606249"],
+                direction=["1","2"],
+                qual=["2","30"]
+        )
+
+rule megahit:
+    input:
+        expand(assembly_megahit_output,
                 sample=["SRR606249"],
                 direction=["1","2"],
                 qual=["2","30"]
