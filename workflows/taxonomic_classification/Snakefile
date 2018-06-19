@@ -267,7 +267,7 @@ kaiju2krona_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 
 # One approach is to let the user set this.
 # But here, we just take care of it for them.
-kaiju2krona_output_file = re.sub('\.out','\.kaiju_out_krona',run_kaiju_output_file)
+kaiju2krona_output_file = re.sub(r'\.out','.kaiju_out_krona',run_kaiju_output_file)
 
 kaiju_image = container_image_name(biocontainers, 'kaiju')
 
@@ -306,7 +306,7 @@ rule kaiju2krona:
 
 
 kaiju2kronasummary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
-kaiju2kronasummary_output_file = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
+kaiju2kronasummary_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
 
 tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
 
@@ -346,7 +346,7 @@ rule kaiju2kronasummary:
 visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
 if(visualize_krona_input_name[-8:] is not '.summary'):
     visualize_krona_input_name += '.summary'
-visualize_krona_output_name = re.sub(visualize_krona_input_name, '.summary','.html')
+visualize_krona_output_name = re.sub(r'\.summary','.html',visualize_krona_input_name)
 
 visualize_krona_input_file  = join(data_dir, visualize_krona_input_name)
 visualize_krona_output_file = join(data_dir, visualize_krona_output_name)
@@ -391,8 +391,8 @@ rule visualize_krona:
 filter_taxa_pct = taxclass['filter_taxa']['pct_threshold']
 
 filter_taxa_total_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
-filter_taxa_total_suffix = '\.kaiju_out_krona.%dpercenttotal.summary'%(filter_taxa_pct)
-filter_taxa_total_output = re.sub('\.out',filter_taxa_total_suffix,taxclass['kaiju']['out'])
+filter_taxa_total_suffix = '.kaiju_out_krona.%dpercenttotal.summary'%(filter_taxa_pct)
+filter_taxa_total_output = re.sub(r'\.out', filter_taxa_total_suffix, run_kaiju_output_file)
 
 def filter_taxa_total_input_function(wildcards):
     return run_kaiju_output_file.format(**wildcards)
@@ -419,17 +419,17 @@ rule filter_taxa_total:
     shell:
         'kaijuReport '
         '-v '
-        '-t /data/{kaiju_dmp1} '
-        '-n /data/{kaiju_dmp2} '
-        '-i /data/{params.filter_taxa_total_input_wc} '
+        '-t /{input[0]} '
+        '-n /{input[1]} '
+        '-i /{params.filter_taxa_total_input_wc} '
         '-r genus '
         '-m {filter_taxa_pct} '
-        '-o /data/{params.filter_taxa_total_output_wc} '
+        '-o /{params.filter_taxa_total_output_wc} '
 
 
 filter_taxa_class_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
-filter_taxa_class_suffix = '\.kaiju_out_krona.%dpercentclassified.summary'%(filter_taxa_pct)
-filter_taxa_class_output = re.sub('\.out',filter_taxa_class_suffix,taxclass['kaiju']['out'])
+filter_taxa_class_suffix = '.kaiju_out_krona.%dpercentclassified.summary'%(filter_taxa_pct)
+filter_taxa_class_output = re.sub(r'\.out', filter_taxa_class_suffix, run_kaiju_output_file)
 
 def filter_taxa_class_input_function(wildcards):
     return run_kaiju_output_file.format(**wildcards)
@@ -456,13 +456,13 @@ rule filter_taxa_class:
     shell:
         'kaijuReport '
         '-v '
-        '-t /data/{kaiju_dmp1} '
-        '-n /data/{kaiju_dmp2} '
-        '-i /data/{params.filter_taxa_class_in_wc} '
+        '-t /{input[0]} '
+        '-n /{input[1]} '
+        '-i /{params.filter_taxa_class_in_wc} '
         '-r genus '
         '-m {filter_taxa_pct} '
         '-u '
-        '-o /data/{params.filter_taxa_class_output_wc}'
+        '-o /{params.filter_taxa_class_output_wc}'
 
 
 ###################################
