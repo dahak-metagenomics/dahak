@@ -5,3 +5,6 @@ include: "read_filtering/Snakefile"
 
 include: "taxonomic_classification/taxonomic_classification.settings"
 include: "taxonomic_classification/Snakefile"
+
+include: "assembly/assembly.settings"
+include: "assembly/Snakefile"
