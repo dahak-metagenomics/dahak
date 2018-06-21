@@ -206,7 +206,7 @@ rule assembly_statistics_multiqc:
 rule metaspades:
     input:
         expand(assembly_metaspades_output,
-                sample=["SRR606249"],
+                sample=["SRR606249_subset10"],
                 direction=["1","2"],
                 qual=["2","30"]
         )
@@ -214,7 +214,7 @@ rule metaspades:
 rule megahit:
     input:
         expand(assembly_megahit_output,
-                sample=["SRR606249"],
+                sample=["SRR606249_subset10"],
                 direction=["1","2"],
                 qual=["2","30"]
         )
