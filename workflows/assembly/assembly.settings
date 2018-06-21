@@ -48,17 +48,14 @@ config_default = {
 
 
     "assembly" : {
-
         "assembly_patterns" : {
-            "metaspades_pattern" : "{sample}_trim{qual}_spades.contigs.fa",
+            "spades_pattern" : "{sample}_trim{qual}_spades.contigs.fa",
             "megahit_pattern" : "{sample}_trim{qual}_megahit.contigs.fa",
             "assembly_pattern" : "{sample}_trim{qual}_{assembler}.contigs.fa",
             "quast_pattern" : "{sample}_trim{qual}_{assembler}_quast/report.html",
             "multiqc_pattern" : "{sample}_trim{qual}_{assembler}_multiqc/report.html",
-        },
-
+        }
     },
-
 
     "taxonomic_classification" : {
 
@@ -128,7 +125,7 @@ config_default = {
             # .summary will be replaced with .html
             "input_summary"  : "{base}.kaiju_output.trim{ntrim}.{suffix}.summary",
         }
-    }
+    },
 
     "read_filtering" : {
 

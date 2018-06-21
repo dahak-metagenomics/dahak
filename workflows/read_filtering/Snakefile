@@ -165,7 +165,7 @@ target_ext = "_%s.zip"%(target_suffix)
 post_trimming_output = re.sub('\.fq\.gz',target_ext,post_trimming_input)
 
 def post_trimming_qa_input(wildcards):
-    return post_trimming_pattern.format(**wildcards)
+    return post_trimming_input.format(**wildcards)
 
 def post_trimming_qa_output(wildcards):
     return post_trimming_output.format(**wildcards)
@@ -249,8 +249,7 @@ rule interleave_reads:
         quality_log
     params:
         interleave_input_wc = interleave_reads_inputs,
-        interleave_output_wc = interleave_reads_output,
-        interleave_logfile = interleave_reads_logfile
+        interleave_output_wc = interleave_reads_output
     shell:
         'interleave-reads.py {params.interleave_input_wc} '
         '--no-reformat '
