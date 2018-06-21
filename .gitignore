@@ -7,6 +7,7 @@
 *.img
 
 # Ignore data/ dirs
+workflows/data
 workflows/read_filtering/data
 workflows/taxonomic_classification/data
 

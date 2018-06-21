@@ -96,13 +96,14 @@ assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
             qual='{qual}'
 )
 
-assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+# just the name
+assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
+
+assembly_megahit_output = join(data_dir, assembly_megahit_outprefix, assembly['assembly_patterns']['megahit_pattern'])
 
 assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
 
-# just the name
-assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 
 megahit_image = container_image_name(biocontainers, 'megahit')
 
@@ -127,13 +128,14 @@ rule assembly_megahit:
     params:
         assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub
     shell:
+        'rm -rf {data_dir}/{params.assembly_megahit_outprefix_wc} '
+        '&& '
         'megahit -t {threads} '
         '--memory 0.20 '
-        '-1 {input.fwd} '
-        '-2 {input.rev} '
+        '-1 /{input.fwd} '
+        '-2 /{input.rev} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
         '-o /{data_dir}/{params.assembly_megahit_outprefix_wc} '
-
 
 
 ###################################
