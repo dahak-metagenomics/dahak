@@ -473,41 +473,111 @@ rule filter_taxa_class:
 
 # sourmash + urls section of config
 rule genbank:
+    """
+    Download the assembled SBT associated with a given database,
+    and for a given k value.
+    """
     input:
-        expand(download_sourmash_sbt_output,database=["genbank"],ksize=["21","31"])
+        expand(
+            download_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
 
 # sourmash section of config
 rule sbts:
+    """
+    Unpack the assembled SBTs associated with a given database
+    and for a given k value.
+    """
     input:
-        expand(unpack_sourmash_sbt_output, database=["genbank"],ksize=["21","31"])
+        expand(
+            unpack_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
 
-# calculate signatures section of config
-rule merge:
+rule usekaiju:
+    """
+    Download and unpack kaiju database.
+    """
     input:
-        expand(sig_output, 
+        unpack_kaiju_output
+
+rule merge:
+    """
+    Merge paired-end read files and compute signatures.
+    """
+    input:
+        expand(
+            sig_output, 
             base=["SRR606249"],
             ntrim=["2","30"]
         )
 
-rule usekaiju:
+rule merge_subset10:
+    """
+    Merge paired-end read files and compute signatures.
+    Only uses the 10% subsampled reads.
+    """
     input:
-        unpack_kaiju_output
+        expand(
+            sig_output, 
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        )
 
 rule runkaiju:
+    """
+    Run the kaiju program.
+    """
     input:
-        expand(run_kaiju_output_file,
+        expand(
+            run_kaiju_output_file,
             base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkaiju_subset10:
+    """
+    Run the kaiju program.
+    """
+    input:
+        expand(
+            run_kaiju_output_file,
+            base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
 
 rule runkrona:
+    """
+    Run the krona visualization tool.
+    """
     input:
-        expand(kaiju2krona_output_file,
+        expand(
+            kaiju2krona_output_file,
             base=["SRR606249"],
             ntrim=["2","30"]
         ),
-        expand(kaiju2kronasummary_output_file,
+        expand(
+            kaiju2kronasummary_output_file,
             base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkrona_subset10:
+    """
+    Run the krona visualization tool.
+    """
+    input:
+        expand(
+            kaiju2krona_output_file,
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        ),
+        expand(
+            kaiju2kronasummary_output_file,
+            base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
 
