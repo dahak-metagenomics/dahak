@@ -18,12 +18,26 @@ site_dir: site
 pages:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
-  - 'Workflows' :
-    - 'Overview of Metagenomic Workflows' : 'workflows.md'
+
+  - 'Workflows':
+    - 'Overview of Metagenomic Workflows' : 'workflows_overview.md'
     - 'Running Metagenomic Workflows' : 'workflows_running.md'
-    - 'Read Filtering' : 'workflow_readfilt.md'
-    - 'Taxonomic Classification' : 'workflow_taxclass.md'
-    - 'Assembly' : 'workflow_assembly.md'
+
+  - 'Read Filtering':
+    - 'Walkthrough' : 'readfilt_walkthru.md'
+    - 'Snakemake Rules' : 'readfilt_snakemake.md'
+    - 'Snakemake Configuration' : 'readfilt_config.md'
+
+  - 'Taxonomic Classification':
+    - 'Walkthrough' : 'taxclass_walkthru.md'
+    - 'Snakemake Rules' : 'taxclass_snakemake.md'
+    - 'Snakemake Configuration' : 'taxclass_config.md'
+
+  - 'Assembly':
+    - 'Walkthrough' : 'assembly_walkthru.md'
+    - 'Snakemake Rules' : 'assembly_snakemake.md'
+    - 'Snakemake Configuration' : 'assembly_config.md'
+
   - 'Parameters and Configuration' : 'config.md'
   - 'Contributing' : 'contrib.md'
 

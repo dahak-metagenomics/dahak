@@ -1,8 +1,11 @@
 # Parameters and Configuration
 
-Each workflow component has a set of parameters
-that controls how that step is run. These parameters
-are set in a configuration file provided to Snakemake.
+TODO: talk generally about how to use configurations,
+because we have presets to use and rules that
+overlap and we need to know how to set and use
+these parameters.
 
+More generally, where to look for all parameters?
 
+More specifically, where to look for a rule?
 

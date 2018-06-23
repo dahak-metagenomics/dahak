@@ -1,49 +1,4 @@
-# Read Filtering Workflow
-
-To run the read filtering and quality assessment workflow, 
-use the Snakefile in the top level of the repository.
-
-Workflow rules for taxonomic classification are defined in the file
-`workflows/read_filtering/Snakefile`.
-
-
-## List of Rules
-
-The most useful rules are the build rules, which do not
-perform any work themselves but instead trigger entire
-portions of the workflow to run. These are listed below:
-
-* `fetch` - fetches all samples specified by the 
-    `pre_trimming_pattern` setting
-
-* `pre_trim` - performs a pre-trimming quality assessment
-    using fastqc
-
-* `post_trim` - performs a post-trimming quality assessment
-    using fastqc
-
-
-You can see a list of all available rules and brief descriptions
-of each by using the Snakemake list command:
-
-```
-snakemake -l
-```
-
-
-## Running Rules
-
-To run a rule, call Snakemake with specified environment variables,
-command line flags, and options, and pass it the name of the rule.
-For example, the following command uses Singularity to run all rules
-that have a singularity directive:
-
-```
-SINGULARITY_BINDPATH="data:/data" snakemake --with-singularity post_trim
-```
-
-
-## Walkthrough
+# Read Filtering Walkthrough
 
 The following walkthrough covers the steps in the read filtering and quality
 assessment workflow. 
@@ -67,13 +22,13 @@ on the [Installing](installing.md) page.
 
 Install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/):
 
-```
+```bash
 pip install osfclient
 ```
 
-Install [docker](https://www.docker.com)
+Install [docker](https://www.docker.com) with the following shell commands:
 
-```
+```bash
 wget -qO- https://get.docker.com/ | sudo sh
 sudo usermod -aG docker ubuntu
 exit
@@ -82,19 +37,19 @@ exit
 Make a directory called data and retrieve some data using the osfclient.
 Specify the path to files.txt or move it to your working directory.  
 
-```
+```bash
 mkdir data
 cd data
 
 for i in $(cat files.txt)
 do 
-	osf -p dm938 fetch osfstorage/data/${i}
+    osf -p dm938 fetch osfstorage/data/${i}
 done
 ```
 
 Link the data and run [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
 
-```
+```bash
 mkdir -p ~/data/qc/before_trim
 
 docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subset10_1.fq.gz -o /data/qc/before_trim
@@ -104,14 +59,14 @@ docker run -v ${PWD}:/data -it biocontainers/fastqc fastqc /data/SRR606249_subse
 
 Grab the adapter sequences:
 
-```
+```bash
 cd ~/data
 curl -O -L http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa
 ```
 
 Link the data and run [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 
-```
+```bash
 for filename in *_1*.fq.gz
 do
     # first, make the base by removing .fq.gz using the unix program basename
@@ -135,7 +90,7 @@ done
 
 Now run fastqc on the trimmed data:
 
-```
+```bash
 mkdir -p ~/data/qc/after_trim
 
 
@@ -148,7 +103,7 @@ Interleave paired-end reads using [khmer](http://khmer.readthedocs.io/en/v2.1.1/
 The output file name includes 'trim2' indicating the reads were trimmed at a quality score of 2. 
 If other values were used change the output name accordingly.
 
-```
+```bash
 cd ~/data
 for filename in *_1.trim.fq.gz
 do

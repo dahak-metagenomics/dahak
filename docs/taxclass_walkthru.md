@@ -75,7 +75,7 @@ Software required:
 - Docker (covered in this walkthrough) or Singularity (if using Snakefile)
 - Updated packages (see the [Installing](installing.md) page)
 - (Optional) OSF CLI (command-line interface; see [Installing](installing.md)
-    and [Read Filtering Workflow](workflow_readfilt.md) pages)
+    and [Read Filtering Snakemake](readfilt_snakemake.md) pages)
 
 Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather
 allows us to taxonomically classify the components of a metagenome by comparing hashes

@@ -1,6 +1,6 @@
 # Installation Instructions
 
-Before getting started with dahak, you will need the following software installed:
+Before getting started with Dahak, you will need the following software installed:
 
 **REQUIRED:**
 
@@ -215,9 +215,11 @@ or install it using pip:
 
 ```
 conda install -c bioconda snakemake
+```
 
-# or
+or
 
+```
 pip install snakemake
 ```
 

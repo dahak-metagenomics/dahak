@@ -71,7 +71,8 @@ or trimming off adapters.
 Tools like Fastqc and Trimmomatic will perform this filtering 
 process for the sequencer's reads.
 
-**See [Read Filtering Workflow](workflow_readfilt.md) for an overview.**
+**See [Read Filtering Snakemake](readfilt_snakemake.md) page for
+instructions on using this workflow.**
 
 Also see the [`read_filtering/`](/workflows/read_filtering/) directory.
 
@@ -80,6 +81,11 @@ Also see the [`read_filtering/`](/workflows/read_filtering/) directory.
 ---
 
 ## Taxonomic Classification Using Custom Database
+
+**See [Taxonomic Classification Snakemake](taxclass_snakemake.md) page for
+instructions on using this workflow.**
+
+Also see [`taxonomic_classification/`](/workflows/taxonomic_classification/) directory.
 
 ![Taxonomic classification](img/Workflow2_TaxClass.png)
 
@@ -104,7 +110,7 @@ etc.).
 
 Typically 30-40% of the reads can be fingerprinted by the assembler.
 
-**See [Assembly Workflow](#) (_in progress_) for instructions on
+**See [Assembly Workflow Snakemake](assembly_snakemake.md) page for instructions on
 using this workflow.**
 
 Also see [`assembly/`](/workflows/assembly/) directory.
@@ -114,15 +120,14 @@ Also see [`assembly/`](/workflows/assembly/) directory.
 
 ## Abundance Estimation and Variance Calling
 
-**See [Abundance Estimation/Variance Calling Workflow](#) (_in progress_) for
-instructions on using this workflow.**
+**See [Variance Calling Workflow Snakemake](#) page
+for instructions on using this workflow.**
 
 ![Abundance estimation and variance calling](img/Workflow3_VC.png)
 
-
 ## Sub-Element Identification
 
-**See [Sub-Element ID Workflow](#) (_in progress_) for instructions on using this
+**See [Sub-Element ID Snakemake](#) (_in progress_) for instructions on using this
 workflow.**
 
 ![Sub-element ID](img/Workflow4_SubID.png)
@@ -141,7 +146,8 @@ in an existing genome.
 ShotMap was originally used for this step, but was 
 replaced by Miphaser.
 
-See [Functional Inference Workflow](#) (_in progress_) for an overview.
+**See [Functional Inference Snakemake](#) page for instructions on using this
+workflow.**
 
 Also see the [`functional_inference/`](/workflows/functional_inference/) directory.
 
@@ -156,7 +162,8 @@ by the assembler and seeing if they match genomes of other organisms.
 
 The tool used for comparison is sourmash.
 
-**See [Read Filtering Workflow](workflow_readfilt.md) for an overview.**
+**See [Sample Comparison Snakemake](#) for instructions on
+using this workflow.**
 
 Also see the [`comparison/`](/workflows/comparison/) directory.
 
