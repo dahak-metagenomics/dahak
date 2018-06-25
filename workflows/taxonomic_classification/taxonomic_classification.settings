@@ -51,7 +51,7 @@ config_default = {
         # everything before the _1/_2 
         # scaled 10000
         #
-        'calculate_signatures' : {
+        'compute_read_signatures' : {
             'scale'         : 10000,
             'kvalues'       : [21,31,51],
             'sig_name'      : '{base}.trim{ntrim}.scaled10k.k21_31_51.sig',
