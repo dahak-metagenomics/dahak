@@ -82,33 +82,33 @@ rule unpack_sourmash_sbts:
 
 
 ############################################
-# Taxonomic Classification: calc signatures
+# Taxonomic Classification: compute read signatures
 
 sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
                join(data_dir, taxclass['reads']['fq_rev'])]
-sig_output   = join(data_dir, taxclass['calculate_signatures']['sig_name'])
-merge_output = join(data_dir, taxclass['calculate_signatures']['merge_name'])
+sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
+merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
 
-kvalues_cmd = ",".join([str(j) for j in taxclass['calculate_signatures']['kvalues']])
-scale = "%s"%(taxclass['calculate_signatures']['scale'])
+kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
+scale = "%s"%(taxclass['compute_read_signatures']['scale'])
 
 sourmash_image = container_image_name(biocontainers, 'sourmash')
 
-def calculate_signatures_fq_fwd(wildcards):
+def compute_read_signatures_fq_fwd(wildcards):
     return taxclass['reads']['fq_fwd'].format(**wildcards)
 
-def calculate_signatures_fq_rev(wildcards):
+def compute_read_signatures_fq_rev(wildcards):
     return taxclass['reads']['fq_rev'].format(**wildcards)
 
-def calculate_signatures_sig_name(wildcards):
-    return taxclass['calculate_signatures']['sig_name'].format(**wildcards)
+def compute_read_signatures_sig_name(wildcards):
+    return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
 
-def calculate_signatures_merge_name(wildcards):
-    return taxclass['calculate_signatures']['merge_name'].format(**wildcards)
+def compute_read_signatures_merge_name(wildcards):
+    return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
 
-rule calculate_signatures:
+rule compute_read_signatures:
     """
-    Calculate signatures from trimmed data using sourmash.
+    Compute read signatures from trimmed data using sourmash.
     """
     input:
         sig_inputs
@@ -117,10 +117,10 @@ rule calculate_signatures:
     singularity:
         sourmash_image
     params:
-        fq_fwd = calculate_signatures_fq_fwd,
-        fq_rev = calculate_signatures_fq_rev,
-        sig_name = calculate_signatures_sig_name,
-        merge_name = calculate_signatures_merge_name
+        fq_fwd = compute_read_signatures_fq_fwd,
+        fq_rev = compute_read_signatures_fq_rev,
+        sig_name = compute_read_signatures_sig_name,
+        merge_name = compute_read_signatures_merge_name
     shell:
         'sourmash compute '
         '--merge /data/{params.merge_name} '
@@ -481,7 +481,7 @@ rule sbts:
     input:
         expand(unpack_sourmash_sbt_output, database=["genbank"],ksize=["21","31"])
 
-# calculate signatures section of config
+# compute signatures section of config
 rule merge:
     input:
         expand(sig_output, 
