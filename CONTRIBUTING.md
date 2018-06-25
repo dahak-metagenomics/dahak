@@ -19,8 +19,6 @@ some data, and contribute however you see fit.
 
 ## How to get started
 
-
-
 1. Create a [GitHub](https://github.com) account.
 
 2.  Fork <https://github.com/dahak-metagenomics/dahak>.
@@ -175,7 +173,7 @@ some data, and contribute however you see fit.
     the air, and do a little dance; you're officially a GitHub master and a
     contributor to the dahak project – we hold you in the highest of regards.
 
-## My pull request has been merged. What do I do now?
+## My pull request was merged. What now?
 
 Before continuing on your journey towards your next pull request, there are a
 couple of steps that you need take to clean up your local copy of dahak.
@@ -187,7 +185,7 @@ git branch -d my-branch-name     # delete the branch locally
 git push origin :my-branch-name  # delete the branch on GitHub (your fork)
 ```
 
-## I have a dataset that I'd like to contribute to the project
+## I have a dataset to contribute to the project
 
 Great! A big part of this project is benchmarking tools to determine when and
 how we should use them. Datasets with interesting composition help us uncover
@@ -201,7 +199,7 @@ repository and analyzing the data in Jupyter notebooks. Poke us and we'd be
 happy to discuss the process. If your dataset is less than 5 GB in size, the
 [open science framework](https://osf.io) is a great, free place to put it.
 
-## I have a tool that I'd like to contribute to the project
+## I have a tool to contribute to the project
 
 Greater! The more tools the better. A major goal of this project to make more
 tools easy to use. We opted to do this by using or creating containerized tools.
@@ -215,7 +213,7 @@ an excellent guide to getting started building containers. We're using
 [Singularity](https://singularity.lbl.gov/docs-docker) to run the containers in
 our workflows. Docker does not need to be installed.
 
-## I have a workflow that I'd like to contribute to the project
+## I have a workflow to contribute to the project
 
 Greatest! New metagenomics analysis tools are created all the time. We're using
 a small subset that we think encompasses most the methods that are most commonly
