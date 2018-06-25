@@ -23,7 +23,6 @@ workflow.
 
 ## What's Here?
 
-The following workflows are required deliverables:
 
 * Taxonomic characterization of bulk metagenome data sets with the sourmash
   tool against public and private reference databases;
@@ -68,7 +67,7 @@ The read filtering step consists of processing raw reads from a
 sequencer, such as discarding reads with a high uncertainty value
 or trimming off adapters.
 
-Tools like Fastqc and Trimmomatic will perform this filtering 
+Tools like FastQC and Trimmomatic will perform this filtering 
 process for the sequencer's reads.
 
 **See [Read Filtering Workflow](workflow_readfilt.md) for an overview.**
@@ -89,20 +88,18 @@ Also see the [`read_filtering/`](/workflows/read_filtering/) directory.
 
 The assembly step consists of software to determine the proper
 order of the reads, and assemble the genome. The assembly tool
-may use short reads (~350 or fewer reads), or it may use 
-long reads (>1000 reads). 
+may use short reads (~350 or fewer base pairs), or it may use 
+long reads (>1000 base pairs). 
 
-Reads are assembled in order into contigs (chunks of contiguous
+Reads are assembled into contigs (chunks of contiguous
 reads). The contigs are themselves assembled into scaffolds 
 that consist of several contigs.
 
-The Spades tool can handle short or long reads, while the Megahit 
+The SPAdes tool can handle short or long reads, while the MEGAHIT
 tool works better for short reads. Pandaseq can merge overlapping reads.
 Metaquast gives assembly statistics that can help evaluate the assembly
 (how long, number of fragments, number of contigs, number of scaffolds, 
 etc.).
-
-Typically 30-40% of the reads can be fingerprinted by the assembler.
 
 **See [Assembly Workflow](#) (_in progress_) for instructions on
 using this workflow.**
@@ -140,8 +137,7 @@ Variant calling searches for common variants of a given
 gene. Variants are obtained by changing a few genes 
 in an existing genome.
 
-ShotMap was originally used for this step, but was 
-replaced by Miphaser.
+Dahak uses mi-faser to generate metabolic pathway models.
 
 See [Functional Inference Workflow](#) (_in progress_) for an overview.
 
