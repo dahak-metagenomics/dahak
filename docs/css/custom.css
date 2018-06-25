@@ -19,6 +19,9 @@ i.md-icon {
     background-color: #dedede;
     font-size: 100%;
 }
+.md-typeset ol li {
+    margin-top: 30px;
+}
 .md-typeset .codehilite code, .md-typeset .codehilite pre, .md-typeset .highlight code, .md-typeset .highlight pre {
     background-color: #dedede;
     font-size: 110%;
