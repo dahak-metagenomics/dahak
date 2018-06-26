@@ -84,9 +84,9 @@ rule unpack_sourmash_sbts:
 ############################################
 # Taxonomic Classification: compute read signatures
 
-sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
+read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
                join(data_dir, taxclass['reads']['fq_rev'])]
-sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
+read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
 merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
 
 kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
@@ -111,16 +111,16 @@ rule compute_read_signatures:
     Compute read signatures from trimmed data using sourmash.
     """
     input:
-        sig_inputs
+        read_sig_inputs
     output:
-        sig_output
+        read_sig_output
     singularity:
         sourmash_image
     params:
         fq_fwd = compute_read_signatures_fq_fwd,
         fq_rev = compute_read_signatures_fq_rev,
-        sig_name = compute_read_signatures_sig_name,
-        merge_name = compute_read_signatures_merge_name
+        read_sig_name = compute_read_signatures_sig_name,
+        read_merge_name = compute_read_signatures_merge_name
     shell:
         'sourmash compute '
         '--merge /data/{params.merge_name} '
@@ -129,7 +129,7 @@ rule compute_read_signatures:
         '-k {kvalues_cmd} '
         '/{inputs[0]} '
         '/{inputs[1]} '
-        '-o /data/{params.sig_name}'
+        '-o /data/{params.read_sig_name}'
 
 
 ############################################
