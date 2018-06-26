@@ -1,0 +1,626 @@
+'''
+Author: Phillip Brooks, Charles Reid
+Affiliation: UC Davis Lab for Data Intensive Biology
+Objective: Use sourmash to compute signatures and taxonomically classify the components of a metagenome by comparing hashes in our dataset to hashes in a sequence bloom tree (SBT) representing genomes.
+Date: 2018-06-08
+Documentation: docs/workflow_taxclass.md
+'''
+
+from utils import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+
+
+############################################
+# Taxonomic Classification: default config
+
+include: "taxonomic_classification.settings"
+
+data_dir = config['data_dir']
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+
+
+###################################
+# Taxonomic Classification: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
+
+############################################
+# Taxonomic Classification: sourmash SBT
+
+sourmash_sbt_tar = taxclass['sourmash']['sbttar']
+download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
+download_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbttar'])
+unpack_sourmash_sbt_input = download_sourmash_sbt_output
+unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
+
+
+def unpack_sourmash_sbt_tar(wildcards):
+    """Perform wildcard substitution to obtain name of sourmash SBT tar files."""
+    # input/output can have {variables} in them, but we need to do
+    # wildcard substiution before we can actually use these to
+    # assemble commands.
+    return unpack_sourmash_sbt_input.format(**wildcards)
+
+
+rule download_sourmash_sbts:
+    input:
+        download_sourmash_sbt_input
+    output:
+        unpack_sourmash_sbt_input
+    params:
+        tar_wc = unpack_sourmash_sbt_tar
+    shell:
+        '''
+        wget -O {params.tar_wc} {input}
+        '''
+
+
+rule unpack_sourmash_sbts:
+    """
+    Download and unpack the sourmash SBTs.
+    """
+    input:
+        unpack_sourmash_sbt_input
+    output:
+        unpack_sourmash_sbt_output
+    params:
+        tar_wc = unpack_sourmash_sbt_tar
+    shell:
+        '''
+        tar -xzf {params.tar_wc} -C {data_dir} && rm -f {params.tar_wc}
+        '''
+
+
+############################################
+# Taxonomic Classification: calc signatures
+
+sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
+               join(data_dir, taxclass['reads']['fq_rev'])]
+sig_output   = join(data_dir, taxclass['calculate_signatures']['sig_name'])
+merge_output = join(data_dir, taxclass['calculate_signatures']['merge_name'])
+
+kvalues_cmd = ",".join([str(j) for j in taxclass['calculate_signatures']['kvalues']])
+scale = "%s"%(taxclass['calculate_signatures']['scale'])
+
+sourmash_image = container_image_name(biocontainers, 'sourmash')
+
+def calculate_signatures_fq_fwd(wildcards):
+    return taxclass['reads']['fq_fwd'].format(**wildcards)
+
+def calculate_signatures_fq_rev(wildcards):
+    return taxclass['reads']['fq_rev'].format(**wildcards)
+
+def calculate_signatures_sig_name(wildcards):
+    return taxclass['calculate_signatures']['sig_name'].format(**wildcards)
+
+def calculate_signatures_merge_name(wildcards):
+    return taxclass['calculate_signatures']['merge_name'].format(**wildcards)
+
+rule calculate_signatures:
+    """
+    Calculate signatures from trimmed data using sourmash.
+    """
+    input:
+        sig_inputs
+    output:
+        sig_output
+    singularity:
+        sourmash_image
+    params:
+        fq_fwd = calculate_signatures_fq_fwd,
+        fq_rev = calculate_signatures_fq_rev,
+        sig_name = calculate_signatures_sig_name,
+        merge_name = calculate_signatures_merge_name
+    shell:
+        'sourmash compute '
+        '--merge /data/{params.merge_name} '
+        '--track-abundance '
+        '--scaled {scale} '
+        '-k {kvalues_cmd} '
+        '/{inputs[0]} '
+        '/{inputs[1]} '
+        '-o /data/{params.sig_name}'
+
+
+############################################
+# Taxonomic Classification: get trimmed data
+
+# incorporate OSF CLI here -
+# user should just need project id.
+
+trimmed_data_files=[]
+trimmed_data_urls=[]
+for filename in taxclass['trimmed_reads'].keys():
+    trimmed_data_files.append( join(data_dir, filename) )
+    trimmed_data_urls.append(taxclass['trimmed_reads'][filename])
+
+rule download_trimmed_data:
+    """
+    Download the trimmed data from OSF.
+    The parameters dictionary contains a map
+    of .fq.gz filenames to corresponding OSF URLs.
+    """
+    output:
+        trimmed_data_files,
+        touch(join(data_dir,'.trimmed'))
+    run:
+        for (osf_file,osf_url) in zip(trimmed_data_files,trimmed_data_urls):
+            if(not os.path.isfile(osf_file)):
+                shell('''
+                    wget -O {osf_file} {osf_url}
+                ''')
+
+
+############################################
+# Taxonomic Classification: kaiju
+
+# output file paths
+kaiju_dmp1   = join(data_dir, taxclass['kaiju']['dmp1'])
+kaiju_dmp2   = join(data_dir, taxclass['kaiju']['dmp2'])
+kaiju_fmi    = join(data_dir, taxclass['kaiju']['fmi'])
+
+kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
+
+kaiju_tar    = taxclass['kaiju']['tar']
+kaiju_url    = taxclass['kaiju']['url']
+
+#unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
+unpack_kaiju_input = HTTP.remote(kaiju_url+"/"+kaiju_tar)
+unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+
+rule dowload_kaiju:
+    """
+    Download the kaiju database.
+    This is a large file and will take approx. 15-30 minutes.
+    """
+    input:
+        unpack_kaiju_input
+    output:
+        kaiju_target
+    shell:
+        '''
+        wget -O {kaiju_target} "{kaiju_url}/{kaiju_tar}"
+        '''
+
+rule unpack_kaiju:
+    """
+    Unpack the kaiju database.
+    """
+    input:
+        kaiju_target
+    output:
+        unpack_kaiju_output
+    shell:
+        '''
+        tar -xzf {kaiju_target} -C {data_dir} && rm -f {kaiju_target}
+        '''
+
+fq_fwd = join(data_dir, taxclass['reads']['fq_fwd'])
+fq_rev = join(data_dir, taxclass['reads']['fq_rev'])
+
+run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+run_kaiju_input_files += [fq_fwd, fq_rev]
+run_kaiju_output_file = join(data_dir, taxclass['kaiju']['out'])
+
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def run_kaiju_fq_fwd(wildcards):
+    # Get forward fq files
+    fq_fwd_wc = fq_fwd.format(**wildcards)
+    return fq_fwd_wc
+
+def run_kaiju_fq_rev(wildcards):
+    # Get reverse fq files
+    fq_rev_wc = fq_rev.format(**wildcards)
+    return fq_rev_wc
+
+def run_kaiju_output(wildcards):
+    # Get output
+    run_kaiju_output_file_wc = run_kaiju_output_file.format(**wildcards)
+    return run_kaiju_output_file_wc
+
+
+rule run_kaiju:
+    """
+    Run kaiju after downloading and unpacking the kaiju database. 
+    This runs the specified command through a singularity container.
+    """
+    input:
+        run_kaiju_input_files
+    output:
+        run_kaiju_output_file
+    singularity: 
+        kaiju_image
+    params:
+        fq_fwd_wc = run_kaiju_fq_fwd,
+        fq_rev_wc = run_kaiju_fq_rev,
+        run_kaiju_output_file_wc = run_kaiju_output
+    shell:
+        'kaiju '
+        '-x '
+        '-v '
+        '-t /{kaiju_dmp1} '
+        '-f /{kaiju_fmi} '
+        '-i /{params.fq_fwd_wc} '
+        '-j /{params.fq_rev_wc} '
+        '-o /{params.run_kaiju_output_file_wc} '
+        '-z 4'
+
+
+taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+taxon_names_output_file = re.sub(r'\.out', r'.names.out', run_kaiju_output_file)
+
+def taxon_names_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the addTaxonNames
+    command. The other input files do not have wildcards, so it's only
+    the run_kaiju_output_file (which is the input to add taxon names) 
+    that requires wildcard substitution.
+    """
+    return run_kaiju_output_file.format(**wildcards)
+
+def taxon_names_output_file_sub(wildcards):
+    """
+    Wildcard substitution of taxon names output.
+    The taxon names output is just the kaiju output name,
+    but replacing .out with .names.out.
+    """
+    return taxon_names_output_file.format(**wildcards)
+
+rule add_taxon_names:
+    """
+    Use kaiju to add taxon names.
+    """
+    input:
+        taxon_names_input_files
+    output:
+        taxon_names_output_file
+    singularity:
+        kaiju_image
+    params:
+        taxon_names_input_file_wc = taxon_names_input_file_sub,
+        taxon_names_output_file_wc = taxon_names_output_file_sub
+    shell:
+        'addTaxonNames '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-u -p '
+        '-I {params.taxon_names_input_file_wc} '
+        '–o {params.taxon_names_output_file_wc}'
+
+
+
+############################################
+# Taxonomic Classification: kaiju to krona
+
+tax_rank     = taxclass['kaiju2krona']['taxonomic_rank']
+
+# name of kaiju output determines name of kaiju2krona input
+kaiju2krona_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+
+# One approach is to let the user set this.
+# But here, we just take care of it for them.
+kaiju2krona_output_file = re.sub(r'\.out','.kaiju_out_krona',run_kaiju_output_file)
+
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def kaiju2krona_input_name(wildcards):
+    # Return the kaiju2krona input file names
+    kaiju2krona_input_name_wc = run_kaiju_output_file.format(**wildcards)
+    return kaiju2krona_input_name_wc
+
+def kaiju2krona_output_name(wildcards):
+    # Return the kaij2krona input file names
+    kaiju2krona_output_name_wc = kaiju2krona_output_file.format(**wildcards)
+    return kaiju2krona_output_name_wc
+
+
+rule kaiju2krona:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    """
+    input:
+        kaiju2krona_input_files
+    output:
+        kaiju2krona_output_file
+    singularity:
+        kaiju_image
+    params:
+        kaiju2krona_input_name_wc = kaiju2krona_input_name,
+        kaiju2krona_output_name_wc = kaiju2krona_output_name
+    shell:
+        'kaiju2krona '
+        '-v '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-i /{params.kaiju2krona_input_name_wc} '
+        '-o /{params.kaiju2krona_output_name_wc} '
+
+
+kaiju2kronasummary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+kaiju2kronasummary_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
+
+tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
+
+def kaiju2kronasummary_input_name(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def kaiju2kronasummary_output_name(wildcards):
+    return kaiju2kronasummary_output_file.format(**wildcards)
+
+rule kaiju2kronasummary:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    """
+    input:
+        kaiju2kronasummary_input_files
+    output:
+        kaiju2kronasummary_output_file
+    singularity:
+        kaiju_image
+    params:
+        kaiju2kronasummary_input_wc = kaiju2kronasummary_input_name,
+        kaiju2kronasummary_output_wc = kaiju2kronasummary_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-i /{params.kaiju2kronasummary_input_wc} '
+        '-r {tax_rank} '
+        '-o /{params.kaiju2kronasummary_output_wc} '
+
+
+############################################
+# Taxonomic Classification: visualize with krona
+
+visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
+if(visualize_krona_input_name[-8:] is not '.summary'):
+    visualize_krona_input_name += '.summary'
+visualize_krona_output_name = re.sub(r'\.summary','.html',visualize_krona_input_name)
+
+visualize_krona_input_file  = join(data_dir, visualize_krona_input_name)
+visualize_krona_output_file = join(data_dir, visualize_krona_output_name)
+
+krona_image = container_image_name(biocontainers, 'krona')
+
+def visualize_krona_input_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_input_wc  = visualize_krona_input_file.format(**wildcards)
+    return visualize_krona_input_wc
+
+def visualize_krona_output_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_output_wc = visualize_krona_output_file.format(**wildcards)
+    return visualize_krona_output_wc
+
+rule visualize_krona:
+    """
+    Visualize the results of the
+    full and filtered taxonomic
+    classifications using krona.
+    This runs docker directly.
+    """
+    input:
+        visualize_krona_input_file
+    output:
+        visualize_krona_output_file
+    params:
+        visualize_krona_input_wc = visualize_krona_input_function,
+        visualize_krona_output_wc = visualize_krona_output_function,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_output_wc} '
+        '/{params.visualize_krona_input_wc} '
+
+
+############################################
+# Taxonomic Classification: filter taxa
+
+filter_taxa_pct = taxclass['filter_taxa']['pct_threshold']
+
+filter_taxa_total_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+filter_taxa_total_suffix = '.kaiju_out_krona.%dpercenttotal.summary'%(filter_taxa_pct)
+filter_taxa_total_output = re.sub(r'\.out', filter_taxa_total_suffix, run_kaiju_output_file)
+
+def filter_taxa_total_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_total_output_function(wildcards):
+    return filter_taxa_total_output.format(**wildcards)
+
+rule filter_taxa_total:
+    """
+    Filter out taxa with low abundances by obtaining
+    genera that comprise at least {pct} percent of the
+    total reads
+    (default: 1%)
+    """
+    input:
+        filter_taxa_total_input
+    output:
+        filter_taxa_total_output
+    singularity:
+        kaiju_image
+    params:
+        filter_taxa_total_input_wc = filter_taxa_total_input_function,
+        filter_taxa_total_output_wc = filter_taxa_total_output_function,
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{input[0]} '
+        '-n /{input[1]} '
+        '-i /{params.filter_taxa_total_input_wc} '
+        '-r genus '
+        '-m {filter_taxa_pct} '
+        '-o /{params.filter_taxa_total_output_wc} '
+
+
+filter_taxa_class_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+filter_taxa_class_suffix = '.kaiju_out_krona.%dpercentclassified.summary'%(filter_taxa_pct)
+filter_taxa_class_output = re.sub(r'\.out', filter_taxa_class_suffix, run_kaiju_output_file)
+
+def filter_taxa_class_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_class_output_function(wildcards):
+    return filter_taxa_class_output.format(**wildcards)
+
+
+rule filter_taxa_class:
+    """
+    For comparison, take the genera that comprise at
+    least {pct} percent of all of the classified reads
+    (default: 1%)
+    """
+    input:
+        filter_taxa_class_input
+    output:
+        filter_taxa_class_output
+    singularity:
+        kaiju_image
+    params:
+        filter_taxa_class_input_wc = filter_taxa_class_input_function,
+        filter_taxa_class_output_wc = filter_taxa_class_output_function
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{input[0]} '
+        '-n /{input[1]} '
+        '-i /{params.filter_taxa_class_in_wc} '
+        '-r genus '
+        '-m {filter_taxa_pct} '
+        '-u '
+        '-o /{params.filter_taxa_class_output_wc}'
+
+
+###################################
+# Taxonomic Classification: build rules
+
+# These "ghost" rules don't do anything 
+# except trigger other rules.
+
+# sourmash + urls section of config
+rule genbank:
+    """
+    Download the assembled SBT associated with a given database,
+    and for a given k value.
+    """
+    input:
+        expand(
+            download_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
+
+# sourmash section of config
+rule sbts:
+    """
+    Unpack the assembled SBTs associated with a given database
+    and for a given k value.
+    """
+    input:
+        expand(
+            unpack_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
+
+rule usekaiju:
+    """
+    Download and unpack kaiju database.
+    """
+    input:
+        unpack_kaiju_output
+
+rule merge:
+    """
+    Merge paired-end read files and compute signatures.
+    """
+    input:
+        expand(
+            sig_output, 
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule merge_subset10:
+    """
+    Merge paired-end read files and compute signatures.
+    Only uses the 10% subsampled reads.
+    """
+    input:
+        expand(
+            sig_output, 
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        )
+
+rule runkaiju:
+    """
+    Run the kaiju program.
+    """
+    input:
+        expand(
+            run_kaiju_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkaiju_subset10:
+    """
+    Run the kaiju program.
+    """
+    input:
+        expand(
+            run_kaiju_output_file,
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        )
+
+rule runkrona:
+    """
+    Run the krona visualization tool.
+    """
+    input:
+        expand(
+            kaiju2krona_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        ),
+        expand(
+            kaiju2kronasummary_output_file,
+            base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkrona_subset10:
+    """
+    Run the krona visualization tool.
+    """
+    input:
+        expand(
+            kaiju2krona_output_file,
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        ),
+        expand(
+            kaiju2kronasummary_output_file,
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        )
+

@@ -1,114 +1,341 @@
 '''
-Author: Phillip Brooks 
+Author: Phillip Brooks, Charles Reid
 Affiliation: UC Davis Lab for Data Intensive Biology
-Aim: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT 
-Date: Wed Jan 17 2018
-Run: snakemake --use-conda --use-singularity 
-Latest modification:
+Objective: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT  
+Date: 2018-06-11
+Documentation: docs/workflow_assembly.md
 '''
-##--------------------------------------------------------------------------------------##
-## Variables declaration                          
-## Declaring some variables
-## (SAMPLES, ASSEMBLER, qual)
-##--------------------------------------------------------------------------------------##
+from utils import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
 
-SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
-ASSEMBLER = ['megahit', 'spades']
 
-rule all:    
+############################################
+# Assembly: default config
+
+include: "assembly.settings"
+
+data_dir = config['data_dir']
+biocontainers = config['biocontainers']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+
+
+###################################
+# Assembly: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
+###################################
+# Assembly: metaspades
+
+# Post trimming pattern uses the {direction} wildcard.
+# We have to explicitly expand direction to _1 and _2.
+# If we rely on wildards, _1 and _2 are two separate rules.
+
+assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
+            direction="2", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
+
+assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
+assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
+
+spades_image = container_image_name(biocontainers, 'spades')
+
+rule assembly_metaspades:
     input:
-        expand('outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa',
-               sample=SAMPLES,
-               qual=['2','30'],
-               assembler=ASSEMBLER,
-               ),
-        expand('outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}_multiqc/report.html',
-               sample=SAMPLES,
-               qual=['2','30'],
-               assembler=ASSEMBLER,
-               ),
-
-rule assembly_metaSPAdes:
-    input:
-        fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
-        rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+        fwd = assembly_metaspades_input_fwd,
+        rev = assembly_metaspades_input_rev
     output:
-        'outputs/assembly/spades/{sample}_trim{qual}_spades/{sample}_trim{qual}_spades.contigs.fa' 
+        assembly_metaspades_output
     message: 
          '--- Assembling quality trimmed data with SPAdes'
     singularity: 
-         'docker://quay.io/biocontainers/spades:3.11.1--py27_zlib1.2.8_0'
-    log: 
-         'outputs/assembly/spades/{sample}_trim{qual}_spades.log'
+        spades_image
     threads: 32 
+    log: 
+        assembly_metaspades_logfile
     benchmark:
-        'benchmarks/{sample}_trim{qual}.spades.benchmark.txt'
-    params:
-        sample="{sample}",
-        qual="{qual}"
+        assembly_metaspades_benchfile
     shell:
-        '''
-        metaspades.py -t {threads} \
-            -m 240 \
-            -1 {input.fwd} \
-            -2 {input.rev} \
-            -o `dirname {output}`
-        mv `dirname {output}`/contigs.fasta {output}
-        '''
+        'metaspades.py -t {threads} '
+        '-m 240 '
+        '-1 /{input.fwd} '
+        '-2 /{input.rev} '
+        '-o /{data_dir} '
+        '&& '
+        'mv /{data_dir}/contigs.fasta /{output} '
 
-rule assembly_MEGAHIT:
+
+###################################
+# Assembly: megahit
+
+assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
+            direction="1", 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+# just the name
+assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
+
+assembly_megahit_output = join(data_dir, assembly_megahit_outprefix, assembly['assembly_patterns']['megahit_pattern'])
+
+assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
+assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
+
+
+megahit_image = container_image_name(biocontainers, 'megahit')
+
+def assembly_megahit_outprefix_sub(wildcards):
+    return assembly_megahit_outprefix.format(**wildcards)
+
+rule assembly_megahit:
     input:
-        fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
-        rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+        fwd = assembly_megahit_input_fwd,
+        rev = assembly_megahit_input_rev
     output:
-        'outputs/assembly/megahit/{sample}_trim{qual}_megahit/{sample}_trim{qual}_megahit.contigs.fa'
+        assembly_megahit_output
     message: 
-        '''--- Assembling quality trimmed reads with SPAdes'''
-    singularity: 
-        'docker://quay.io/biocontainers/megahit:1.1.2--py35_0'
+        '''--- Assembling quality trimmed reads with Megahit'''
+    singularity:
+        megahit_image
     threads: 8
-    benchmark: 
-        'benchmarks/{sample}_trim{qual}.megahit.benchmark.txt'
-    params: 
-        sample="{sample}", 
-        qual="{qual}" 
+    log:
+        assembly_megahit_logfile
+    benchmark:
+        assembly_megahit_benchfile
+    params:
+        assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub
     shell:
-        '''
-        rm -rf `dirname {output}`
-        megahit -t {threads} \
-	    --memory 0.20 \
-            -1 {input.fwd} \
-            -2 {input.rev} \
-	    --out-prefix={params.sample}_trim{params.qual}_megahit \
-	    -o `dirname {output}`
-        mv `dirname {output}`/{params.sample}_trim{params.qual}_megahit.contigs.fa {output} 
-        '''
+        'rm -rf {data_dir}/{params.assembly_megahit_outprefix_wc} '
+        '&& '
+        'megahit -t {threads} '
+        '--memory 0.20 '
+        '-1 /{input.fwd} '
+        '-2 /{input.rev} '
+        '--out-prefix={params.assembly_megahit_outprefix_wc} '
+        '-o /{data_dir}/{params.assembly_megahit_outprefix_wc} '
+
+
+###################################
+# Assembly: quast statistics
+
+assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+
+assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
+
+quast_image = container_image_name(biocontainers, 'quast')
+
+def assembly_quast_logfile(wildcards):
+    logfile = re.sub('.contigs.fa','_quast.log',assembly['assembly_patterns']['assembly_pattern'])
+    return logfile.format(**wildcards)
 
 rule assembly_statistics_quast:
     input:
-        'outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa'
+        assembly_quast_input
     output:
-        'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_quast/report.html',
+        assembly_quast_output
     message: 
         '--- Calculating assembly statistics with quast'
-    singularity: 
-        'docker://quay.io/biocontainers/quast:4.5--boost1.61_1'
-    log: 
-        'outputs/assembly/stats/{sample}_trim{qual}_{assembler}.log',
+    #log:
+    #    assembly_quast_logfile
+    singularity:
+        quast_image
     shell:
         'quast.py {input} -o {output}'
 
-rule compile_assembly_stats_with_multiqc:
-    input: 
-        'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_quast/report.html',
-    output: 
-        'outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}_multiqc/report.html'  
+
+
+###################################
+# Assembly: multiqc statistics
+
+assembly_multiqc_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+
+assembly_multiqc_output = join(data_dir, assembly['assembly_patterns']['multiqc_pattern'])
+
+multiqc_image = container_image_name(biocontainers, 'multiqc')
+
+def assembly_multiqc_logfile(wildcards):
+    logfile = re.sub('.contigs.fa','_multiqc.log',assembly['assembly_patterns']['assembly_pattern'])
+    return logfile.format(**wildcards)
+
+rule assembly_statistics_multiqc:
+    input:
+        assembly_multiqc_input
+    output:
+        assembly_multiqc_output
     message: 
         '--- Compiling assembly statistics with multiqc'
-    singularity: 
-        'docker://quay.io/biocontainers/multiqc:1.4--py35_0'
-    log: 
-        'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_multiqc.log',
+    #log:
+    #    assembly_multiqc_logfile
+    singularity:
+        multiqc_image
     shell:
-        'multiqc {input}' 
+        'multiqc {input}'
+
+
+
+###################################
+# Assembly: build rules
+
+# note: taxonomic classification is the outlier
+# read filtering and assembly both consistent
+# sample <--> base
+# qual <--> ntrim
+rule metaspades:
+    input:
+        expand(assembly_metaspades_output,
+                sample=["SRR606249_subset10"],
+                direction=["1","2"],
+                qual=["2","30"]
+        )
+
+rule megahit:
+    input:
+        expand(assembly_megahit_output,
+                sample=["SRR606249_subset10"],
+                direction=["1","2"],
+                qual=["2","30"]
+        )
+
+
+# try to keep everything
+# in one snakefile, one scratch
+# directory, one settings file,
+# etc.
+# ---
+# need to prefix build rules 
+# with build_ or something.
+
+######################################
+# Old Snakefile contents
+######################################
+
+
+### ##--------------------------------------------------------------------------------------##
+### ## Variables declaration                          
+### ## Declaring some variables
+### ## (SAMPLES, ASSEMBLER, qual)
+### ##--------------------------------------------------------------------------------------##
+### 
+### SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
+### ASSEMBLER = ['megahit', 'spades']
+### 
+### rule all:    
+###     input:
+###         expand('outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa',
+###                sample=SAMPLES,
+###                qual=['2','30'],
+###                assembler=ASSEMBLER,
+###                ),
+###         expand('outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}_multiqc/report.html',
+###                sample=SAMPLES,
+###                qual=['2','30'],
+###                assembler=ASSEMBLER,
+###                ),
+### 
+### rule assembly_metaSPAdes:
+###     input:
+###         fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
+###         rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+###     output:
+###         'outputs/assembly/spades/{sample}_trim{qual}_spades/{sample}_trim{qual}_spades.contigs.fa' 
+###     message: 
+###          '--- Assembling quality trimmed data with SPAdes'
+###     singularity: 
+###          'docker://quay.io/biocontainers/spades:3.11.1--py27_zlib1.2.8_0'
+###     log: 
+###          'outputs/assembly/spades/{sample}_trim{qual}_spades.log'
+###     threads: 32 
+###     benchmark:
+###         'benchmarks/{sample}_trim{qual}.spades.benchmark.txt'
+###     params:
+###         sample="{sample}",
+###         qual="{qual}"
+###     shell:
+###         '''
+###         metaspades.py -t {threads} \
+###             -m 240 \
+###             -1 {input.fwd} \
+###             -2 {input.rev} \
+###             -o `dirname {output}`
+###         mv `dirname {output}`/contigs.fasta {output}
+###         '''
+### 
+### rule assembly_MEGAHIT:
+###     input:
+###         fwd='../read_filtering/outputs/trim/{sample}_trim{qual}_1.fq.gz',
+###         rev='../read_filtering/outputs/trim/{sample}_trim{qual}_2.fq.gz',
+###     output:
+###         'outputs/assembly/megahit/{sample}_trim{qual}_megahit/{sample}_trim{qual}_megahit.contigs.fa'
+###     message: 
+###         '''--- Assembling quality trimmed reads with SPAdes'''
+###     singularity: 
+###         'docker://quay.io/biocontainers/megahit:1.1.2--py35_0'
+###     threads: 8
+###     benchmark: 
+###         'benchmarks/{sample}_trim{qual}.megahit.benchmark.txt'
+###     params: 
+###         sample="{sample}", 
+###         qual="{qual}" 
+###     shell:
+###         '''
+###         rm -rf `dirname {output}`
+###         megahit -t {threads} \
+### 	    --memory 0.20 \
+###             -1 {input.fwd} \
+###             -2 {input.rev} \
+### 	    --out-prefix={params.sample}_trim{params.qual}_megahit \
+### 	    -o `dirname {output}`
+###         mv `dirname {output}`/{params.sample}_trim{params.qual}_megahit.contigs.fa {output} 
+###         '''
+### 
+### rule assembly_statistics_quast:
+###     input:
+###         'outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa'
+###     output:
+###         'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_quast/report.html',
+###     message: 
+###         '--- Calculating assembly statistics with quast'
+###     singularity: 
+###         'docker://quay.io/biocontainers/quast:4.5--boost1.61_1'
+###     log: 
+###         'outputs/assembly/stats/{sample}_trim{qual}_{assembler}.log',
+###     shell:
+###         'quast.py {input} -o {output}'
+### 
+### rule compile_assembly_stats_with_multiqc:
+###     input: 
+###         'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_quast/report.html',
+###     output: 
+###         'outputs/assembly/stats/{assembler}/{sample}_trim{qual}_{assembler}_multiqc/report.html'  
+###     message: 
+###         '--- Compiling assembly statistics with multiqc'
+###     singularity: 
+###         'docker://quay.io/biocontainers/multiqc:1.4--py35_0'
+###     log: 
+###         'outputs/assembly/stats/{sample}_trim{qual}_{assembler}_multiqc.log',
+###     shell:
+###         'multiqc {input}' 
 

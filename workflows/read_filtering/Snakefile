@@ -1,116 +1,446 @@
 '''
-Author: Phillip Brooks 
+Author: Phillip Brooks, Charles Reid
 Affiliation: UC Davis Lab for Data Intensive Biology
-Aim: A simple Snakemake workflow to process reads to produce quality trimmed data 
-Date: Tue Jan 16 2018
-Run: snakemake --use-conda --use-singularity 
-Latest modification:
+Objective: A Snakemake workflow to process reads to produce quality trimmed data 
+Date: 2018-06-08
+Documentation: docs/workflow_readfilt.md
 '''
-##--------------------------------------------------------------------------------------##
-## Variables declaration                          
-## Declaring some variables
-## (SAMPLES, direction, qual)
-##--------------------------------------------------------------------------------------##
 
-SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
+from utils import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
 
-rule all:    
-    input:
-        expand('outputs/qc/after_trimming/{sample}_trim{qual}_{direction}_fastqc.zip',
-               sample=SAMPLES,
-               direction=['1', '2'],
-               qual=['2','30']
-               ),
-        expand('outputs/qc/before_trimming/{sample}_{direction}_fastqc.zip',
-               sample=SAMPLES,
-               direction=['1', '2'],
-               )
 
-# To use os.path.join,
-# which is more robust than manually writing the separator.
-import os
 
-# Association between output files and source links
-links = {
-        'SRR606249_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7',
-        'SRR606249_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47',
-        'SRR606249_subset10_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b',
-        'SRR606249_subset10_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a',
-        'SRR606249_subset25_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38',
-        'SRR606249_subset25_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486',
-        'SRR606249_subset50_1.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf',
-        'SRR606249_subset50_2.fq.gz' : 'https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77'}
+###################################
+# Read Filtering: default config
 
-# Make this association accessible via a function of wildcards
-def chainfile2link(wildcards):
-    return links[wildcards.chainfile]
-    
-rule download:
-    input:
+include: "read_filtering.settings"
+
+data_dir = config['data_dir']
+biocontainers = config['biocontainers']
+readfilt = config['read_filtering']
+
+
+###################################
+# Read Filtering: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
+###################################
+# Read Filtering: biocontainers
+
+# Assemble container image names for containers
+quayurls = []
+for app in biocontainers.keys():
+    if container_image_is_external(biocontainers,app):
+        name = container_image_name(biocontainers,app)
+        quayurls.append(name)
+
+pulled_containers_touchfile = ".pulled_containers"
+pulled_containers_touchfile = join(data_dir,pulled_containers_touchfile)
+
+rule pull_biocontainers:
+    """
+    Pull the required versions of containers from quay.io.
+    Note that this is not necessary with the singularity: directive.
+    """
     output:
-        # We inform snakemake what this rule will generate
-        os.path.join('inputs/data/', '{chainfile}')
-    message: '''--- Downloading Data.'''
-    params:
-        # using a function of wildcards in params
-        link = chainfile2link,
-    shell:
-        '''
-        mkdir -p inputs/data/
-        wget {params.link} -O {output}
-        '''       
+        touch(pulled_containers_touchfile)
+    run:
+        for quayurl in quayurls:
+            shell('''
+                singularity pull --force {quayurl}
+            ''')
 
-rule download_TruSeq_PE:
-    output: 'inputs/adapters/TruSeq2-PE.fa'
-    message: '''--- Downloading adapters.'''
+
+###################################
+# Read Filtering: fetch reads
+
+# Match wildcards with the pre-trimming pattern
+pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+
+def download_reads_read_data_url(wildcards):
+    """Returns url where data can be downloaded"""
+
+    # Get the filename only from the relative path, and do wildcard substitution
+    _, stripped_output = os.path.split(pre_trimming_pattern)
+    stripped_output = stripped_output.format(**wildcards)
+
+    # Get the URL where this file is available
+    read_data_url = readfilt['read_files'][stripped_output]
+
+    return read_data_url
+
+def download_reads_read_data_file(wildcards):
+    return pre_trimming_pattern.format(**wildcards)
+
+rule download_reads:
+    """
+    Fetch user-requested files from OSF containing reads that will be used in
+    the read filtering process.
+
+    Note that this defines wildcard-based download rules, rather than
+    downloading all files all at once, to keep things flexible and fast.
+    """
+    output:
+        pre_trimming_pattern
+    message: 
+        '''--- Downloading reads.'''
+    params:
+        read_data_url = download_reads_read_data_url,
+        read_data_file = download_reads_read_data_file
     shell:
-        'wget -O {output} http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa'
-	
+        'wget -O {params.read_data_file} {params.read_data_url}'
+
+
+adapter_output = join(data_dir, readfilt['adapter_file']['name'])
+adapter_url = readfilt['adapter_file']['url']
+
+rule download_read_adapters:
+    """
+    Download FASTA read adapaters (TruSeq2-PE sequencer by default).
+    """
+    output:
+        adapter_output
+    message:
+        '''--- Downloading adapter file.'''
+    shell:
+        'wget -O {adapter_output} {adapter_url}'
+
+
+###################################
+# Read Filtering: pre and post trimming
+
+pre_trimming_input = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+
+target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+target_ext = "_%s.zip"%(target_suffix)
+pre_trimming_output = re.sub('\.fq\.gz',target_ext,pre_trimming_input)
+
+fastqc_image = container_image_name(biocontainers, 'fastqc')
+
+def pre_trimming_qa_input(wildcards):
+    # Wildcard substitution to obtain trimming input
+    return pre_trimming_input.format(**wildcards) 
+
+def pre_trimming_qa_output(wildcards):
+    # Wildcard substitution to obtain trimming output
+    return pre_trimming_output.format(**wildcards) 
+
 
 rule pre_trimming_quality_assessment:
+    """
+    Perform a pre-trimming quality check of the reads from the sequencer.
+    """
     input:
-        'inputs/data/{sample}_{direction}.fq.gz',
+        pre_trimming_input
     output: 
-        'outputs/qc/before_trimming/{sample}_{direction}_fastqc.zip',
-    singularity: 'docker://brooksph/fastqc:latest'
+        pre_trimming_output
+    message: 
+        '''--- Pre-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
     threads: 2
-    shell:
-        'fastqc -t {threads} {input} -o `dirname {output}`'
-        
-rule quality_trimming:
-    input: 
-        fwd='inputs/data/{sample}_1.fq.gz',
-        rev='inputs/data/{sample}_2.fq.gz',
-        adapters='inputs/adapters/TruSeq2-PE.fa'
-    output:
-        fwd='outputs/trim/{sample}_trim{qual}_1.fq.gz',
-        rev='outputs/trim/{sample}_trim{qual}_2.fq.gz',
-        fwd_se='outputs/trim/{sample}_trim{qual}_1_se',
-        rev_se='outputs/trim/{sample}_trim{qual}_2_se',
-    message: '''--- Quality trimming data at q 2 and 30.'''
     params:
-        qual='{qual}'    
-    singularity: 'docker://quay.io/biocontainers/trimmomatic:0.36--5'
-    log: 'outputs/trim/trimmomatic_pe_{sample}.log'
+        pre_trimming_output_wc = pre_trimming_qa_output,
+        pre_trimming_input_wc = pre_trimming_qa_input
     shell:
-        ''' 
-	trimmomatic PE \
-            {input.fwd} {input.rev} \
-            {output.fwd} {output.fwd_se} \
-            {output.rev} {output.rev_se} \
-            ILLUMINACLIP:{input.adapters}:2:40:15 \
-            LEADING:{params.qual} TRAILING:{params.qual} \
-            SLIDINGWINDOW:4:{params.qual} MINLEN:25 \
-        2> {log}
-        '''
+        'fastqc -t {threads} '
+        '/{params.pre_trimming_input_wc} '
+        '-o /{data_dir} '
+
+post_trimming_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+post_trimming_input  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
+target_suffix = readfilt['quality_assessment']['fastqc_suffix']
+target_ext = "_%s.zip"%(target_suffix)
+
+post_trimming_output = re.sub('\.fq\.gz',target_ext,post_trimming_input)
+
+def post_trimming_qa_input(wildcards):
+    return post_trimming_input.format(**wildcards)
+
+def post_trimming_qa_output(wildcards):
+    return post_trimming_output.format(**wildcards)
 
 rule post_trimming_quality_assessment:
+    """
+    Perform a post-trimming quality check 
+    of the reads from the sequencer.
+    """
     input:
-        'outputs/trim/{sample}_trim{qual}_{direction}.fq.gz',
-    output: 
-        'outputs/qc/after_trimming/{sample}_trim{qual}_{direction}_fastqc.zip',
-    message: '''--- Quality check of trimmed data with Fastqc.'''
-    singularity: 'docker://brooksph/fastqc:latest'
+        post_trimming_input
+    output:
+        post_trimming_output
+    message: 
+        '''--- Post-trim quality check of trimmed data with fastqc.'''
+    singularity: 
+        fastqc_image
     threads: 2 
+    params:
+        post_trimming_output_wc = post_trimming_qa_output,
+        post_trimming_input_wc = post_trimming_qa_input
     shell:
-        'fastqc -t {threads} {input} -o `dirname {output}`'
+        'fastqc -t {threads} '
+        '/{params.post_trimming_input_wc} '
+        '-o /{data_dir} '
+
+
+###################################
+# Read Filtering: interleave
+
+interleave_ext = readfilt['interleaving']['interleave_suffix']
+
+# these are strings containing templates of .fq.gz file names
+fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
+
+interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
+interleave_output = fq_interleave
+khmer_image = container_image_name(biocontainers,'khmer')
+quality_log = join(data_dir,'interleave_{sample}_trim{qual}.log')
+
+def interleave_reads_inputs(wildcards):
+    # inputs should include the data directory prefix
+    # do wildcard substitution
+    interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
+
+    # for docker container, turn prefix 'data/' into '/data/'
+    interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
+    interleave_input_wcs = " ".join(interleave_input_wc)
+    return interleave_input_wcs
+
+def interleave_reads_output(wildcards):
+    # wildcard substitution
+    return interleave_output.format(**wildcards)
+
+def interleave_reads_logfile(wildcards):
+    # wildcard substitution
+    return quality_log.format(**wildcards)
+
+
+rule interleave_reads:
+    """
+    Interleave paired-end reads using khmer.
+    The trim quality comes from the filename.
+    """
+    input:
+        interleave_input
+    output:
+        interleave_output
+    message:
+        """--- Interleaving read data."""
+    singularity:
+        khmer_image
+    log:
+        quality_log
+    params:
+        interleave_input_wc = interleave_reads_inputs,
+        interleave_output_wc = interleave_reads_output
+    shell:
+        'interleave-reads.py {params.interleave_input_wc} '
+        '--no-reformat '
+        '-o {params.interleave_output_wc} '
+        '--gzip'
+
+
+###################################
+# Read Filtering: quality trimming
+
+# If you only want to substitute a subset of wildcards,
+# you can leave a wildcard untouched by substituting
+# the string {variable} for {variable}.
+# 
+# We use this trick several times in these rules.
+# 
+fq_fwd = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=1,sample='{sample}'))
+fq_rev = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(direction=2,sample='{sample}'))
+
+quality_input = [fq_fwd, fq_rev]
+
+fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+
+trim_target_ext = readfilt['quality_trimming']['trim_suffix']
+
+fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
+fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
+
+quality_output = [fq_fwd_trimmed, fq_fwd_se,
+                  fq_rev_trimmed, fq_rev_se]
+
+adapter_file = join(data_dir, readfilt['adapter_file']['name'])
+
+quality_log = join(data_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
+trimmo_image = container_image_name(biocontainers,'trimmomatic')
+
+def quality_trimming_quality_log(wildcards):
+    """Get the log file for this quality trimming param set"""
+    return quality_log.format(**wildcards)
+
+def quality_trimming_qual(wildcards):
+    """Get quality threshold for trimming"""
+    return "{qual}".format(**wildcards)
+
+def quality_trimming_quality_input(wildcards):
+    """
+    Wildcard substitution to get input files for trimming. 
+    Absolute path for container: data/ becomes /data/
+    """
+
+    # input includes data/ prefix
+    quality_input_wc = [x.format(**wildcards) for x in quality_input]
+
+    # for containers, turn prefix data/ into /data/
+    quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
+    quality_input_wcs = " ".join(quality_input_wc)
+    return quality_input_wcs
+
+def quality_trimming_quality_output(wildcards):
+    """
+    Wildcard substitution to get input files for trimming. 
+    Absolute path for container: data/ becomes /data/
+    """
+    # input includes data/ prefix
+    quality_output_wc = [x.format(**wildcards) for x in quality_output]
+
+    # for containers, turn prefix data/ into /data/
+    quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
+    quality_output_wcs = " ".join(quality_output_wc)
+    return quality_output_wcs
+
+
+rule quality_trimming:
+    """
+    Trim reads from the sequencer by dropping low-quality reads.
+    """
+    input:
+        quality_input, adapter_file
+    output:
+        quality_output
+    message: 
+        """--- Quality trimming read data."""
+    singularity: 
+        trimmo_image
+    params:
+        qual = quality_trimming_qual,
+        quality_input_wc = quality_trimming_quality_input,
+        quality_output_wc = quality_trimming_quality_output,
+        quality_log_wc = quality_trimming_quality_log
+    log: 
+        quality_log
+    shell:
+        'trimmomatic PE '
+        '{params.quality_input_wc} '
+        '{params.quality_output_wc} '
+        'ILLUMINACLIP:/{adapter_file}:2:40:15 '
+        'LEADING:{params.qual} '
+        'TRAILING:{params.qual} '
+        'SLIDINGWINDOW:4:{params.qual} '
+        'MINLEN:25 '
+
+
+###################################
+# Read Filtering: build rules
+
+# These "ghost" build rules don't do anything 
+# except trigger other rules.
+
+rule fetch:
+    """
+    Fetch read data from OSF. Uses full reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"])
+
+rule pre_trim:
+    """
+    Pre-trimming quality assessment of read data. Uses full reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+
+rule post_trim:
+    """
+    Post-trimming quality assessment of read data. Uses full reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+
+
+
+rule fetch_subset10:
+    """
+    Fetch read data from OSF. Uses 10% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"])
+
+rule pre_trim_subset10:
+    """
+    Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset10:
+    """
+    Post-trimming quality assessment of read data. Uses 10% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+
+
+
+rule fetch_subset25:
+    """
+    Fetch read data from OSF. Uses 25% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"])
+
+rule pre_trim_subset25:
+    """
+    Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset25:
+    """
+    Post-trimming quality assessment of read data. Uses 25% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+
+
+
+rule fetch_subset50:
+    """
+    Fetch read data from OSF. Uses 50% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"])
+
+rule pre_trim_subset50:
+    """
+    Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset50:
+    """
+    Post-trimming quality assessment of read data. Uses 50% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+
