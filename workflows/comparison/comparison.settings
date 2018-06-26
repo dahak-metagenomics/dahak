@@ -32,6 +32,36 @@ config_default = {
     },
 
     "comparison" : {
+        "compute_read_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "sig_suffix"    : "scaled10k.k21_31_51.sig", 
+            "merge_suffix"  : "scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_read_signatures" : {
+            # k and scale values come from above
+            # only compare read signatures for these:
+            "base" = ["SRR606249_subset10","SRR606249_subset25"],
+            "quality" : ["2","30"]
+        },
+
+        "compute_assembly_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "sig_name_suffix" : "scaled10k.k21_31_51.sig",
+        },
+        "compare_assembly_signatures" : {
+            # k and scale values come from above
+            # only compare read signatures for these:
+            "base" : ["SRR606249_subset10","SRR606249_subset25"],
+            "quality" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]
+        },
+        "compare_read_assembly_signatures" : {
+            "base": ["SRR606249"],
+            "quality" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]
+        }
 
     },
 
@@ -72,7 +102,7 @@ config_default = {
         # everything before the _1/_2 
         # scaled 10000
         #
-        "calculate_signatures" : {
+        "compute_read_signatures" : {
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
             "sig_name"      : "{base}.trim{ntrim}.scaled10k.k21_31_51.sig",

@@ -27,6 +27,7 @@ biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
 assembly = config['assembly']
 readfilt = config['read_filtering']
+comparison = config['comparison']
 
 
 ##################################################
@@ -48,9 +49,21 @@ readfilt = config['read_filtering']
 # Comparison: compute signatures for assemblies
 
 
+# input is assembly pattern (output of assembly workflow)
 assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 
-kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
+# output replaces .contigs.fa with 'sig_suffix'
+assembly_sig_output = re.sub(r'\.contigs\.fa',
+                             comparison['compute_assembly_signatures'],
+                             assembly['assembly_patterns']['assembly_pattern'])
+
+# scale, for command line
+assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
+
+# likewise, get separate k values for assembly and read signatures
+kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembly_signatures']['kvalues']])
+
+# k values for the filename are hard-coded by the user.
 
 rule compute_assembly_signatures:
     """
@@ -62,25 +75,12 @@ rule compute_assembly_signatures:
         assembly_sig_output
     singularity:
         sourmash_image
-    params:
-        assembly_sig_name = compute_read_signatures_sig_name,
-        assembly_merge_name = compute_read_signatures_merge_name
-
-
-
-
-###for i in osfstorage/assembly/SRR606249{"_1","_subset10_1","_subset25_1","_subset50_1"}.trim{"2","30"}.fq.gz_megahit_output/final.contigs.fa
-###do     
-###    base=`echo ${i} | awk -F/ '{print $3}'`
-###    echo ${base}
-###    
-###    docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
-###            compute \ 
-###            -k 21,31,51 \ 
-###            --scaled 10000 \
-###            /data/${i} \
-###            -o /data/${base}.k21_31_51.sig
-###done 
+    shell:
+        'sourmash compute '
+        '-k {kvalues_cmd} '
+        '--scaled {scale} '
+        '/{input} '
+        '-o /{output} '
 
 
 ##################################################
@@ -133,10 +133,17 @@ rule compute_assembly_signatures:
 ##################################################
 # Comparison: compare signatures for reads and assemblies
 
+# long list will become input
+# input variable will be expand()
+# expand will use compare_assembly_signatures
+# keys: base, quality, assembler
+# etc
+
 ###for i in 21 31 51
 ###do
-###        docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
-###                compare /data/SRR606249_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
+###        docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 \
+###                sourmash compare \
+###                /data/SRR606249_1.trim2.fq.gz_megahit_output.k21_31_51.sig \
 ###                /data/SRR606249_1.trim2.fq.gz_spades_output.k21_31_51.sig \
 ###                /data/SRR606249.pe.trim2.fq.gz.k21_31_51.sig \
 ###                /data/SRR606249.pe.trim30.fq.gz.k21_31_51.sig \
