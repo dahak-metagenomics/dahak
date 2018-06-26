@@ -21,6 +21,8 @@ include: "read_filtering.settings"
 
 data_dir = config['data_dir']
 biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+assembly = config['assembly']
 readfilt = config['read_filtering']
 
 
