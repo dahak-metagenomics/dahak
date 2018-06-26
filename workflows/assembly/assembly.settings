@@ -101,11 +101,11 @@ config_default = {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
             "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk.tgz",
-            "url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            #"tar"  : "kaiju_index_nr_euk.tgz", # <-- seems to be having an issue
+            "tar"  : "kaiju_index_pg.tgz",
+            "url"  : "http://kaiju.binf.ku.dk/database",
             "out"  : "{base}.kaiju_output.trim{ntrim}.out"
         },
-        #"url"  : "http://kaiju.binf.ku.dk/database",
 
         "reads" : {
             "fq_fwd"     : "{base}_1.trim{ntrim}.fq.gz",
