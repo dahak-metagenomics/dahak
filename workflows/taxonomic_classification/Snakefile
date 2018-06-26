@@ -257,6 +257,49 @@ rule run_kaiju:
         '-z 4'
 
 
+taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+taxon_names_output_file = re.sub(r'\.out', r'.names.out', run_kaiju_output_file)
+
+def taxon_names_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the addTaxonNames
+    command. The other input files do not have wildcards, so it's only
+    the run_kaiju_output_file (which is the input to add taxon names) 
+    that requires wildcard substitution.
+    """
+    return run_kaiju_output_file.format(**wildcards)
+
+def taxon_names_output_file_sub(wildcards):
+    """
+    Wildcard substitution of taxon names output.
+    The taxon names output is just the kaiju output name,
+    but replacing .out with .names.out.
+    """
+    return taxon_names_output_file.format(**wildcards)
+
+rule add_taxon_names:
+    """
+    Use kaiju to add taxon names.
+    """
+    input:
+        taxon_names_input_files
+    output:
+        taxon_names_output_file
+    singularity:
+        kaiju_image
+    params:
+        taxon_names_input_file_wc = taxon_names_input_file_sub,
+        taxon_names_output_file_wc = taxon_names_output_file_sub
+    shell:
+        'addTaxonNames '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-u -p '
+        '-I {params.taxon_names_input_file_wc} '
+        '–o {params.taxon_names_output_file_wc}'
+
+
+
 ############################################
 # Taxonomic Classification: kaiju to krona
 
