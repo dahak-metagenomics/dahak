@@ -257,6 +257,49 @@ rule run_kaiju:
         '-z 4'
 
 
+taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+taxon_names_output_file = re.sub(r'\.out', r'.names.out', run_kaiju_output_file)
+
+def taxon_names_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the addTaxonNames
+    command. The other input files do not have wildcards, so it's only
+    the run_kaiju_output_file (which is the input to add taxon names) 
+    that requires wildcard substitution.
+    """
+    return run_kaiju_output_file.format(**wildcards)
+
+def taxon_names_output_file_sub(wildcards):
+    """
+    Wildcard substitution of taxon names output.
+    The taxon names output is just the kaiju output name,
+    but replacing .out with .names.out.
+    """
+    return taxon_names_output_file.format(**wildcards)
+
+rule add_taxon_names:
+    """
+    Use kaiju to add taxon names.
+    """
+    input:
+        taxon_names_input_files
+    output:
+        taxon_names_output_file
+    singularity:
+        kaiju_image
+    params:
+        taxon_names_input_file_wc = taxon_names_input_file_sub,
+        taxon_names_output_file_wc = taxon_names_output_file_sub
+    shell:
+        'addTaxonNames '
+        '-t /{kaiju_dmp1} '
+        '-n /{kaiju_dmp2} '
+        '-u -p '
+        '-I {params.taxon_names_input_file_wc} '
+        '–o {params.taxon_names_output_file_wc}'
+
+
+
 ############################################
 # Taxonomic Classification: kaiju to krona
 
@@ -473,41 +516,111 @@ rule filter_taxa_class:
 
 # sourmash + urls section of config
 rule genbank:
+    """
+    Download the assembled SBT associated with a given database,
+    and for a given k value.
+    """
     input:
-        expand(download_sourmash_sbt_output,database=["genbank"],ksize=["21","31"])
+        expand(
+            download_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
 
 # sourmash section of config
 rule sbts:
+    """
+    Unpack the assembled SBTs associated with a given database
+    and for a given k value.
+    """
     input:
-        expand(unpack_sourmash_sbt_output, database=["genbank"],ksize=["21","31"])
+        expand(
+            unpack_sourmash_sbt_output,
+            database=["genbank"],
+            ksize=["21","31","51"]
+        )
 
-# compute signatures section of config
-rule merge:
+rule usekaiju:
+    """
+    Download and unpack kaiju database.
+    """
     input:
-        expand(sig_output, 
+        unpack_kaiju_output
+
+rule merge:
+    """
+    Merge paired-end read files and compute signatures.
+    """
+    input:
+        expand(
+            sig_output, 
             base=["SRR606249"],
             ntrim=["2","30"]
         )
 
-rule usekaiju:
+rule merge_subset10:
+    """
+    Merge paired-end read files and compute signatures.
+    Only uses the 10% subsampled reads.
+    """
     input:
-        unpack_kaiju_output
+        expand(
+            sig_output, 
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        )
 
 rule runkaiju:
+    """
+    Run the kaiju program.
+    """
     input:
-        expand(run_kaiju_output_file,
+        expand(
+            run_kaiju_output_file,
             base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkaiju_subset10:
+    """
+    Run the kaiju program.
+    """
+    input:
+        expand(
+            run_kaiju_output_file,
+            base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
 
 rule runkrona:
+    """
+    Run the krona visualization tool.
+    """
     input:
-        expand(kaiju2krona_output_file,
+        expand(
+            kaiju2krona_output_file,
             base=["SRR606249"],
             ntrim=["2","30"]
         ),
-        expand(kaiju2kronasummary_output_file,
+        expand(
+            kaiju2kronasummary_output_file,
             base=["SRR606249"],
+            ntrim=["2","30"]
+        )
+
+rule runkrona_subset10:
+    """
+    Run the krona visualization tool.
+    """
+    input:
+        expand(
+            kaiju2krona_output_file,
+            base=["SRR606249_subset10"],
+            ntrim=["2","30"]
+        ),
+        expand(
+            kaiju2kronasummary_output_file,
+            base=["SRR606249_subset10"],
             ntrim=["2","30"]
         )
 

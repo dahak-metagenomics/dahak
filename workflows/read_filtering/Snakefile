@@ -200,15 +200,10 @@ rule post_trimming_quality_assessment:
 
 interleave_ext = readfilt['interleaving']['interleave_suffix']
 
-try:
-    # these are strings containing templates of .fq.gz file names
-    fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
-    fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
-    fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
-except KeyError:
-    fq_fwd_trimmed = ""
-    fq_rev_trimmed = ""
-    fq_interleave  = ""
+# these are strings containing templates of .fq.gz file names
+fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
+fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
+fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
 
 interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
 interleave_output = fq_interleave
@@ -362,15 +357,92 @@ rule quality_trimming:
 # except trigger other rules.
 
 rule fetch:
+    """
+    Fetch read data from OSF. Uses full reads.
+    """
     input:
         expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"])
 
 rule pre_trim:
+    """
+    Pre-trimming quality assessment of read data. Uses full reads.
+    """
     input:
         expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
 
 rule post_trim:
+    """
+    Post-trimming quality assessment of read data. Uses full reads.
+    """
     input:
         expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
 
+
+
+rule fetch_subset10:
+    """
+    Fetch read data from OSF. Uses 10% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"])
+
+rule pre_trim_subset10:
+    """
+    Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset10:
+    """
+    Post-trimming quality assessment of read data. Uses 10% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+
+
+
+rule fetch_subset25:
+    """
+    Fetch read data from OSF. Uses 25% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"])
+
+rule pre_trim_subset25:
+    """
+    Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset25:
+    """
+    Post-trimming quality assessment of read data. Uses 25% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+
+
+
+rule fetch_subset50:
+    """
+    Fetch read data from OSF. Uses 50% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"])
+
+rule pre_trim_subset50:
+    """
+    Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
+    """
+    input:
+        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+
+rule post_trim_subset50:
+    """
+    Post-trimming quality assessment of read data. Uses 50% subsampled reads.
+    """
+    input:
+        expand(post_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
 

@@ -37,6 +37,8 @@ config_default = {
             "post_trimming_pattern" : "{sample}_{direction}_trim{qual}.fq.gz",
         },
 
+        # could also add a samples list
+
         # read_files must be defined by user 
         "read_files" : {
             "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",

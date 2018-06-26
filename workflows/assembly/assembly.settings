@@ -111,9 +111,6 @@ config_default = {
             "fq_fwd"     : "{base}_1.trim{ntrim}.fq.gz",
             "fq_rev"     : "{base}_2.trim{ntrim}.fq.gz",
         },
-        # Should this use {dir}? 
-        # or just use the post_trim_pattern
-        # from read_filt
 
         "sourmash" : { 
             "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
