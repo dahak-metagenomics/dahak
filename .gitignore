@@ -1,0 +1,21 @@
+
+# Ignore snakemake files
+.snakemake
+
+# Ignore singularity images
+*.simg
+*.img
+
+# Ignore data/ dirs
+workflows/read_filtering/data
+workflows/taxonomic_classification/data
+
+# no big files
+.sbt*
+*.pdf
+*.json
+*.tar.gz
+*.tgz
+
+# python
+__pycache__
