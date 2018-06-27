@@ -53,35 +53,17 @@ read_sig_output_name = re.sub(r'\.fq\.gz',
 read_sig_output = join(data_dir, read_sig_output_name)
 
 # scale, for command line
-assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
+read_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
 
-
-
-
-# ---------
-# old tax class:
-
-read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
-merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
-
-kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
-kvalues_file = "_".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
-scale = "%s"%(taxclass['compute_read_signatures']['scale'])
-
-sourmash_image = container_image_name(biocontainers, 'sourmash')
-
-def compute_read_signatures_fq_fwd(wildcards):
-    return taxclass['reads']['fq_fwd'].format(**wildcards)
-
-def compute_read_signatures_fq_rev(wildcards):
-    return taxclass['reads']['fq_rev'].format(**wildcards)
-
-# add k values
 def compute_read_signatures_sig_name(wildcards):
-    return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
+    sn = comparison['compute_read_signatures']['sig_name'].format(**wildcards)
+    sn = join(data_dir, sn)
+    return sn
 
 def compute_read_signatures_merge_name(wildcards):
-    return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
+    mn = comparison['compute_read_signatures']['merge_name'].format(**wildcards)
+    mn = join(data_dir, mn)
+    return mn
 
 rule compute_read_signatures:
     """
@@ -94,20 +76,17 @@ rule compute_read_signatures:
     singularity:
         sourmash_image
     params:
-        fq_fwd = compute_read_signatures_fq_fwd,
-        fq_rev = compute_read_signatures_fq_rev,
         read_sig_name = compute_read_signatures_sig_name,
         read_merge_name = compute_read_signatures_merge_name
     shell:
         'sourmash compute '
-        '--merge /data/{params.merge_name} '
+        '--merge /{params.merge_name} '
         '--track-abundance '
         '--scaled {scale} '
         '-k {kvalues_cmd} '
         '/{inputs[0]} '
         '/{inputs[1]} '
-        '-o /data/{params.read_sig_name}'
-
+        '-o /{params.read_sig_name}'
 
 
 
@@ -119,9 +98,10 @@ rule compute_read_signatures:
 assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 
 # output replaces .contigs.fa with sig_suffix variable
-assembly_sig_output = re.sub(r'\.contigs\.fa',
-                             comparison['compute_assembly_signatures'],
-                             assembly['assembly_patterns']['assembly_pattern'])
+assembly_sig_output_name = re.sub(r'\.contigs\.fa',
+                                  comparison['compute_assembly_signatures']['sig_name_suffix'],
+                                  assembly['assembly_patterns']['assembly_pattern'])
+assembly_sig_output = join(data_dir, assembly_sig_output_name)
 
 # scale, for command line
 assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
@@ -179,6 +159,8 @@ def compare_read_sigs_inputs_wc(wildcards):
 compare_read_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
 compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
 
+compare_read_sigs_kvalues = ",".join([str(j) for j in comparison['compare_read_signatures']['kvalues']])
+
 rule compare_read_signatures:
     """
     Compare signatures of specified reads.
@@ -190,27 +172,12 @@ rule compare_read_signatures:
     singularity:
         sourmash_image
     params:
-        compare_reads_input_wc = post_trimming_qa_output,
+        compare_reads_input_wc = compare_read_sigs_inputs_wc
     shell:
-        # TODO        
-
-
-###for i in 21 31 51
-###do
-###
-###     docker run -v ${PWD}:/data quay.io/biocontainers/sourmash:2.0.0a1--py35_2 sourmash \
-###         compare /data/SRR606249.pe.trim2.fq.gz.k21_31_51.sig \
-###         /data/SRR606249.pe.trim30.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset10.pe.trim2.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset10.pe.trim30.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset25.pe.trim2.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset25.pe.trim30.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset50.pe.trim2.fq.gz.k21_31_51.sig \
-###         /data/SRR606249_subset50.pe.trim30.fq.gz.k21_31_51.sig \
-###         -k ${i} \
-###         --csv /data/SRR606249.pe.trim2and30_comparison.k${i}.csv
-###done
-
+        'sourmash compare '
+        '{params.compare_reads_input_wc} '
+        '-k {compare_read_sigs_kvalues} '
+        '--csv /{output}'
 
 
 ##################################################
