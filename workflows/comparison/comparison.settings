@@ -44,7 +44,6 @@ config_default = {
             "base" = ["SRR606249_subset10","SRR606249_subset25"],
             "quality" : ["2","30"]
         },
-
         "compute_assembly_signatures" : {
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
@@ -55,12 +54,14 @@ config_default = {
             # only compare read signatures for these:
             "base" : ["SRR606249_subset10","SRR606249_subset25"],
             "quality" : ["2","30"],
-            "assembler" : ["megahit","metaspades"]
+            "assembler" : ["megahit","metaspades"],
+            "csv_out" : "SRR606249_trim2and30_read_comparison.k21_31_51.csv"
         },
         "compare_read_assembly_signatures" : {
-            "base": ["SRR606249"],
+            "base": ["SRR606249_subset10"],
             "quality" : ["2","30"],
-            "assembler" : ["megahit","metaspades"]
+            "assembler" : ["megahit","metaspades"],
+            "csv_out" : "SRR606249_trim2and30_assembly_comparison.k21_31_51.csv"
         }
 
     },
@@ -128,8 +129,8 @@ config_default = {
         #"url"  : "http://kaiju.binf.ku.dk/database",
 
         "reads" : {
-            "fq_fwd"     : "{base}_1.trim{ntrim}.fq.gz",
-            "fq_rev"     : "{base}_2.trim{ntrim}.fq.gz",
+            "fq_fwd" : "{base}_1.trim{ntrim}.fq.gz",
+            "fq_rev" : "{base}_2.trim{ntrim}.fq.gz"
         },
 
         "sourmash" : { 
