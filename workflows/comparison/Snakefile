@@ -42,7 +42,73 @@ comparison = config['comparison']
 ##################################################
 # Comparison: compute signatures for reads
 
-# see rule compute_read_signatures in taxonomic classification Snakefile
+read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
+                    join(data_dir, taxclass['reads']['fq_rev'])]
+
+# output replaces .fq.gz with sig_suffix variable
+read_fq_sig = re.sub('_1','',reads['fq_fwd'])
+read_sig_output_name = re.sub(r'\.fq\.gz',
+                              comparison['compute_read_signatures']['sig_suffix'],
+                              read_fq_sig)
+read_sig_output = join(data_dir, read_sig_output_name)
+
+# scale, for command line
+assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
+
+
+
+
+# ---------
+# old tax class:
+
+read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
+merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
+
+kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
+kvalues_file = "_".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
+scale = "%s"%(taxclass['compute_read_signatures']['scale'])
+
+sourmash_image = container_image_name(biocontainers, 'sourmash')
+
+def compute_read_signatures_fq_fwd(wildcards):
+    return taxclass['reads']['fq_fwd'].format(**wildcards)
+
+def compute_read_signatures_fq_rev(wildcards):
+    return taxclass['reads']['fq_rev'].format(**wildcards)
+
+# add k values
+def compute_read_signatures_sig_name(wildcards):
+    return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
+
+def compute_read_signatures_merge_name(wildcards):
+    return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
+
+rule compute_read_signatures:
+    """
+    Compute read signatures from trimmed data using sourmash.
+    """
+    input:
+        read_sig_inputs
+    output:
+        read_sig_output
+    singularity:
+        sourmash_image
+    params:
+        fq_fwd = compute_read_signatures_fq_fwd,
+        fq_rev = compute_read_signatures_fq_rev,
+        read_sig_name = compute_read_signatures_sig_name,
+        read_merge_name = compute_read_signatures_merge_name
+    shell:
+        'sourmash compute '
+        '--merge /data/{params.merge_name} '
+        '--track-abundance '
+        '--scaled {scale} '
+        '-k {kvalues_cmd} '
+        '/{inputs[0]} '
+        '/{inputs[1]} '
+        '-o /data/{params.read_sig_name}'
+
+
 
 
 ##################################################
@@ -52,7 +118,7 @@ comparison = config['comparison']
 # input is assembly pattern (output of assembly workflow)
 assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 
-# output replaces .contigs.fa with 'sig_suffix'
+# output replaces .contigs.fa with sig_suffix variable
 assembly_sig_output = re.sub(r'\.contigs\.fa',
                              comparison['compute_assembly_signatures'],
                              assembly['assembly_patterns']['assembly_pattern'])
@@ -85,6 +151,49 @@ rule compute_assembly_signatures:
 
 ##################################################
 # Comparison: compare signatures for reads
+
+
+# We need to use expand() to create a list of 
+# read signature files (the input files)
+compare_read_sigs_input_names = expand(
+        read_fq_sig,
+        base = comparison['compare_read_signatures']['base'],
+        quality = comparison['compare_read_signatures']['quality'])
+
+# Turn filename X into data/X
+compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
+
+def compare_read_sigs_inputs_wc(wildcards):
+    """
+    For each input file name, perform wildcard substitution, 
+    add absolute container path, and join all the input file
+    names together in a single string.
+    """
+    compare_input_names_wc = [x.format(**wildcards) for x in compare_read_sigs_inputs]
+    compare_input_names_wc = ["/%s"%(x) for x in interleave_input_wc]
+    compare_input_names_wc = " ".join(interleave_input_wc)
+    return compare_input_names_wc
+
+# User specifies CSV output file.
+# This name is used verbatim.
+compare_read_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
+compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
+
+rule compare_read_signatures:
+    """
+    Compare signatures of specified reads.
+    """
+    input:
+        compare_read_sigs_inputs
+    output:
+        compare_read_sigs_output
+    singularity:
+        sourmash_image
+    params:
+        compare_reads_input_wc = post_trimming_qa_output,
+    shell:
+        # TODO        
+
 
 ###for i in 21 31 51
 ###do
