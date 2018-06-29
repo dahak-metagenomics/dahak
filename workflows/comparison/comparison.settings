@@ -1,5 +1,8 @@
 from snakemake.utils import update_config
 
+# base => sample
+# ntrim => qual
+
 # Note: don"t include http:// or https://
 config_default = {
     "data_dir" : "data/",
@@ -40,9 +43,13 @@ config_default = {
         },
         "compare_read_signatures" : {
             # k and scale values come from above
-            # only compare read signatures for these:
+            # the samples/quality variables are used to expand into multiple filenames
+            # csvout is the single output file for all of the filenames that come from expand()
+            # {kvalue} is replaced with the k value
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
-            "quality" : ["2","30"]
+            "quality" : ["2","30"],
+            "kvalue"  : [21, 31, 51],
+            "csv_out" : "SRR606249_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             "scale"         : 10000,
@@ -55,13 +62,15 @@ config_default = {
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
             "quality" : ["2","30"],
             "assembler" : ["megahit","metaspades"],
-            "csv_out" : "SRR606249_trim2and30_read_comparison.k21_31_51.csv"
+            "kvalue"  : [21, 31, 51],
+            "csv_out" : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
         },
         "compare_read_assembly_signatures" : {
             "samples": ["SRR606249_subset10"],
             "quality" : ["2","30"],
+            "kvalue"  : [21, 31, 51],
             "assembler" : ["megahit","metaspades"],
-            "csv_out" : "SRR606249_trim2and30_assembly_comparison.k21_31_51.csv"
+            "csv_out" : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
         }
 
     },
@@ -99,15 +108,15 @@ config_default = {
             "SRR606249_subset10_2.trim30.fq.gz":   "osf.io/zq4f9/download"
         },
 
-        # base comes from filenames above,
+        # sample comes from filenames above,
         # everything before the _1/_2 
         # scaled 10000
         #
         "compute_read_signatures" : {
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
-            "sig_name"      : "{sample}.trim{ntrim}.scaled10k.k21_31_51.sig",
-            "merge_name"    : "{sample}_merged.trim{ntrim}.scaled10k.k21_31_51.fq.gz"
+            "sig_name"      : "{sample}.trim{qual}.scaled10k.k21_31_51.sig",
+            "merge_name"    : "{sample}_merged.trim{qual}.scaled10k.k21_31_51.fq.gz"
         },
 
         "filter_taxa" : {
@@ -124,13 +133,13 @@ config_default = {
             "fmi"  : "kaiju_db_nr_euk.fmi",
             "tar"  : "kaiju_index_nr_euk.tgz",
             "url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "out"  : "{base}.kaiju_output.trim{ntrim}.out"
+            "out"  : "{sample}.kaiju_output.trim{qual}.out"
         },
         #"url"  : "http://kaiju.binf.ku.dk/database",
 
         "reads" : {
-            "fq_fwd" : "{base}_1.trim{ntrim}.fq.gz",
-            "fq_rev" : "{base}_2.trim{ntrim}.fq.gz"
+            "fq_fwd" : "{sample}_1.trim{qual}.fq.gz",
+            "fq_rev" : "{sample}_2.trim{qual}.fq.gz"
         },
 
         "sourmash" : { 
@@ -141,7 +150,7 @@ config_default = {
 
         "visualize_krona" : {
             # .summary will be replaced with .html
-            "input_summary"  : "{base}.kaiju_output.trim{ntrim}.{suffix}.summary",
+            "input_summary"  : "{sample}.kaiju_output.trim{qual}.{suffix}.summary",
         }
     },
 
