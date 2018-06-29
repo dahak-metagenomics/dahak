@@ -1,13 +1,13 @@
 from snakemake.utils import update_config
 
-include: "read_filtering/read_filtering.settings"
-include: "read_filtering/Snakefile"
-
-include: "taxonomic_classification/taxonomic_classification.settings"
-include: "taxonomic_classification/Snakefile"
-
-include: "assembly/assembly.settings"
-include: "assembly/Snakefile"
+#include: "read_filtering/read_filtering.settings"
+#include: "read_filtering/Snakefile"
+#
+#include: "taxonomic_classification/taxonomic_classification.settings"
+#include: "taxonomic_classification/Snakefile"
+#
+#include: "assembly/assembly.settings"
+#include: "assembly/Snakefile"
 
 include: "comparison/comparison.settings"
 include: "comparison/Snakefile"
