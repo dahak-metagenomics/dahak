@@ -46,7 +46,7 @@ read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']),
                     join(data_dir, taxclass['reads']['fq_rev'])]
 
 # output replaces .fq.gz with sig_suffix variable
-read_fq_sig = re.sub('_1','',reads['fq_fwd'])
+read_fq_sig = re.sub('_1','', taxclass['reads']['fq_fwd'])
 read_sig_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['sig_suffix'],
                               read_fq_sig)
@@ -140,7 +140,7 @@ rule compute_assembly_signatures:
 compare_read_sigs_input_names = expand(
         read_fq_sig,
         sample = comparison['compare_read_signatures']['samples'],
-        quality = comparison['compare_read_signatures']['quality'])
+        qual = comparison['compare_read_signatures']['quality'])
 
 # Turn filename X into data/X
 compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
@@ -254,12 +254,8 @@ compare_ra_assembly_sigs_input_names = expand(
         qual = comparison['compare_read_assembly_signatures']['quality'],
         assembler = comparison['compare_read_assembly_signatures']['assembler'])
 
-compare_ra_sigs_inputs = [join(data_dir, k) 
-                            for k in
-                            compare_ra_read_sigs_input_names]
-                       + [join(data_dir, k)
-                            for k in
-                            compare_ra_assembly_sigs_input_names]
+compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
+compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
 
 # User specifies CSV output file.
 # This name is used verbatim.
