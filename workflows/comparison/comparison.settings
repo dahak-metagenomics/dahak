@@ -59,18 +59,19 @@ config_default = {
         "compare_assembly_signatures" : {
             # k and scale values come from above
             # only compare read signatures for these:
-            "samples" : ["SRR606249_subset10","SRR606249_subset25"],
-            "quality" : ["2","30"],
+            "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
+            "quality"   : ["2","30"],
             "assembler" : ["megahit","metaspades"],
-            "kvalue"  : [21, 31, 51],
-            "csv_out" : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
+            "kvalues"   : [21, 31, 51],
+            # csv should not use wildcards for anything but k values
+            "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
         },
         "compare_read_assembly_signatures" : {
-            "samples": ["SRR606249_subset10"],
-            "quality" : ["2","30"],
-            "kvalue"  : [21, 31, 51],
+            "samples"   : ["SRR606249_subset10"],
+            "quality"   : ["2","30"],
+            "kvalues"   : [21, 31, 51],
             "assembler" : ["megahit","metaspades"],
-            "csv_out" : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
         }
 
     },

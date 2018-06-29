@@ -97,7 +97,8 @@ rule compute_read_signatures:
 
 
 # input is assembly pattern (output of assembly workflow)
-assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_sig_input_name = assembly['assembly_patterns']['assembly_pattern']
+assembly_sig_input = join(data_dir, assembly_sig_input_name)
 
 # output replaces .contigs.fa with sig_suffix variable
 assembly_sig_output_name = re.sub(r'\.contigs\.fa',
@@ -150,10 +151,15 @@ compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_na
 compare_read_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
 compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
 
-compare_read_sigs_kvalues = ",".join([str(j) for j in comparison['compare_read_signatures']['kvalues']])
-
 sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
 
+
+def compare_read_sigs_output_wc(wildcards):
+    """
+    Perform wildcard substitution for the output file name
+    """
+    out_wc = compare_read_sigs_output.format(**wildcards)
+    return out_wc
 
 def compare_read_sigs_inputs_wc(wildcards):
     """
@@ -177,12 +183,13 @@ rule compare_read_signatures:
     singularity:
         sourmash_compare_image
     params:
-        compare_reads_input_wc = compare_read_sigs_inputs_wc
+        compare_reads_input_wc = compare_read_sigs_inputs_wc,
+        compare_reads_output_wc = compare_read_sigs_output_wc
     shell:
         'sourmash compare '
         '{params.compare_reads_input_wc} '
-        '-k {compare_read_sigs_kvalues} '
-        '--csv /{output}'
+        '-k {wildcards.kvalue} '
+        '--csv /{params.compare_reads_output_wc}'
 
 
 ##################################################
@@ -190,7 +197,7 @@ rule compare_read_signatures:
 
 # We already have the assembly sig name
 compare_assembly_sigs_input_names = expand(
-            assembly_sig_output,
+            assembly_sig_output_name,
             sample = comparison['compare_assembly_signatures']['samples'],
             qual = comparison['compare_assembly_signatures']['quality'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
@@ -200,10 +207,16 @@ compare_assembly_sigs_inputs = [join(data_dir,k) for k in compare_assembly_sigs_
 
 # User specifies CSV output file.
 # This name is used verbatim.
-compare_assembly_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
+compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
 compare_assembly_sigs_output = join(data_dir, compare_assembly_sigs_output_name)
 
-compare_assembly_sigs_kvalues = ",".join([str(j) for j in comparison['compare_read_signatures']['kvalues']])
+
+def compare_assembly_sigs_output_wc(wildcards):
+    """
+    Perform wildcard substitution for the output file name
+    """
+    out_wc = compare_assembly_sigs_output.format(**wildcards)
+    return out_wc
 
 def compare_assembly_sigs_inputs_wc(wildcards):
     """
@@ -228,15 +241,13 @@ rule compare_assembly_signatures:
     singularity:
         sourmash_compare_image
     params:
-        compare_assembly_inputs_wc = compare_assembly_sigs_inputs_wc
+        compare_assembly_inputs_wc = compare_assembly_sigs_inputs_wc,
+        compare_assembly_output_wc = compare_assembly_sigs_output_wc
     shell:
         'sourmash compare '
         '{params.compare_assembly_inputs_wc} '
-        '-k {compare_assembly_sigs_kvalues} '
-        '--csv /{output}'
-
-
-
+        '-k {wildcards.kvalue} '
+        '--csv /{params.compare_assembly_output_wc}'
 
 
 ##################################################
@@ -246,7 +257,7 @@ rule compare_assembly_signatures:
 compare_ra_read_sigs_input_names = expand(
         read_fq_sig,
         sample = comparison['compare_read_signatures']['samples'],
-        quality = comparison['compare_read_signatures']['quality'])
+        qual = comparison['compare_read_signatures']['quality'])
 
 compare_ra_assembly_sigs_input_names = expand(
         assembly_sig_output,
@@ -262,10 +273,13 @@ compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_i
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
 compare_ra_sigs_output = join(data_dir, compare_ra_sigs_output_name)
 
-compare_ra_sigs_kvalues = ",".join([str(j) for j in comparison['compare_read_signatures']['kvalues']])
 
-sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
-
+def compare_ra_sigs_output_wc(wildcards):
+    """
+    Perform wildcard substitution for the output file name
+    """
+    out_wc = compare_ra_sigs_output.format(**wildcards)
+    return out_wc
 
 def compare_ra_sigs_inputs_wc(wildcards):
     """
@@ -289,10 +303,19 @@ rule compare_read_assembly_signatures:
     singularity:
         sourmash_compare_image
     params:
-        compare_ra_inputs_wc = compare_ra_sigs_inputs_wc
+        compare_ra_inputs_wc = compare_ra_sigs_inputs_wc,
+        compare_ra_output_wc = compare_ra_sigs_output_wc
     shell:
         'sourmash compare '
         '{params.compare_ra_inputs_wc} '
-        '-k {compare_ra_sigs_kvalues} '
-        '--csv /{output}'
+        '-k {wildcards.kvalue} '
+        '--csv /{params.compare_ra_outputs_wc}'
+
+
+rule doit:
+    input:
+        "data/SRR606249_trim2and30_assembly_comparison.k21.csv"
+
+
+
 
