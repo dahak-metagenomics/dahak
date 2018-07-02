@@ -6,7 +6,8 @@ from snakemake.utils import update_config
 # Note: don"t include http:// or https://
 config_default = {
 
-    "data_dir" : "data/",
+    # the name of the directory where everything is being stored
+    "data_dir" : "data",
 
     "biocontainers" : {
         "sourmash" : {
@@ -28,6 +29,26 @@ config_default = {
             "use_local" : False,
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
+        },
+        "spades" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/spades",
+            "version" : "3.11.1--py27_zlib1.2.8_0"
+        },
+        "megahit" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/megahit",
+            "version" : "1.1.2--py35_0"
+        },
+        "quast" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/quast",
+            "version" : "4.5--boost1.61_1"
+        },
+        "multiqc" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/multiqc",
+            "version" : "1.4--py35_0"
         },
         "osf" : {
             "use_local" : False,
@@ -70,7 +91,7 @@ config_default = {
             "kvalues"       : [21,31,51],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix" : "scaled10k.k21_31_51.sig"
+            "sig_suffix" : "scaled10k.k21_31_51.sig",
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
             "merge_suffix"  : "scaled10k.k21_31_51.fq.gz"
@@ -84,7 +105,7 @@ config_default = {
             # the samples and quality variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
             "quality"   : ["2","30"],
-            "assembler" : ["megahit","metaspades"],
+            "assembler" : ["megahit","spades"],
             #
             # csv_out is the single output file containing comparisons of all input files
             # {kvalue} is replaced with the k value used in the comparison
@@ -95,7 +116,7 @@ config_default = {
             # the samples, quality, assembler variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10"],
             "quality"   : ["2","30"],
-            "assembler" : ["megahit","metaspades"],
+            "assembler" : ["megahit","spades"],
             #
             # k values are passed to sourmash compare
             "kvalues"   : [21, 31, 51],

@@ -42,6 +42,7 @@ comparison = config['comparison']
 ##################################################
 # Comparison: compare read signatures
 
+# input is fwd/rev reads
 read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
                     join(data_dir, taxclass['reads']['fq_rev'])]
 
@@ -96,13 +97,13 @@ rule compute_read_signatures:
 # Comparison: compute signatures for assemblies
 
 
-# input is assembly pattern (output of assembly workflow)
-assembly_sig_input_name = assembly['assembly_patterns']['assembly_pattern']
-assembly_sig_input = join(data_dir, assembly_sig_input_name)
+# input is the output of the assembly workflow
+assembly_sig_input_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['assembly_pattern'])
+assembly_sig_input = join(data_dir, assembly_sig_input_prefix, assembly['assembly_patterns']['assembly_pattern'])
 
 # output replaces .contigs.fa with sig_suffix variable
 assembly_sig_output_name = re.sub(r'\.contigs\.fa',
-                                  comparison['compute_assembly_signatures']['sig_name_suffix'],
+                                  comparison['compute_assembly_signatures']['sig_suffix'],
                                   assembly['assembly_patterns']['assembly_pattern'])
 assembly_sig_output = join(data_dir, assembly_sig_output_name)
 

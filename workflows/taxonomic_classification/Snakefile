@@ -81,55 +81,55 @@ rule unpack_sourmash_sbts:
         '''
 
 
-############################################
-# Taxonomic Classification: compute read signatures
-
-read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
-               join(data_dir, taxclass['reads']['fq_rev'])]
-read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
-merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
-
-kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
-scale = "%s"%(taxclass['compute_read_signatures']['scale'])
-
-sourmash_image = container_image_name(biocontainers, 'sourmash')
-
-def compute_read_signatures_fq_fwd(wildcards):
-    return taxclass['reads']['fq_fwd'].format(**wildcards)
-
-def compute_read_signatures_fq_rev(wildcards):
-    return taxclass['reads']['fq_rev'].format(**wildcards)
-
-def compute_read_signatures_sig_name(wildcards):
-    return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
-
-def compute_read_signatures_merge_name(wildcards):
-    return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
-
-rule compute_read_signatures:
-    """
-    Compute read signatures from trimmed data using sourmash.
-    """
-    input:
-        read_sig_inputs
-    output:
-        read_sig_output
-    singularity:
-        sourmash_image
-    params:
-        fq_fwd = compute_read_signatures_fq_fwd,
-        fq_rev = compute_read_signatures_fq_rev,
-        read_sig_name = compute_read_signatures_sig_name,
-        read_merge_name = compute_read_signatures_merge_name
-    shell:
-        'sourmash compute '
-        '--merge /data/{params.merge_name} '
-        '--track-abundance '
-        '--scaled {scale} '
-        '-k {kvalues_cmd} '
-        '/{inputs[0]} '
-        '/{inputs[1]} '
-        '-o /data/{params.read_sig_name}'
+### ############################################
+### # Taxonomic Classification: compute read signatures
+### 
+### read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
+###                join(data_dir, taxclass['reads']['fq_rev'])]
+### read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
+### merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
+### 
+### kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
+### scale = "%s"%(taxclass['compute_read_signatures']['scale'])
+### 
+### sourmash_image = container_image_name(biocontainers, 'sourmash')
+### 
+### def compute_read_signatures_fq_fwd(wildcards):
+###     return taxclass['reads']['fq_fwd'].format(**wildcards)
+### 
+### def compute_read_signatures_fq_rev(wildcards):
+###     return taxclass['reads']['fq_rev'].format(**wildcards)
+### 
+### def compute_read_signatures_sig_name(wildcards):
+###     return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
+### 
+### def compute_read_signatures_merge_name(wildcards):
+###     return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
+### 
+### rule compute_read_signatures:
+###     """
+###     Compute read signatures from trimmed data using sourmash.
+###     """
+###     input:
+###         read_sig_inputs
+###     output:
+###         read_sig_output
+###     singularity:
+###         sourmash_image
+###     params:
+###         fq_fwd = compute_read_signatures_fq_fwd,
+###         fq_rev = compute_read_signatures_fq_rev,
+###         read_sig_name = compute_read_signatures_sig_name,
+###         read_merge_name = compute_read_signatures_merge_name
+###     shell:
+###         'sourmash compute '
+###         '--merge /data/{params.merge_name} '
+###         '--track-abundance '
+###         '--scaled {scale} '
+###         '-k {kvalues_cmd} '
+###         '/{inputs[0]} '
+###         '/{inputs[1]} '
+###         '-o /data/{params.read_sig_name}'
 
 
 ############################################
@@ -547,29 +547,6 @@ rule usekaiju:
     input:
         unpack_kaiju_output
 
-rule merge:
-    """
-    Merge paired-end read files and compute signatures.
-    """
-    input:
-        expand(
-            sig_output, 
-            base=["SRR606249"],
-            ntrim=["2","30"]
-        )
-
-rule merge_subset10:
-    """
-    Merge paired-end read files and compute signatures.
-    Only uses the 10% subsampled reads.
-    """
-    input:
-        expand(
-            sig_output, 
-            base=["SRR606249_subset10"],
-            ntrim=["2","30"]
-        )
-
 rule runkaiju:
     """
     Run the kaiju program.
@@ -577,8 +554,8 @@ rule runkaiju:
     input:
         expand(
             run_kaiju_output_file,
-            base=["SRR606249"],
-            ntrim=["2","30"]
+            sample=["SRR606249"],
+            qual=["2","30"]
         )
 
 rule runkaiju_subset10:
@@ -588,8 +565,8 @@ rule runkaiju_subset10:
     input:
         expand(
             run_kaiju_output_file,
-            base=["SRR606249_subset10"],
-            ntrim=["2","30"]
+            sample=["SRR606249_subset10"],
+            qual=["2","30"]
         )
 
 rule runkrona:
@@ -599,13 +576,13 @@ rule runkrona:
     input:
         expand(
             kaiju2krona_output_file,
-            base=["SRR606249"],
-            ntrim=["2","30"]
+            sample=["SRR606249"],
+            qual=["2","30"]
         ),
         expand(
             kaiju2kronasummary_output_file,
-            base=["SRR606249"],
-            ntrim=["2","30"]
+            sample=["SRR606249"],
+            qual=["2","30"]
         )
 
 rule runkrona_subset10:
@@ -615,12 +592,12 @@ rule runkrona_subset10:
     input:
         expand(
             kaiju2krona_output_file,
-            base=["SRR606249_subset10"],
-            ntrim=["2","30"]
+            sample=["SRR606249_subset10"],
+            qual=["2","30"]
         ),
         expand(
             kaiju2kronasummary_output_file,
-            base=["SRR606249_subset10"],
-            ntrim=["2","30"]
+            sample=["SRR606249_subset10"],
+            qual=["2","30"]
         )
 

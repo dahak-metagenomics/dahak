@@ -13,8 +13,6 @@ import os, re
 ############################################
 # Assembly: default config
 
-include: "assembly.settings"
-
 data_dir = config['data_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
@@ -36,7 +34,7 @@ readfilt = config['read_filtering']
 
 # Post trimming pattern uses the {direction} wildcard.
 # We have to explicitly expand direction to _1 and _2.
-# If we rely on wildards, _1 and _2 are two separate rules.
+# (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
 assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
 assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
@@ -64,7 +62,7 @@ rule assembly_metaspades:
     output:
         assembly_metaspades_output
     message: 
-         '--- Assembling quality trimmed data with SPAdes'
+         '--- Assembling quality trimmed reads with SPAdes'
     singularity: 
         spades_image
     threads: 32 
@@ -92,7 +90,7 @@ assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
             qual='{qual}'
 )
 assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
-            direction="1", 
+            direction="2", 
             sample='{sample}', 
             qual='{qual}'
 )
@@ -137,6 +135,10 @@ rule assembly_megahit:
         '-2 /{input.rev} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
         '-o /{data_dir}/{params.assembly_megahit_outprefix_wc} '
+        '&& '
+        'mv '
+        '/{data_dir}/{params.assembly_megahit_outprefix_wc}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
+        '/{data_dir}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
 
 
 ###################################
