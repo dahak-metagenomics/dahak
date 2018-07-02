@@ -6,3 +6,60 @@ include: "read_filtering/Snakefile"
 include: "taxonomic_classification/Snakefile"
 include: "assembly/Snakefile"
 include: "comparison/Snakefile"
+
+
+# Build rules:
+# These rules don't do anything except trigger other rules
+
+rule read_filtering_workflow:
+    input:
+        expand( post_trimming_output,
+                sample="SRR606249_subset10",
+                direction=["1","2"],
+                qual=["2","30"]
+        )
+
+#rule taxonomic_classification_workflow:
+
+rule assembly_workflow_metaspades:
+    input:
+        expand( assembly_metaspades_output,
+                sample = ["SRR606249_subset10"],
+                direction = ["1","2"],
+                qual = ["2","30"]
+        )
+
+rule assembly_workflow_megahit:
+    input:
+        expand( assembly_megahit_output,
+                sample = ["SRR606249_subset10"],
+                direction = ["1","2"],
+                qual = ["2","30"]
+        )
+
+rule assembly_workflow_all:
+    input:
+        expand( assembly_megahit_output,
+                sample = ["SRR606249_subset10"],
+                direction = ["1","2"],
+                qual = ["2","30"]
+        )
+
+rule comparison_workflow_reads:
+    input:
+        expand( compare_read_sigs_output,
+                kvalue = ["21","31","51"]
+        )
+
+rule comparison_workflow_assembly:
+    input:
+        expand( compare_assembly_sigs_output,
+                kvalue = ["21","31","51"]
+        )
+
+rule comparison_workflow_reads_assembly:
+    input:
+        expand( compare_ra_sigs_output,
+                kvalue = ["21","31","51"]
+        )
+

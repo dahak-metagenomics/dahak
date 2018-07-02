@@ -111,8 +111,9 @@ config_default = {
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
             "quality" : ["2","30"],
             # 
-            # csv_out is the single output file containing comparisons of all input files
-            # {kvalue} is replaced with the k value used in the comparison
+            # csv_out is the single output file containing comparisons of all input files.
+            # {kvalue} is replaced with the k value used in the comparison.
+            # note that the file prefix does not need to be/should not be modified.
             "csv_out" : "SRR606249_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
@@ -163,19 +164,19 @@ config_default = {
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
-            "metaspades_pattern" : "{sample}_trim{qual}_metaspades.contigs.fa",
+            "metaspades_pattern" : "{sample}.trim{qual}.fq.gz_metaspades.contigs.fa",
             #
             # filename pattern for megahit output
-            "megahit_pattern" : "{sample}_trim{qual}_megahit.contigs.fa",
+            "megahit_pattern" : "{sample}.trim{qual}.fq.gz_megahit.contigs.fa",
             #
             # general assembler output filename pattern
-            "assembly_pattern" : "{sample}_trim{qual}_{assembler}.contigs.fa",
+            "assembly_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}_trim{qual}_{assembler}_quast/report.html",
+            "quast_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}_quast/report.html",
             #
             # multiqc output filename pattern
-            "multiqc_pattern" : "{sample}_trim{qual}_{assembler}_multiqc/report.html",
+            "multiqc_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}_multiqc/report.html",
         }
     },
 
@@ -262,19 +263,7 @@ config_default = {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_{direction}_trim{qual}.fq.gz",
-        },
-
-        # read_files must be defined by user 
-        "read_files" : {
-            "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
-            "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
-            "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
-            "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-            "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-            "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-            "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
-            "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77"
+            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
         },
 
         "quality_assessment" : {

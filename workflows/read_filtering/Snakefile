@@ -86,8 +86,8 @@ def download_reads_read_data_file(wildcards):
     Return the pre-trimming file that matches the given wildcards
     """
     # Get the relative path and do wildcard substitution
-    pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
-    return pre_trimming_pattern.format(**wildcards)
+    pre_trimming_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+    return pre_trimming_path.format(**wildcards)
 
 rule download_reads:
     """
@@ -164,8 +164,7 @@ rule pre_trimming_quality_assessment:
         '/{params.pre_trimming_input_wc} '
         '-o /{data_dir} '
 
-post_trimming_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-post_trimming_input  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+post_trimming_input   = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
 
 target_suffix = readfilt['quality_assessment']['fastqc_suffix']
 target_ext = "_%s.zip"%(target_suffix)
@@ -424,99 +423,99 @@ rule quality_trimming:
 
 
 
-###################################
-# Read Filtering: build rules
-
-# These "ghost" build rules don't do anything 
-# except trigger other rules.
-
-rule fetch:
-    """
-    Fetch read data from OSF. Uses full reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"])
-
-rule pre_trim:
-    """
-    Pre-trimming quality assessment of read data. Uses full reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
-
-rule post_trim:
-    """
-    Post-trimming quality assessment of read data. Uses full reads.
-    """
-    input:
-        expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
-
-
-
-rule fetch_subset10:
-    """
-    Fetch read data from OSF. Uses 10% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"])
-
-rule pre_trim_subset10:
-    """
-    Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
-
-rule post_trim_subset10:
-    """
-    Post-trimming quality assessment of read data. Uses 10% subsampled reads.
-    """
-    input:
-        expand(post_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
-
-
-
-rule fetch_subset25:
-    """
-    Fetch read data from OSF. Uses 25% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"])
-
-rule pre_trim_subset25:
-    """
-    Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
-
-rule post_trim_subset25:
-    """
-    Post-trimming quality assessment of read data. Uses 25% subsampled reads.
-    """
-    input:
-        expand(post_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
-
-
-
-rule fetch_subset50:
-    """
-    Fetch read data from OSF. Uses 50% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"])
-
-rule pre_trim_subset50:
-    """
-    Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
-    """
-    input:
-        expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
-
-rule post_trim_subset50:
-    """
-    Post-trimming quality assessment of read data. Uses 50% subsampled reads.
-    """
-    input:
-        expand(post_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+### ###################################
+### # Read Filtering: build rules
+### 
+### # These "ghost" build rules don't do anything 
+### # except trigger other rules.
+### 
+### rule fetch:
+###     """
+###     Fetch read data from OSF. Uses full reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"])
+### 
+### rule pre_trim:
+###     """
+###     Pre-trimming quality assessment of read data. Uses full reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+### 
+### rule post_trim:
+###     """
+###     Post-trimming quality assessment of read data. Uses full reads.
+###     """
+###     input:
+###         expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+### 
+### 
+### 
+### rule fetch_subset10:
+###     """
+###     Fetch read data from OSF. Uses 10% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"])
+### 
+### rule pre_trim_subset10:
+###     """
+###     Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+### 
+### rule post_trim_subset10:
+###     """
+###     Post-trimming quality assessment of read data. Uses 10% subsampled reads.
+###     """
+###     input:
+###         expand(post_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+### 
+### 
+### 
+### rule fetch_subset25:
+###     """
+###     Fetch read data from OSF. Uses 25% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"])
+### 
+### rule pre_trim_subset25:
+###     """
+###     Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+### 
+### rule post_trim_subset25:
+###     """
+###     Post-trimming quality assessment of read data. Uses 25% subsampled reads.
+###     """
+###     input:
+###         expand(post_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+### 
+### 
+### 
+### rule fetch_subset50:
+###     """
+###     Fetch read data from OSF. Uses 50% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"])
+### 
+### rule pre_trim_subset50:
+###     """
+###     Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
+###     """
+###     input:
+###         expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+### 
+### rule post_trim_subset50:
+###     """
+###     Post-trimming quality assessment of read data. Uses 50% subsampled reads.
+###     """
+###     input:
+###         expand(post_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
 

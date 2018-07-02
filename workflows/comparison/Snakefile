@@ -20,8 +20,6 @@ HTTP = HTTPRemoteProvider()
 ##################################################
 # Comparison: default config
 
-include: "comparison.settings"
-
 data_dir = config['data_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
@@ -46,27 +44,33 @@ comparison = config['comparison']
 read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
                     join(data_dir, taxclass['reads']['fq_rev'])]
 
-# output replaces .fq.gz with sig_suffix variable
+# signature file output replaces .fq.gz with sig_suffix variable
 read_fq_sig = re.sub('_1','', taxclass['reads']['fq_fwd'])
 read_sig_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['sig_suffix'],
                               read_fq_sig)
 read_sig_output = join(data_dir, read_sig_output_name)
 
+
+# merge file output replaces .fq.gz with merge_suffix variable
+read_merge_output_name = re.sub(r'\.fq\.gz',
+                              comparison['compute_read_signatures']['merge_suffix'],
+                              read_fq_sig)
+read_merge_output = join(data_dir, read_merge_output_name)
+
 # scale, for command line
-read_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
+read_sig_scale = "%s"%(comparison['compute_read_signatures']['scale'])
+
+read_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_read_signatures']['kvalues']])
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
 def compute_read_signatures_sig_name(wildcards):
-    sn = comparison['compute_read_signatures']['sig_name'].format(**wildcards)
-    sn = join(data_dir, sn)
-    return sn
+    return read_sig_output.format(**wildcards)
 
 def compute_read_signatures_merge_name(wildcards):
-    mn = comparison['compute_read_signatures']['merge_name'].format(**wildcards)
-    mn = join(data_dir, mn)
-    return mn
+    return read_merge_output.format(**wildcards)
+
 
 rule compute_read_signatures:
     """
@@ -83,12 +87,12 @@ rule compute_read_signatures:
         read_merge_name = compute_read_signatures_merge_name
     shell:
         'sourmash compute '
-        '--merge /{params.merge_name} '
+        '--merge /{params.read_merge_name} '
         '--track-abundance '
-        '--scaled {scale} '
-        '-k {kvalues_cmd} '
-        '/{inputs[0]} '
-        '/{inputs[1]} '
+        '--scaled {read_sig_scale} '
+        '-k {read_sig_kvalues_cmd} '
+        '/{input[0]} '
+        '/{input[1]} '
         '-o /{params.read_sig_name}'
 
 
@@ -105,7 +109,7 @@ assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_patt
 assembly_sig_output_name = re.sub(r'\.contigs\.fa',
                                   comparison['compute_assembly_signatures']['sig_suffix'],
                                   assembly['assembly_patterns']['assembly_pattern'])
-assembly_sig_output = join(data_dir, assembly_sig_output_name)
+assembly_sig_output = join(data_dir, 'assembly', assembly_sig_output_name)
 
 # scale, for command line
 assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
@@ -254,11 +258,12 @@ rule compare_assembly_signatures:
 ##################################################
 # Comparison: compare signatures for reads and assemblies
 
-# We already have the assembly sig name
+compare_ra_read_sigs_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
 compare_ra_read_sigs_input_names = expand(
-        read_fq_sig,
-        sample = comparison['compare_read_signatures']['samples'],
-        qual = comparison['compare_read_signatures']['quality'])
+            compare_ra_read_sigs_input_pattern,
+            direction = ["1","2"],
+            sample = comparison['compare_read_signatures']['samples'],
+            qual = comparison['compare_read_signatures']['quality'])
 
 compare_ra_assembly_sigs_input_names = expand(
         assembly_sig_output,
@@ -311,12 +316,6 @@ rule compare_read_assembly_signatures:
         '{params.compare_ra_inputs_wc} '
         '-k {wildcards.kvalue} '
         '--csv /{params.compare_ra_outputs_wc}'
-
-
-rule doit:
-    input:
-        "data/SRR606249_trim2and30_assembly_comparison.k21.csv"
-
 
 
 

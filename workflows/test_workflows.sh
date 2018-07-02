@@ -1,18 +1,17 @@
 #!/bin/bash
 
 ## Read filtering
-#snakemake -n -p pre_trim
-#snakemake -n -p post_trim
-#
-## Taxonomic classification
-#snakemake -n -p usekaiju
-#snakemake -n -p runkaiju
-#snakemake -n -p runkrona
-#
-## Assembly
-#snakemake -n -p metaspades
-#snakemake -n -p megahit
+#snakemake -n -p read_filtering_workflow
 
-# Comparison
-snakemake -n -p doit
+# Taxonomic classification
 
+## Assembly workflows
+#snakemake -n -p assembly_workflow_megahit
+#snakemake -n -p assembly_workflow_metaspades
+#snakemake -n -p assembly_workflow_all
+
+# Comparison workflows
+#snakemake -n -p comparison_workflow_all
+snakemake -n -p comparison_workflow_reads
+#snakemake -n -p comparison_workflow_assembly
+#snakemake -n -p comparison_workflow_reads_assembly

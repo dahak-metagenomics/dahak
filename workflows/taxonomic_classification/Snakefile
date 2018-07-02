@@ -17,8 +17,6 @@ HTTP = HTTPRemoteProvider()
 ############################################
 # Taxonomic Classification: default config
 
-include: "taxonomic_classification.settings"
-
 data_dir = config['data_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
