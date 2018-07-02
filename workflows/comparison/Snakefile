@@ -111,7 +111,7 @@ assembly_sig_output = join(data_dir, assembly_sig_output_name)
 assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
 
 # likewise, get separate k values for assembly and read signatures
-kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembly_signatures']['kvalues']])
+assembly_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembly_signatures']['kvalues']])
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
@@ -127,8 +127,8 @@ rule compute_assembly_signatures:
         sourmash_compute_image
     shell:
         'sourmash compute '
-        '-k {kvalues_cmd} '
-        '--scaled {scale} '
+        '-k {assembly_sig_kvalues_cmd} '
+        '--scaled {assembly_sig_scale} '
         '/{input} '
         '-o /{output} '
 
