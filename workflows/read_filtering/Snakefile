@@ -65,22 +65,28 @@ rule pull_biocontainers:
 ###################################
 # Read Filtering: fetch reads
 
-# Match wildcards with the pre-trimming pattern
-pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+pre_trimmed_pattern = readfilt['read_patterns']['pre_trimming_pattern']
+pre_trimmed_relative_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
 
 def download_reads_read_data_url(wildcards):
-    """Returns url where data can be downloaded"""
-
+    """
+    Given a set of wildcards, return the URL where the 
+    pre-trimmed reads can be downloaded.
+    """
     # Get the filename only from the relative path, and do wildcard substitution
-    _, stripped_output = os.path.split(pre_trimming_pattern)
-    stripped_output = stripped_output.format(**wildcards)
+    pre_trimmed_name = pre_trimmed_pattern.format(**wildcards)
 
     # Get the URL where this file is available
-    read_data_url = readfilt['read_files'][stripped_output]
+    read_data_url = config['files'][pre_trimmed_name]
 
     return read_data_url
 
 def download_reads_read_data_file(wildcards):
+    """
+    Return the pre-trimming file that matches the given wildcards
+    """
+    # Get the relative path and do wildcard substitution
+    pre_trimming_pattern = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
     return pre_trimming_pattern.format(**wildcards)
 
 rule download_reads:
@@ -92,7 +98,7 @@ rule download_reads:
     downloading all files all at once, to keep things flexible and fast.
     """
     output:
-        pre_trimming_pattern
+        pre_trimmed_relative_path
     message: 
         '''--- Downloading reads.'''
     params:
@@ -360,6 +366,64 @@ rule quality_trimming:
         'MINLEN:25 '
 
 
+
+### ############################################
+### # Read Filtering: bypass trimming, download trimmed data directly
+### #
+### # THIS RULE SHOULD PROBABLY BE COMMENTED OUT
+### #
+### # Note: either quality_trimming or download_trimmed_data
+### # must be enabled, but not both. Otherwise you get conflicts
+### # due to two rules producing the same output file.
+### # 
+### # download_trimmed_data is for testing, folks will not normally
+### # have already-trimmed data to download.
+### 
+### post_trimmed_pattern = readfilt['read_patterns']['post_trimming_pattern']
+### post_trimmed_relative_path = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+### 
+### def download_reads_trimmed_data_url(wildcards):
+###     """
+###     Given a set of wildcards, return the URL where the 
+###     post-trimmed reads can be downloaded (if available).
+###     """
+###     # Get the filename only from the relative path, and do wildcard substitution
+###     post_trimmed_name = post_trimmed_pattern.format(**wildcards)
+### 
+###     # Get the URL where this file is available
+###     read_data_url = config['files'][post_trimmed_name]
+### 
+###     return read_data_url
+### 
+### def download_reads_trimmed_data_file(wildcards):
+###     """
+###     Return the post-trimming file that matches the given wildcards
+###     """
+###     # Get the relative path and do wildcard substitution
+###     post_trimming_file = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+###     return post_trimming_file.format(**wildcards)
+### 
+### 
+### rule download_trimmed_data:
+###     """
+###     Fetch user-requested files from OSF containing trimmed reads that will be
+###     used in various workflows.
+### 
+###     Note that this defines wildcard-based download rules, rather than
+###     downloading all files all at once, to keep things flexible and fast.
+###     """
+###     output:
+###         post_trimmed_relative_path
+###     message:
+###         '''--- Skipping read trimming step, downloading trimmed reads directly.'''
+###     params:
+###         trimmed_data_url = download_reads_trimmed_data_url,
+###         trimmed_data_file = download_reads_trimmed_data_file
+###     shell:
+###         'wget -O {params.read_data_file} {params.read_data_url}'
+
+
+
 ###################################
 # Read Filtering: build rules
 
@@ -371,14 +435,14 @@ rule fetch:
     Fetch read data from OSF. Uses full reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"])
+        expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"])
 
 rule pre_trim:
     """
     Pre-trimming quality assessment of read data. Uses full reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
+        expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
 
 rule post_trim:
     """
@@ -394,14 +458,14 @@ rule fetch_subset10:
     Fetch read data from OSF. Uses 10% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"])
 
 rule pre_trim_subset10:
     """
     Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
 
 rule post_trim_subset10:
     """
@@ -417,14 +481,14 @@ rule fetch_subset25:
     Fetch read data from OSF. Uses 25% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"])
 
 rule pre_trim_subset25:
     """
     Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
 
 rule post_trim_subset25:
     """
@@ -440,14 +504,14 @@ rule fetch_subset50:
     Fetch read data from OSF. Uses 50% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"])
 
 rule pre_trim_subset50:
     """
     Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
     """
     input:
-        expand(pre_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+        expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
 
 rule post_trim_subset50:
     """

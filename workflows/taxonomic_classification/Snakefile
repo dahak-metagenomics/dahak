@@ -133,35 +133,6 @@ rule unpack_sourmash_sbts:
 
 
 ############################################
-# Taxonomic Classification: get trimmed data
-
-# incorporate OSF CLI here -
-# user should just need project id.
-
-trimmed_data_files=[]
-trimmed_data_urls=[]
-for filename in taxclass['trimmed_reads'].keys():
-    trimmed_data_files.append( join(data_dir, filename) )
-    trimmed_data_urls.append(taxclass['trimmed_reads'][filename])
-
-rule download_trimmed_data:
-    """
-    Download the trimmed data from OSF.
-    The parameters dictionary contains a map
-    of .fq.gz filenames to corresponding OSF URLs.
-    """
-    output:
-        trimmed_data_files,
-        touch(join(data_dir,'.trimmed'))
-    run:
-        for (osf_file,osf_url) in zip(trimmed_data_files,trimmed_data_urls):
-            if(not os.path.isfile(osf_file)):
-                shell('''
-                    wget -O {osf_file} {osf_url}
-                ''')
-
-
-############################################
 # Taxonomic Classification: kaiju
 
 # output file paths
