@@ -33,7 +33,7 @@ readfilt = config['read_filtering']
 # Assembly: metaspades
 
 # Post trimming pattern uses the {direction} wildcard.
-# We have to explicitly expand direction to _1 and _2.
+# We have to explicitly expand {direction} to _1 and _2.
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
 assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
@@ -48,12 +48,25 @@ assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
             qual='{qual}'
 )
 
-assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
+#########################
+############################
+###################
+#####################
+########################
+##################
+################################
+##############################
+###############
+#########################
+############################
+####################meta
+assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
+assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
 
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
 
-spades_image = container_image_name(biocontainers, 'spades')
+spades_image = container_image_name(biocontainers, 'metaspades')
 
 rule assembly_metaspades:
     input:
@@ -84,6 +97,7 @@ rule assembly_metaspades:
 # Assembly: megahit
 
 assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
 assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
             direction="1", 
             sample='{sample}', 
@@ -98,11 +112,10 @@ assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
 # just the name
 assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 
-assembly_megahit_output = join(data_dir, assembly_megahit_outprefix, assembly['assembly_patterns']['megahit_pattern'])
+assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
 assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
-
 
 megahit_image = container_image_name(biocontainers, 'megahit')
 
@@ -243,7 +256,7 @@ rule megahit:
 ### ##--------------------------------------------------------------------------------------##
 ### 
 ### SAMPLES = ['SRR606249', 'SRR606249_subset10', 'SRR606249_subset25', 'SRR606249_subset50']
-### ASSEMBLER = ['megahit', 'spades']
+### ASSEMBLER = ['megahit', 'metaspades']
 ### 
 ### rule all:    
 ###     input:

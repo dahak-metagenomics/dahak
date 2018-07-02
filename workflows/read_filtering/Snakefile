@@ -200,10 +200,20 @@ rule post_trimming_quality_assessment:
 
 interleave_ext = readfilt['interleaving']['interleave_suffix']
 
-# these are strings containing templates of .fq.gz file names
-fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=1,sample='{sample}',qual='{qual}'))
-fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=2,sample='{sample}',qual='{qual}'))
-fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(direction=interleave_ext,sample='{sample}',qual='{qual}'))
+# These are strings containing templates of .fq.gz file names.
+# R
+fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=1,
+                        sample='{sample}',
+                        qual='{qual}'))
+fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=2,
+                        sample='{sample}',
+                        qual='{qual}'))
+fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=interleave_ext,
+                        sample='{sample}',
+                        qual='{qual}'))
 
 interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
 interleave_output = fq_interleave

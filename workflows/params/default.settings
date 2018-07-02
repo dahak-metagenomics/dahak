@@ -30,7 +30,7 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
         },
-        "spades" : {
+        "metaspades" : {
             "use_local" : False,
             "quayurl" : "quay.io/biocontainers/spades",
             "version" : "3.11.1--py27_zlib1.2.8_0"
@@ -65,10 +65,10 @@ config_default = {
             "kvalues"       : [21,31,51],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix"    : "scaled10k.k21_31_51.sig", 
+            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
-            "merge_suffix"  : "scaled10k.k21_31_51.fq.gz"
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_read_signatures" : {
             #
@@ -91,10 +91,10 @@ config_default = {
             "kvalues"       : [21,31,51],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix" : "scaled10k.k21_31_51.sig",
+            "sig_suffix" : "_scaled10k.k21_31_51.sig",
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
-            "merge_suffix"  : "scaled10k.k21_31_51.fq.gz"
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_assembly_signatures" : {
             #
@@ -105,7 +105,7 @@ config_default = {
             # the samples and quality variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
             "quality"   : ["2","30"],
-            "assembler" : ["megahit","spades"],
+            "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
             # {kvalue} is replaced with the k value used in the comparison
@@ -116,7 +116,7 @@ config_default = {
             # the samples, quality, assembler variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10"],
             "quality"   : ["2","30"],
-            "assembler" : ["megahit","spades"],
+            "assembler" : ["megahit","metaspades"],
             #
             # k values are passed to sourmash compare
             "kvalues"   : [21, 31, 51],
@@ -132,8 +132,8 @@ config_default = {
     "assembly" : {
         "assembly_patterns" : {
             # 
-            # filename pattern for spades output
-            "spades_pattern" : "{sample}_trim{qual}_spades.contigs.fa",
+            # filename pattern for metaspades output
+            "metaspades_pattern" : "{sample}_trim{qual}_metaspades.contigs.fa",
             #
             # filename pattern for megahit output
             "megahit_pattern" : "{sample}_trim{qual}_megahit.contigs.fa",
