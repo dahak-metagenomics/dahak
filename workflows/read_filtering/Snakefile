@@ -65,8 +65,8 @@ rule pull_biocontainers:
 ###################################
 # Read Filtering: fetch reads
 
-pre_trimmed_pattern = readfilt['read_patterns']['pre_trimming_pattern']
-pre_trimmed_relative_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+pre_trimming_pattern = readfilt['read_patterns']['pre_trimming_pattern']
+pre_trimming_relative_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
 
 def download_reads_read_data_url(wildcards):
     """
@@ -74,10 +74,10 @@ def download_reads_read_data_url(wildcards):
     pre-trimmed reads can be downloaded.
     """
     # Get the filename only from the relative path, and do wildcard substitution
-    pre_trimmed_name = pre_trimmed_pattern.format(**wildcards)
+    pre_trimming_name = pre_trimming_pattern.format(**wildcards)
 
     # Get the URL where this file is available
-    read_data_url = config['files'][pre_trimmed_name]
+    read_data_url = config['files'][pre_trimming_name]
 
     return read_data_url
 
@@ -86,8 +86,14 @@ def download_reads_read_data_file(wildcards):
     Return the pre-trimming file that matches the given wildcards
     """
     # Get the relative path and do wildcard substitution
-    pre_trimming_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
-    return pre_trimming_path.format(**wildcards)
+    #pre_trimming_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
+    #############################
+    ###########################
+    ########################
+    ################################
+    ##########################
+    ###########################
+    return pre_trimming_relative_path.format(**wildcards)
 
 rule download_reads:
     """
@@ -98,7 +104,7 @@ rule download_reads:
     downloading all files all at once, to keep things flexible and fast.
     """
     output:
-        pre_trimmed_relative_path
+        pre_trimming_relative_path
     message: 
         '''--- Downloading reads.'''
     params:

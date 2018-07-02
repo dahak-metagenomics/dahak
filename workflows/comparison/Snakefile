@@ -138,13 +138,12 @@ rule compute_assembly_signatures:
 
 
 ##################################################
-# Comparison: compare signatures for reads
-
+# Comparison: compare read signatures
 
 # We need to use expand() to create a list of 
 # read signature files (the input files)
 compare_read_sigs_input_names = expand(
-        read_fq_sig,
+        read_sig_output_name,
         sample = comparison['compare_read_signatures']['samples'],
         qual = comparison['compare_read_signatures']['quality'])
 
@@ -153,7 +152,7 @@ compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_na
 
 # User specifies CSV output file.
 # This name is used verbatim.
-compare_read_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
+compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
 
 sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
@@ -258,19 +257,17 @@ rule compare_assembly_signatures:
 ##################################################
 # Comparison: compare signatures for reads and assemblies
 
-compare_ra_read_sigs_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-compare_ra_read_sigs_input_names = expand(
-            compare_ra_read_sigs_input_pattern,
-            direction = ["1","2"],
-            sample = comparison['compare_read_signatures']['samples'],
-            qual = comparison['compare_read_signatures']['quality'])
-
 compare_ra_assembly_sigs_input_names = expand(
-        assembly_sig_output,
-        sample = comparison['compare_read_assembly_signatures']['samples'],
-        qual = comparison['compare_read_assembly_signatures']['quality'],
-        assembler = comparison['compare_read_assembly_signatures']['assembler'])
-
+            assembly_sig_output_name,
+            sample = comparison['compare_assembly_signatures']['samples'],
+            qual = comparison['compare_assembly_signatures']['quality'],
+            assembler = comparison['compare_assembly_signatures']['assembler']
+)
+compare_ra_read_sigs_input_names = expand(
+            read_sig_output_name,
+            sample = comparison['compare_read_signatures']['samples'],
+            qual = comparison['compare_read_signatures']['quality']
+)
 compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
 compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
 
@@ -315,7 +312,7 @@ rule compare_read_assembly_signatures:
         'sourmash compare '
         '{params.compare_ra_inputs_wc} '
         '-k {wildcards.kvalue} '
-        '--csv /{params.compare_ra_outputs_wc}'
+        '--csv /{params.compare_ra_output_wc}'
 
 
 
