@@ -58,8 +58,9 @@ def create_cluster_map(filename, save_name, title):
     o = sns.clustermap(output, col_cluster=True, row_cluster=True, linewidths=.5, figsize=(10, 10), cmap=cmap)
     o.ax_heatmap.set_yticklabels(o.ax_heatmap.get_yticklabels(), rotation=0)
     sns.set_context('paper')
+    o.fig.suptitle(title) 
     return o.savefig(save_name)
-    o.fig.suptitle() 
+    
     
 #df_csv = pd.read_csv("SRR606249.pe.trim2and30_reads_and_contigs_comparison.k51.csv")
 
