@@ -35,32 +35,6 @@ readfilt = config['read_filtering']
 # tasks.
 
 
-###################################
-# Read Filtering: biocontainers
-
-# Assemble container image names for containers
-quayurls = []
-for app in biocontainers.keys():
-    if container_image_is_external(biocontainers,app):
-        name = container_image_name(biocontainers,app)
-        quayurls.append(name)
-
-pulled_containers_touchfile = ".pulled_containers"
-pulled_containers_touchfile = join(data_dir,pulled_containers_touchfile)
-
-rule pull_biocontainers:
-    """
-    Pull the required versions of containers from quay.io.
-    Note that this is not necessary with the singularity: directive.
-    """
-    output:
-        touch(pulled_containers_touchfile)
-    run:
-        for quayurl in quayurls:
-            shell('''
-                singularity pull --force {quayurl}
-            ''')
-
 
 ###################################
 # Read Filtering: fetch reads
@@ -86,13 +60,6 @@ def download_reads_read_data_file(wildcards):
     Return the pre-trimming file that matches the given wildcards
     """
     # Get the relative path and do wildcard substitution
-    #pre_trimming_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
-    #############################
-    ###########################
-    ########################
-    ################################
-    ##########################
-    ###########################
     return pre_trimming_relative_path.format(**wildcards)
 
 rule download_reads:
