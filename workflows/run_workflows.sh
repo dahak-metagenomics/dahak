@@ -3,8 +3,6 @@
 # Read filtering workflow
 #SINGULARITY_BINDPATH="data:/data" snakemake -p --use-singularity read_filtering_workflow
 
-# Taxonomic classification
-
 # Assembly workflows
 SINGULARITY_BINDPATH="data:/data" snakemake -p --use-singularity assembly_workflow_metaspades
 #SINGULARITY_BINDPATH="data:/data" snakemake -p --use-singularity assembly_workflow_megahit
