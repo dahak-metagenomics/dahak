@@ -248,7 +248,7 @@ config_default = {
         "visualize_krona" : {
             #
             # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.{suffix}.summary",
+            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
         }
     },
 
