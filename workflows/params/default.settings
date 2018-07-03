@@ -8,6 +8,7 @@ config_default = {
 
     # the name of the directory where everything is being stored
     "data_dir" : "data",
+    "assembly_dir" : "assembly",
 
     "files" : {
         #
@@ -164,19 +165,19 @@ config_default = {
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
-            "metaspades_pattern" : "{sample}.trim{qual}.fq.gz_metaspades.contigs.fa",
+            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
             #
             # filename pattern for megahit output
-            "megahit_pattern" : "{sample}.trim{qual}.fq.gz_megahit.contigs.fa",
+            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
             #
             # general assembler output filename pattern
-            "assembly_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}.contigs.fa",
+            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}_quast/report.html",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
             #
             # multiqc output filename pattern
-            "multiqc_pattern" : "{sample}.trim{qual}.fq.gz_{assembler}_multiqc/report.html",
+            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
         }
     },
 
