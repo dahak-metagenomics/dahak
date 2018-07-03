@@ -19,7 +19,25 @@ rule read_filtering_workflow:
                 qual=["2","30"]
         )
 
-#rule taxonomic_classification_workflow:
+# Run kaiju, generate report, create visualization
+rule taxonomic_classification_workflow:
+    input:
+        expand( kaiju2krona_output_file,
+                sample = ["SRR606249_subset10"],
+                qual = ["2","30"]
+        ),
+        expand( visualize_krona_output_file,
+                sample = ["SRR606249_subset10"],
+                qual = ["2","30"]
+        )
+
+# Filter taxa comprising more than 1% of total reads
+rule taxonomic_classification_filter_workflow:
+    input:
+        expand( filter_taxa_total_output,
+                sample = ["SRR606249_subset10"],
+                qual = ["2","30"]
+        )
 
 rule assembly_workflow_metaspades:
     input:
