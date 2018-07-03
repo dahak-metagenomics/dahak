@@ -79,57 +79,6 @@ rule unpack_sourmash_sbts:
         '''
 
 
-### ############################################
-### # Taxonomic Classification: compute read signatures
-### 
-### read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
-###                join(data_dir, taxclass['reads']['fq_rev'])]
-### read_sig_output   = join(data_dir, taxclass['compute_read_signatures']['sig_name'])
-### merge_output = join(data_dir, taxclass['compute_read_signatures']['merge_name'])
-### 
-### kvalues_cmd = ",".join([str(j) for j in taxclass['compute_read_signatures']['kvalues']])
-### scale = "%s"%(taxclass['compute_read_signatures']['scale'])
-### 
-### sourmash_image = container_image_name(biocontainers, 'sourmash')
-### 
-### def compute_read_signatures_fq_fwd(wildcards):
-###     return taxclass['reads']['fq_fwd'].format(**wildcards)
-### 
-### def compute_read_signatures_fq_rev(wildcards):
-###     return taxclass['reads']['fq_rev'].format(**wildcards)
-### 
-### def compute_read_signatures_sig_name(wildcards):
-###     return taxclass['compute_read_signatures']['sig_name'].format(**wildcards)
-### 
-### def compute_read_signatures_merge_name(wildcards):
-###     return taxclass['compute_read_signatures']['merge_name'].format(**wildcards)
-### 
-### rule compute_read_signatures:
-###     """
-###     Compute read signatures from trimmed data using sourmash.
-###     """
-###     input:
-###         read_sig_inputs
-###     output:
-###         read_sig_output
-###     singularity:
-###         sourmash_image
-###     params:
-###         fq_fwd = compute_read_signatures_fq_fwd,
-###         fq_rev = compute_read_signatures_fq_rev,
-###         read_sig_name = compute_read_signatures_sig_name,
-###         read_merge_name = compute_read_signatures_merge_name
-###     shell:
-###         'sourmash compute '
-###         '--merge /data/{params.merge_name} '
-###         '--track-abundance '
-###         '--scaled {scale} '
-###         '-k {kvalues_cmd} '
-###         '/{inputs[0]} '
-###         '/{inputs[1]} '
-###         '-o /data/{params.read_sig_name}'
-
-
 ############################################
 # Taxonomic Classification: kaiju
 
@@ -150,7 +99,7 @@ unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 rule dowload_kaiju:
     """
     Download the kaiju database.
-    This is a large file and will take approx. 15-30 minutes.
+    This is a large file and may take up to 30 minutes.
     """
     input:
         unpack_kaiju_input
@@ -202,7 +151,6 @@ def run_kaiju_output(wildcards):
 rule run_kaiju:
     """
     Run kaiju after downloading and unpacking the kaiju database. 
-    This runs the specified command through a singularity container.
     """
     input:
         run_kaiju_input_files
@@ -272,7 +220,7 @@ rule add_taxon_names:
 ############################################
 # Taxonomic Classification: kaiju to krona
 
-tax_rank     = taxclass['kaiju2krona']['taxonomic_rank']
+tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
 
 # name of kaiju output determines name of kaiju2krona input
 kaiju2krona_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
@@ -377,10 +325,8 @@ def visualize_krona_output_function(wildcard):
 
 rule visualize_krona:
     """
-    Visualize the results of the
-    full and filtered taxonomic
-    classifications using krona.
-    This runs docker directly.
+    Visualize the results of the full and filtered
+    kaiju taxonomic classifications using krona.
     """
     input:
         visualize_krona_input_file
@@ -415,7 +361,7 @@ def filter_taxa_total_output_function(wildcards):
 rule filter_taxa_total:
     """
     Filter out taxa with low abundances by obtaining
-    genera that comprise at least {pct} percent of the
+    genera that comprise at least X percent of the
     total reads
     (default: 1%)
     """
