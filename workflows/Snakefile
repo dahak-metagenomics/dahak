@@ -1,5 +1,6 @@
 from snakemake.utils import update_config
 
+include: "params/workflow_config.settings"
 include: "params/default.settings"
 
 include: "read_filtering/Snakefile"
@@ -8,31 +9,13 @@ include: "assembly/Snakefile"
 include: "comparison/Snakefile"
 
 
-# Build rules:
-# These rules don't do anything except trigger other rules
 
-rule read_filtering_workflow:
-    input:
-        expand( post_trimming_output,
-                sample="SRR606249_subset10",
-                direction=["1","2"],
-                qual=["2","30"]
-        )
-
-# Run kaiju, generate report, create visualization
-rule taxonomic_classification_workflow:
-    input:
-        expand( kaiju2krona_output_file,
-                sample = ["SRR606249_subset10"],
-                qual = ["2","30"]
-        ),
-        expand( visualize_krona_output_file,
-                sample = ["SRR606249_subset10"],
-                qual = ["2","30"]
-        )
 
 # Filter taxa comprising more than 1% of total reads
 rule taxonomic_classification_filter_workflow:
+    """
+    Build rule: trigger the taxonomic classification filtering workflow
+    """
     input:
         expand( filter_taxa_total_output,
                 sample = ["SRR606249_subset10"],
@@ -40,14 +23,20 @@ rule taxonomic_classification_filter_workflow:
         )
 
 rule assembly_workflow_metaspades:
+    """
+    Build rule: trigger the metaspades assembly step.
+    """
     input:
         expand( assembly_metaspades_output,
-                sample = ["SRR606249_subset10"],
+                sample = ["SRR606249_subset10","SRR606249_subset25"],
                 direction = ["1","2"],
-                qual = ["2","30"]
+                qual = ["2","5","30"]
         )
 
 rule assembly_workflow_megahit:
+    """
+    Build rule: trigger the megahit assembly step.
+    """
     input:
         expand( assembly_megahit_output,
                 sample = ["SRR606249_subset10"],
@@ -56,26 +45,43 @@ rule assembly_workflow_megahit:
         )
 
 rule assembly_workflow_all:
+    """
+    Build rule: trigger the assembly step with all assemblers.
+    """
     input:
         expand( assembly_megahit_output,
+                sample = ["SRR606249_subset10"],
+                direction = ["1","2"],
+                qual = ["2","30"]
+        ),
+        expand( assembly_metaspades_output,
                 sample = ["SRR606249_subset10"],
                 direction = ["1","2"],
                 qual = ["2","30"]
         )
 
 rule comparison_workflow_reads:
+    """
+    Build rule: run sourmash compare on all reads
+    """
     input:
         expand( compare_read_sigs_output,
                 kvalue = ["21","31","51"]
         )
 
 rule comparison_workflow_assembly:
+    """
+    Build rule: run sourmash compare on all assemblies
+    """
     input:
         expand( compare_assembly_sigs_output,
                 kvalue = ["21","31","51"]
         )
 
 rule comparison_workflow_reads_assembly:
+    """
+    Build rule: run sourmash compare on all reads and assemblies together
+    """
     input:
         expand( compare_ra_sigs_output,
                 kvalue = ["21","31","51"]

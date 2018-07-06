@@ -1,0 +1,103 @@
+from snakemake.utils import update_config
+
+config_default = {
+
+    "workflows" : {
+
+        "read_filtering_workflow" : {
+            #
+            # These parameters determine which samples
+            # the read filtering workflow will be run on.
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "quality"   : ["2","30"],
+        },
+
+        "taxonomic_classification_workflow" : {
+            #
+            # These parameters determine which samples
+            # the taxonomic classification workflow 
+            # will be run on.
+            # 
+            "sample"  : ["SRR606249_subset10"],
+            "quality" : ["2","30"],
+        },
+
+        "taxonomic_classification_filtering_workflow" : {
+            #
+            # These parameters determine which samples
+            # the taxonomic classification filtering 
+            # workflow will be run on.
+            # 
+            "sample"  : ["SRR606249_subset10"],
+            "quality" : ["2","30"],
+        },
+
+        "assembly_workflow_metaspades" : {
+            #
+            # these parameters determine which samples
+            # the assembly workflow will be run on.
+            # (metaspades assembler only).
+            # 
+            "sample"    : ["srr606249_subset10","srr606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        },
+
+        "assembly_workflow_megahit" : {
+            #
+            # these parameters determine which samples
+            # the assembly workflow will be run on
+            # (megahit assembler only).
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        },
+
+        "assembly_workflow_all" : {
+            #
+            # these parameters determine which samples
+            # the assembly workflow will be run on
+            # (all assemblers).
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        },
+
+        "comparison_workflow_reads": {
+            #
+            # these parameters determine which reads
+            # the comparison workflow will be run on
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        },
+
+        "comparison_workflow_assembly" : {
+            #
+            # these parameters determine which assembled reads
+            # the comparison workflow will be run on
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        },
+
+        "comparison_workflow_reads_assembly" : {
+            #
+            # these parameters determine which reads and assembled 
+            # reads the comparison workflow will be run on
+            # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "direction" : ["1","2"],
+            "qual"      : ["2","5","30"],
+        }
+    }
+}
+
+update_config(config_default, config)
+config = config_default

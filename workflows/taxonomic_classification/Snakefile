@@ -51,6 +51,9 @@ def unpack_sourmash_sbt_tar(wildcards):
 
 
 rule download_sourmash_sbts:
+    """
+    Download the sourmash SBTs
+    """
     input:
         download_sourmash_sbt_input
     output:
@@ -65,7 +68,7 @@ rule download_sourmash_sbts:
 
 rule unpack_sourmash_sbts:
     """
-    Download and unpack the sourmash SBTs.
+    Unpack the sourmash SBTs
     """
     input:
         unpack_sourmash_sbt_input
@@ -98,8 +101,8 @@ unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 
 rule dowload_kaiju:
     """
-    Download the kaiju database.
-    This is a large file and may take up to 30 minutes.
+    Download the kaiju database
+    (this is a large file and may take up to 30 minutes)
     """
     input:
         unpack_kaiju_input
@@ -112,7 +115,7 @@ rule dowload_kaiju:
 
 rule unpack_kaiju:
     """
-    Unpack the kaiju database.
+    Unpack the kaiju database
     """
     input:
         kaiju_target
@@ -196,7 +199,7 @@ def taxon_names_output_file_sub(wildcards):
 
 rule add_taxon_names:
     """
-    Use kaiju to add taxon names.
+    Use kaiju to add taxon names
     """
     input:
         taxon_names_input_files
@@ -245,7 +248,7 @@ def kaiju2krona_output_name(wildcards):
 rule kaiju2krona:
     """
     Convert kaiju results to krona results,
-    and generate a report.
+    and generate a report
     """
     input:
         kaiju2krona_input_files
@@ -279,7 +282,7 @@ def kaiju2kronasummary_output_name(wildcards):
 rule kaiju2kronasummary:
     """
     Convert kaiju results to krona results,
-    and generate a report.
+    and generate a report
     """
     input:
         kaiju2kronasummary_input_files
@@ -426,93 +429,33 @@ rule filter_taxa_class:
 ###################################
 # Taxonomic Classification: build rules
 
-# These "ghost" rules don't do anything 
-# except trigger other rules.
+workflows = config['workflows']
 
-# sourmash + urls section of config
-rule genbank:
+# Run kaiju, generate report, create visualization
+rule taxonomic_classification_workflow:
     """
-    Download the assembled SBT associated with a given database,
-    and for a given k value.
+    Build rule: trigger the taxonomic classification workflow
     """
     input:
-        expand(
-            download_sourmash_sbt_output,
-            database=["genbank"],
-            ksize=["21","31","51"]
-        )
-
-# sourmash section of config
-rule sbts:
-    """
-    Unpack the assembled SBTs associated with a given database
-    and for a given k value.
-    """
-    input:
-        expand(
-            unpack_sourmash_sbt_output,
-            database=["genbank"],
-            ksize=["21","31","51"]
-        )
-
-rule usekaiju:
-    """
-    Download and unpack kaiju database.
-    """
-    input:
-        unpack_kaiju_output
-
-rule runkaiju:
-    """
-    Run the kaiju program.
-    """
-    input:
-        expand(
-            run_kaiju_output_file,
-            sample=["SRR606249"],
-            qual=["2","30"]
-        )
-
-rule runkaiju_subset10:
-    """
-    Run the kaiju program.
-    """
-    input:
-        expand(
-            run_kaiju_output_file,
-            sample=["SRR606249_subset10"],
-            qual=["2","30"]
-        )
-
-rule runkrona:
-    """
-    Run the krona visualization tool.
-    """
-    input:
-        expand(
-            kaiju2krona_output_file,
-            sample=["SRR606249"],
-            qual=["2","30"]
+        expand( kaiju2krona_output_file,
+                sample  = workflows['taxonomic_classification_workflow']['sample'], 
+                qual    = workflows['taxonomic_classification_workflow']['qual'], 
         ),
-        expand(
-            kaiju2kronasummary_output_file,
-            sample=["SRR606249"],
-            qual=["2","30"]
+        expand( visualize_krona_output_file,
+                sample  = workflows['taxonomic_classification_workflow']['sample'], 
+                qual    = workflows['taxonomic_classification_workflow']['qual'], 
         )
 
-rule runkrona_subset10:
+# Filter taxa comprising more than 1% of total reads
+rule taxonomic_classification_filter_workflow:
     """
-    Run the krona visualization tool.
+    Build rule: trigger the taxonomic classification filtering workflow
     """
     input:
-        expand(
-            kaiju2krona_output_file,
-            sample=["SRR606249_subset10"],
-            qual=["2","30"]
-        ),
-        expand(
-            kaiju2kronasummary_output_file,
-            sample=["SRR606249_subset10"],
-            qual=["2","30"]
+        expand( filter_taxa_total_output,
+                sample  = workflows['taxonomic_classification_filtering_workflow']['sample'], 
+                qual    = workflows['taxonomic_classification_filtering_workflow']['qual'], 
         )
+
+
 

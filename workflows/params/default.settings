@@ -52,6 +52,21 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/sourmash",
             "version" : "2.0.0a3--py36_0"
         },
+        "trimmomatic" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "version" : "0.36--5"
+        },
+        "fastqc" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/fastqc",
+            "version" : "0.11.7--pl5.22.0_2"
+        },
+        "khmer" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/khmer",
+            "version" : "2.1.2--py35_0"
+        },
         "kaiju" : {
             "use_local" : False,
             "quayurl" : "quay.io/biocontainers/kaiju",

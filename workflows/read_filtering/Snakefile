@@ -17,8 +17,6 @@ HTTP = HTTPRemoteProvider()
 ###################################
 # Read Filtering: default config
 
-include: "read_filtering.settings"
-
 data_dir = config['data_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
@@ -339,156 +337,78 @@ rule quality_trimming:
 
 
 
-### ############################################
-### # Read Filtering: bypass trimming, download trimmed data directly
-### #
-### # THIS RULE SHOULD PROBABLY BE COMMENTED OUT
-### #
-### # Note: either quality_trimming or download_trimmed_data
-### # must be enabled, but not both. Otherwise you get conflicts
-### # due to two rules producing the same output file.
-### # 
-### # download_trimmed_data is for testing, folks will not normally
-### # have already-trimmed data to download.
-### 
-### post_trimmed_pattern = readfilt['read_patterns']['post_trimming_pattern']
-### post_trimmed_relative_path = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-### 
-### def download_reads_trimmed_data_url(wildcards):
-###     """
-###     Given a set of wildcards, return the URL where the 
-###     post-trimmed reads can be downloaded (if available).
-###     """
-###     # Get the filename only from the relative path, and do wildcard substitution
-###     post_trimmed_name = post_trimmed_pattern.format(**wildcards)
-### 
-###     # Get the URL where this file is available
-###     read_data_url = config['files'][post_trimmed_name]
-### 
-###     return read_data_url
-### 
-### def download_reads_trimmed_data_file(wildcards):
-###     """
-###     Return the post-trimming file that matches the given wildcards
-###     """
-###     # Get the relative path and do wildcard substitution
-###     post_trimming_file = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-###     return post_trimming_file.format(**wildcards)
-### 
-### 
-### rule download_trimmed_data:
-###     """
-###     Fetch user-requested files from OSF containing trimmed reads that will be
-###     used in various workflows.
-### 
-###     Note that this defines wildcard-based download rules, rather than
-###     downloading all files all at once, to keep things flexible and fast.
-###     """
-###     output:
-###         post_trimmed_relative_path
-###     message:
-###         '''--- Skipping read trimming step, downloading trimmed reads directly.'''
-###     params:
-###         trimmed_data_url = download_reads_trimmed_data_url,
-###         trimmed_data_file = download_reads_trimmed_data_file
-###     shell:
-###         'wget -O {params.read_data_file} {params.read_data_url}'
+'''
+############################################
+# Read Filtering: bypass trimming, download trimmed data directly
+#
+# THIS RULE SHOULD PROBABLY BE COMMENTED OUT
+#
+# Note: either quality_trimming or download_trimmed_data
+# must be enabled, but not both. Otherwise you get conflicts
+# due to two rules producing the same output file.
+# 
+# download_trimmed_data is for testing, folks will not normally
+# have already-trimmed data to download.
+
+post_trimmed_pattern = readfilt['read_patterns']['post_trimming_pattern']
+post_trimmed_relative_path = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
+def download_reads_trimmed_data_url(wildcards):
+    """
+    Given a set of wildcards, return the URL where the 
+    post-trimmed reads can be downloaded (if available).
+    """
+    # Get the filename only from the relative path, and do wildcard substitution
+    post_trimmed_name = post_trimmed_pattern.format(**wildcards)
+
+    # Get the URL where this file is available
+    read_data_url = config['files'][post_trimmed_name]
+
+    return read_data_url
+
+def download_reads_trimmed_data_file(wildcards):
+    """
+    Return the post-trimming file that matches the given wildcards
+    """
+    # Get the relative path and do wildcard substitution
+    post_trimming_file = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+    return post_trimming_file.format(**wildcards)
+
+
+rule download_trimmed_data:
+    """
+    Fetch user-requested files from OSF containing trimmed reads that will be
+    used in various workflows.
+
+    Note that this defines wildcard-based download rules, rather than
+    downloading all files all at once, to keep things flexible and fast.
+    """
+    output:
+        post_trimmed_relative_path
+    message:
+        """--- Skipping read trimming step, downloading trimmed reads directly."""
+    params:
+        trimmed_data_url = download_reads_trimmed_data_url,
+        trimmed_data_file = download_reads_trimmed_data_file
+    shell:
+        'wget -O {params.read_data_file} {params.read_data_url}'
+'''
 
 
 
-### ###################################
-### # Read Filtering: build rules
-### 
-### # These "ghost" build rules don't do anything 
-### # except trigger other rules.
-### 
-### rule fetch:
-###     """
-###     Fetch read data from OSF. Uses full reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"])
-### 
-### rule pre_trim:
-###     """
-###     Pre-trimming quality assessment of read data. Uses full reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
-### 
-### rule post_trim:
-###     """
-###     Post-trimming quality assessment of read data. Uses full reads.
-###     """
-###     input:
-###         expand(post_trimming_pattern, sample="SRR606249", direction=["1","2"], qual=["2","30"])
-### 
-### 
-### 
-### rule fetch_subset10:
-###     """
-###     Fetch read data from OSF. Uses 10% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"])
-### 
-### rule pre_trim_subset10:
-###     """
-###     Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
-### 
-### rule post_trim_subset10:
-###     """
-###     Post-trimming quality assessment of read data. Uses 10% subsampled reads.
-###     """
-###     input:
-###         expand(post_trimming_pattern, sample="SRR606249_subset10", direction=["1","2"], qual=["2","30"])
-### 
-### 
-### 
-### rule fetch_subset25:
-###     """
-###     Fetch read data from OSF. Uses 25% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"])
-### 
-### rule pre_trim_subset25:
-###     """
-###     Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
-### 
-### rule post_trim_subset25:
-###     """
-###     Post-trimming quality assessment of read data. Uses 25% subsampled reads.
-###     """
-###     input:
-###         expand(post_trimming_pattern, sample="SRR606249_subset25", direction=["1","2"], qual=["2","30"])
-### 
-### 
-### 
-### rule fetch_subset50:
-###     """
-###     Fetch read data from OSF. Uses 50% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"])
-### 
-### rule pre_trim_subset50:
-###     """
-###     Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
-###     """
-###     input:
-###         expand(pre_trimmed_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
-### 
-### rule post_trim_subset50:
-###     """
-###     Post-trimming quality assessment of read data. Uses 50% subsampled reads.
-###     """
-###     input:
-###         expand(post_trimming_pattern, sample="SRR606249_subset50", direction=["1","2"], qual=["2","30"])
+###################################
+# Read Filtering: build rules
+
+workflows = config['workflows']
+
+rule read_filtering_workflow:
+    """
+    Build rule: trigger the read filtering workflow
+    """
+    input:
+        expand( post_trimming_output,
+                sample    = workflows['read_filtering_workflow']['sample'],
+                direction = workflows['read_filtering_workflow']['direction'],
+                qual      = workflows['read_filtering_workflow']['quality']
+        )
 

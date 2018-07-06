@@ -163,6 +163,9 @@ def assembly_quast_logfile(wildcards):
     return logfile.format(**wildcards)
 
 rule assembly_statistics_quast:
+    """
+    Compute assembly statistics with quast
+    """
     input:
         assembly_quast_input
     output:
@@ -188,6 +191,9 @@ assembly_multiqc_output = join(data_dir, assembly_dir, assembly['assembly_patter
 multiqc_image = container_image_name(biocontainers, 'multiqc')
 
 rule assembly_statistics_multiqc:
+    """
+    Compute assembly statistics with multiqc
+    """
     input:
         assembly_multiqc_input
     output:
@@ -198,4 +204,38 @@ rule assembly_statistics_multiqc:
         multiqc_image
     shell:
         'multiqc {input}'
+
+
+
+###################################
+# Assembly: build rules
+
+workflows = config['workflows']
+
+rule taxonomic_classification_workflow:
+    """
+    Build rule: trigger the taxonomic classification workflow
+    """
+    input:
+        expand( kaiju2krona_output_file,
+
+        expand( visualize_krona_output_file,
+
+
+rule read_filtering_workflow:
+    """
+    Build rule: trigger the read filtering workflow
+    """
+    input:
+        expand( post_trimming_output,
+                sample    = workflows['read_filtering_workflow']['sample'],
+                direction = workflows['read_filtering_workflow']['direction'],
+                quality   = workflows['read_filtering_workflow']['quality']
+        )
+
+
+
+
+
+
 
