@@ -15,6 +15,9 @@
 ### snakemake -n -p comparison_workflow_assembly
 ### snakemake -n -p comparison_workflow_reads_assembly
 
-snakemake -p comparison_workflow_reads
+
+
+snakemake -n -p comparison_workflow_reads
+
 #snakemake -p comparison_workflow_assembly
 #snakemake -p comparison_workflow_reads_assembly

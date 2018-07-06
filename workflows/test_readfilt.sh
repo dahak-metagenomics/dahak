@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#snakemake --forceall --dag post_trim | dot -Tpdf > dag.pdf
+snakemake -n -p read_filtering_workflow
 
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity pre_trim
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity post_trim
+snakemake --forceall --dag read_filtering_workflow | dot -Tpdf > dag_readfilt.pdf
 
-#snakemake -n -p pre_trim
-#snakemake -n -p post_trim
+echo "----------------------"
+echo "created task graph figure in dag_readfilt.pdf"
+echo "----------------------"
+echo ""
 
-snakemake -n -p data/SRR606249_subset10_2_trim30.fq.gz

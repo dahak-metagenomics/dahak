@@ -1,4 +1,4 @@
 #!/bin/bash
 
-snakemake --forceall --dag sbts | dot -Tpdf > dag.pdf
+snakemake --forceall --dag comparison_workflow_assembly | dot -Tpdf > dag.pdf
 
