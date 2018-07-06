@@ -82,7 +82,8 @@ sudo usermod -aG docker ubuntu
 
 # Installing Python 
 
-[Snakemake](http://snakemake.readthedocs.io/en/stable/) is a python build tool.
+To run Dahak workflows, we utilize [Snakemake](http://snakemake.readthedocs.io/en/stable/),
+a Python build tool. To use Snakemake, we must first install Python.
 
 To ensure a universal installation process, we will use [pyenv](https://github.com/pyenv/pyenv)
 to install the correct versions of Python and Conda.

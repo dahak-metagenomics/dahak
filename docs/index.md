@@ -44,71 +44,17 @@ The following software is required to run Dahak workflows:
 
 **TARGET PLATFORM:**
 
-* Singularity >= 2.4 and Sun Grid Compute Engine (utilizes available Singularity, does not require sudo access)
-* (Optional) Ubuntu 16.04 (Xenial) and Docker (requires sudo access)
+* (Required) Singularity >= 2.4 (does not require sudo access) or Docker
+  (requires sudo access)
+* (Optional) Sun Grid Compute Engine
+* (Optional) Ubuntu 16.04 (Xenial)
 
 See [Installing](installing.md) for detailed instructions
 on installing each of the required components listed above,
 including Singularity and Docker.
 
-
-## Quick Start
-
-To run Dahak workflows, use Snakemake from the command line.  Each workflow component is
-comprised of a set of Snakemake rules. 
-
-[Snakemake](https://snakemake.readthedocs.io/) is a Python program that assembles and
-runs tasks using a task graph approach. See [Installing](installing.md). 
-
-Dahak workflows benefit directly from Snakemake's rich feature set and capabilities.
-There is an extensive documentation page on [executing Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html),
-and its command line options. There are other projects demonstrating ways of creating 
-[snakemake-profiles](https://github.com/snakemake-profiles/doc), or platform-specific
-configuration profiles.
-
-Generally, Snakemake is called by passing command line flags and the name of a
-target file or rule name:
-
-```
-$ snakemake [FLAGS] <target>
-```
-
-By default, Snakemake looks for rules and targets that are defined in the file
-`Snakefile`.
-
-The Dahak Snakefile contains `singularity:` directives, which specify a
-Singularity image to pull and use to run the given commands. These are not
-used by default; to force Snakemake to use Singularity to run commands with
-`singularity:` directives , use the `--use-singularity` flag:
-
-```
-snakemake --use-singularity ...
-```
-
-To specify a directory for Singularity to bind-mount, use the
-`SINGULARITY_BINDPATH` environment variable. These are both required:
-
-```
-$ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity <target>
-```
-
-These workflows will use default parameter values for each step of the
-workflow.
-
-To use a custom configuration file (JSON or YAML format), use the
-`--configfile` flag:
-
-```
-$ snakemake --configfile myworkflowparams_2018-01-31.json ...
-```
-
-All together, this will look like:
-
-```
-$ SINGULARITY_BINDPATH="data:/data" snakemake \
-    --configfile myworkflowparams_2018-01-31.json \
-    --use-singularity <target>
-``` 
+See [Quick Start](quickstart.md) for instructions on getting 
+started running dahak workflows with Snakemake.
 
 
 ## Workflows 

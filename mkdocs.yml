@@ -18,10 +18,8 @@ site_dir: site
 pages:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
-
-  - 'Workflows':
-    - 'Overview of Metagenomic Workflows' : 'workflows_overview.md'
-    - 'Running Metagenomic Workflows' : 'workflows_running.md'
+  - 'Running Workflows' : 'running_workflows.md'
+  - 'Quick Start' : 'quickstart.md'
 
   - 'Read Filtering':
     - 'Walkthrough' : 'readfilt_walkthru.md'
