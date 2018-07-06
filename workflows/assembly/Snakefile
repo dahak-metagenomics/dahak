@@ -220,7 +220,7 @@ rule assembly_workflow_metaspades:
         expand( assembly_metaspades_output,
                 sample    = workflows['assembly_workflow_metaspades']['sample'],
                 direction = workflows['assembly_workflow_metaspades']['direction'],
-                qual      = workflows['assembly_workflow_metaspades']['quality']
+                qual      = workflows['assembly_workflow_metaspades']['qual']
         )
 
 rule assembly_workflow_megahit:
@@ -231,7 +231,7 @@ rule assembly_workflow_megahit:
         expand( assembly_megahit_output,
                 sample    = workflows['assembly_workflow_megahit']['sample'],
                 direction = workflows['assembly_workflow_megahit']['direction'],
-                qual      = workflows['assembly_workflow_megahit']['quality']
+                qual      = workflows['assembly_workflow_megahit']['qual']
         )
 
 rule assembly_workflow_all:
@@ -242,12 +242,12 @@ rule assembly_workflow_all:
         expand( assembly_metaspades_output,
                 sample    = workflows['assembly_workflow_all']['sample'],
                 direction = workflows['assembly_workflow_all']['direction'],
-                qual      = workflows['assembly_workflow_all']['quality']
+                qual      = workflows['assembly_workflow_all']['qual']
         ),
         expand( assembly_megahit_output,
                 sample    = workflows['assembly_workflow_all']['sample'],
                 direction = workflows['assembly_workflow_all']['direction'],
-                qual      = workflows['assembly_workflow_all']['quality']
+                qual      = workflows['assembly_workflow_all']['qual']
         )
 
 

@@ -317,3 +317,35 @@ rule compare_read_assembly_signatures:
 
 
 
+###################################
+# Comparison: build rules
+
+workflows = config['workflows']
+
+rule comparison_workflow_reads:
+    """
+    Build rule: run sourmash compare on all reads
+    """
+    input:
+        expand( compare_read_sigs_output,
+                kvalue = workflows['comparison_workflow_reads']['kvalue']
+       )
+
+rule comparison_workflow_assembly:
+    """
+    Build rule: run sourmash compare on all assemblies
+    """
+    input:
+        expand( compare_assembly_sigs_output,
+                kvalue = workflows['comparison_workflow_assembly']['kvalue']
+        )
+
+rule comparison_workflow_reads_assembly:
+    """
+    Build rule: run sourmash compare on all reads and assemblies together
+    """
+    input:
+        expand( compare_ra_sigs_output,
+                kvalue = workflows['comparison_workflow_reads_assembly']['kvalue']
+        )
+

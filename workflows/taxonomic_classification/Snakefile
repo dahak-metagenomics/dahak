@@ -439,11 +439,11 @@ rule taxonomic_classification_workflow:
     input:
         expand( kaiju2krona_output_file,
                 sample  = workflows['taxonomic_classification_workflow']['sample'], 
-                qual    = workflows['taxonomic_classification_workflow']['quality'], 
+                qual    = workflows['taxonomic_classification_workflow']['qual'], 
         ),
         expand( visualize_krona_output_file,
                 sample  = workflows['taxonomic_classification_workflow']['sample'], 
-                qual    = workflows['taxonomic_classification_workflow']['quality'], 
+                qual    = workflows['taxonomic_classification_workflow']['qual'], 
         )
 
 # Filter taxa comprising more than 1% of total reads
@@ -454,7 +454,7 @@ rule taxonomic_classification_filter_workflow:
     input:
         expand( filter_taxa_total_output,
                 sample  = workflows['taxonomic_classification_filtering_workflow']['sample'], 
-                qual    = workflows['taxonomic_classification_filtering_workflow']['quality'],
+                qual    = workflows['taxonomic_classification_filtering_workflow']['qual'],
         )
 
 

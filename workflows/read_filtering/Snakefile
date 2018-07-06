@@ -409,6 +409,6 @@ rule read_filtering_workflow:
         expand( post_trimming_output,
                 sample    = workflows['read_filtering_workflow']['sample'],
                 direction = workflows['read_filtering_workflow']['direction'],
-                qual      = workflows['read_filtering_workflow']['quality']
+                qual      = workflows['read_filtering_workflow']['qual']
         )
 

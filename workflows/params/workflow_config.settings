@@ -11,7 +11,7 @@ config_default = {
             # 
             "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
             "direction" : ["1","2"],
-            "quality"   : ["2","30"],
+            "qual"   : ["2","30"],
         },
 
         "taxonomic_classification_workflow" : {
@@ -21,7 +21,7 @@ config_default = {
             # will be run on.
             # 
             "sample"  : ["SRR606249_subset10"],
-            "quality" : ["2","30"],
+            "qual" : ["2","30"],
         },
 
         "taxonomic_classification_filtering_workflow" : {
@@ -31,7 +31,7 @@ config_default = {
             # workflow will be run on.
             # 
             "sample"  : ["SRR606249_subset10"],
-            "quality" : ["2","30"],
+            "qual" : ["2","30"],
         },
 
         "assembly_workflow_metaspades" : {
@@ -42,7 +42,7 @@ config_default = {
             # 
             "sample"    : ["srr606249_subset10","srr606249_subset25"],
             "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "qual"   : ["2","5","30"],
         },
 
         "assembly_workflow_megahit" : {
@@ -72,9 +72,7 @@ config_default = {
             # these parameters determine which reads
             # the comparison workflow will be run on
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "kvalue"    : ["21","31","51"],
         },
 
         "comparison_workflow_assembly" : {
@@ -82,9 +80,7 @@ config_default = {
             # these parameters determine which assembled reads
             # the comparison workflow will be run on
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "kvalue"    : ["21","31","51"],
         },
 
         "comparison_workflow_reads_assembly" : {
@@ -92,9 +88,7 @@ config_default = {
             # these parameters determine which reads and assembled 
             # reads the comparison workflow will be run on
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "kvalue"    : ["21","31","51"],
         }
     }
 }
