@@ -95,8 +95,8 @@ kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
 kaiju_tar    = taxclass['kaiju']['tar']
 kaiju_url    = taxclass['kaiju']['url']
 
-#unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
-unpack_kaiju_input = HTTP.remote(kaiju_url+"/"+kaiju_tar)
+unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
+#unpack_kaiju_input = HTTP.remote(kaiju_url+"/"+kaiju_tar, allow_redirects=True)
 unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 
 rule dowload_kaiju:
@@ -104,8 +104,8 @@ rule dowload_kaiju:
     Download the kaiju database
     (this is a large file and may take up to 30 minutes)
     """
-    input:
-        unpack_kaiju_input
+    #input:
+    #    unpack_kaiju_input
     output:
         kaiju_target
     shell:
@@ -307,7 +307,7 @@ rule kaiju2kronasummary:
 # Taxonomic Classification: visualize with krona
 
 visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
-if(visualize_krona_input_name[-8:] is not '.summary'):
+if('.summary' not in visualize_krona_input_name):
     visualize_krona_input_name += '.summary'
 visualize_krona_output_name = re.sub(r'\.summary','.html',visualize_krona_input_name)
 

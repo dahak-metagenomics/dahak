@@ -1,12 +1,13 @@
 #!/bin/bash
 
-#snakemake --forceall --dag sbts | dot -Tpdf > dag.pdf
+snakemake -n -p taxonomic_classification_workflow
+snakemake --forceall --dag taxonomic_classification_workflow | dot -Tpdf > dag_taxcass.pdf
+echo "----------------------"
+echo "rule: taxonomic_classification_workflow"
+echo "task graph: dag_taxclass.pdf"
+echo "----------------------"
+echo ""
 
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity merge
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity usekaiju
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity runkaiju
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity runkrona
-
-#snakemake -n -p usekaiju
 #snakemake -n -p runkaiju
-snakemake -n -p runkrona
+#snakemake -n -p runkrona
+
