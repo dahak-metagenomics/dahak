@@ -11,6 +11,9 @@ include: "comparison/Snakefile"
 
 
 
+
+
+
 # Filter taxa comprising more than 1% of total reads
 rule taxonomic_classification_filter_workflow:
     """
@@ -19,44 +22,6 @@ rule taxonomic_classification_filter_workflow:
     input:
         expand( filter_taxa_total_output,
                 sample = ["SRR606249_subset10"],
-                qual = ["2","30"]
-        )
-
-rule assembly_workflow_metaspades:
-    """
-    Build rule: trigger the metaspades assembly step.
-    """
-    input:
-        expand( assembly_metaspades_output,
-                sample = ["SRR606249_subset10","SRR606249_subset25"],
-                direction = ["1","2"],
-                qual = ["2","5","30"]
-        )
-
-rule assembly_workflow_megahit:
-    """
-    Build rule: trigger the megahit assembly step.
-    """
-    input:
-        expand( assembly_megahit_output,
-                sample = ["SRR606249_subset10"],
-                direction = ["1","2"],
-                qual = ["2","30"]
-        )
-
-rule assembly_workflow_all:
-    """
-    Build rule: trigger the assembly step with all assemblers.
-    """
-    input:
-        expand( assembly_megahit_output,
-                sample = ["SRR606249_subset10"],
-                direction = ["1","2"],
-                qual = ["2","30"]
-        ),
-        expand( assembly_metaspades_output,
-                sample = ["SRR606249_subset10"],
-                direction = ["1","2"],
                 qual = ["2","30"]
         )
 

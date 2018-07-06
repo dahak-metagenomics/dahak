@@ -198,27 +198,6 @@ config_default = {
 
 
     "taxonomic_classification" : {
-        #
-        # These URLs are not used unless the user requests
-        # workflows that require the files
-        "trimmed_reads" : {
-            "SRR606249_1.trim2.fq.gz":             "osf.io/tzkjr/download",
-            "SRR606249_2.trim2.fq.gz":             "osf.io/sd968/download",
-            "SRR606249_subset50_1.trim2.fq.gz":    "osf.io/acs5k/download",
-            "SRR606249_subset50_2.trim2.fq.gz":    "osf.io/bem28/download",
-            "SRR606249_subset25_1.trim2.fq.gz":    "osf.io/syf3m/download",
-            "SRR606249_subset25_2.trim2.fq.gz":    "osf.io/zbcrx/download",
-            "SRR606249_subset10_1.trim2.fq.gz":    "osf.io/ksu3e/download",
-            "SRR606249_subset10_2.trim2.fq.gz":    "osf.io/k9tqn/download",
-            "SRR606249_1.trim30.fq.gz":            "osf.io/qtzyk/download",
-            "SRR606249_2.trim30.fq.gz":            "osf.io/dumz6/download",
-            "SRR606249_subset50_1.trim30.fq.gz":   "osf.io/v5jhs/download",
-            "SRR606249_subset50_2.trim30.fq.gz":   "osf.io/q4cfa/download",
-            "SRR606249_subset25_1.trim30.fq.gz":   "osf.io/jcp5n/download",
-            "SRR606249_subset25_2.trim30.fq.gz":   "osf.io/qevh9/download",
-            "SRR606249_subset10_1.trim30.fq.gz":   "osf.io/rtvuz/download",
-            "SRR606249_subset10_2.trim30.fq.gz":   "osf.io/zq4f9/download"
-        },
 
         "filter_taxa" : {
             #
@@ -269,13 +248,14 @@ config_default = {
 
 
     "read_filtering" : {
-
+        # 
         # The workflow actually builds the rules to download 
         # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
             #
             # filename pattern for pre-trimmed reads
-            # Note: the read_files section below MUST match the pre_trimmming_pattern.
+            # Note: the files section (top) listing URLS for read files
+            # MUST match the pre_trimmming_pattern.
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #
             # filename pattern for post-trimmed reads
@@ -300,6 +280,8 @@ config_default = {
             "interleave_suffix" : "pe"
         },
 
+        #
+        # Set the read adapter file
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file

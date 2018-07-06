@@ -212,30 +212,42 @@ rule assembly_statistics_multiqc:
 
 workflows = config['workflows']
 
-rule taxonomic_classification_workflow:
+rule assembly_workflow_metaspades:
     """
-    Build rule: trigger the taxonomic classification workflow
-    """
-    input:
-        expand( kaiju2krona_output_file,
-
-        expand( visualize_krona_output_file,
-
-
-rule read_filtering_workflow:
-    """
-    Build rule: trigger the read filtering workflow
+    Build rule: trigger the metaspades assembly step.
     """
     input:
-        expand( post_trimming_output,
-                sample    = workflows['read_filtering_workflow']['sample'],
-                direction = workflows['read_filtering_workflow']['direction'],
-                quality   = workflows['read_filtering_workflow']['quality']
+        expand( assembly_metaspades_output,
+                sample    = workflows['assembly_workflow_metaspades']['sample'],
+                direction = workflows['assembly_workflow_metaspades']['direction'],
+                qual      = workflows['assembly_workflow_metaspades']['quality']
         )
 
+rule assembly_workflow_megahit:
+    """
+    Build rule: trigger the megahit assembly step.
+    """
+    input:
+        expand( assembly_megahit_output,
+                sample    = workflows['assembly_workflow_megahit']['sample'],
+                direction = workflows['assembly_workflow_megahit']['direction'],
+                qual      = workflows['assembly_workflow_megahit']['quality']
+        )
 
-
-
-
+rule assembly_workflow_all:
+    """
+    Build rule: trigger the assembly step with all assemblers.
+    """
+    input:
+        expand( assembly_metaspades_output,
+                sample    = workflows['assembly_workflow_all']['sample'],
+                direction = workflows['assembly_workflow_all']['direction'],
+                qual      = workflows['assembly_workflow_all']['quality']
+        ),
+        expand( assembly_megahit_output,
+                sample    = workflows['assembly_workflow_all']['sample'],
+                direction = workflows['assembly_workflow_all']['direction'],
+                qual      = workflows['assembly_workflow_all']['quality']
+        )
 
 
