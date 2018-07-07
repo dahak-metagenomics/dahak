@@ -39,12 +39,12 @@ readfilt = config['read_filtering']
 
 assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
 assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
-            direction="1", 
+            direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
             qual='{qual}'
 )
 assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
-            direction="2", 
+            direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
             qual='{qual}'
 )
@@ -91,12 +91,12 @@ rule assembly_metaspades:
 assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
 
 assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
-            direction="1", 
+            direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
             qual='{qual}'
 )
 assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
-            direction="2", 
+            direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
             qual='{qual}'
 )
@@ -158,10 +158,6 @@ assembly_quast_output = join(data_dir, assembly_dir, assembly['assembly_patterns
 
 quast_image = container_image_name(biocontainers, 'quast')
 
-def assembly_quast_logfile(wildcards):
-    logfile = re.sub('.contigs.fa','_quast.log',assembly['assembly_patterns']['assembly_pattern'])
-    return logfile.format(**wildcards)
-
 rule assembly_statistics_quast:
     """
     Compute assembly statistics with quast
@@ -172,8 +168,6 @@ rule assembly_statistics_quast:
         assembly_quast_output
     message: 
         '--- Calculating assembly statistics with quast'
-    #log:
-    #    assembly_quast_logfile
     singularity:
         quast_image
     shell:
@@ -212,6 +206,9 @@ rule assembly_statistics_multiqc:
 
 workflows = config['workflows']
 
+directions = [readfilt['direction_labels']['forward'],
+              readfilt['direction_labels']['reverse']]
+
 rule assembly_workflow_metaspades:
     """
     Build rule: trigger the metaspades assembly step.
@@ -219,8 +216,8 @@ rule assembly_workflow_metaspades:
     input:
         expand( assembly_metaspades_output,
                 sample    = workflows['assembly_workflow_metaspades']['sample'],
-                direction = workflows['assembly_workflow_metaspades']['direction'],
-                qual      = workflows['assembly_workflow_metaspades']['qual']
+                qual      = workflows['assembly_workflow_metaspades']['qual'],
+                direction = directions,
         )
 
 rule assembly_workflow_megahit:
@@ -230,8 +227,8 @@ rule assembly_workflow_megahit:
     input:
         expand( assembly_megahit_output,
                 sample    = workflows['assembly_workflow_megahit']['sample'],
-                direction = workflows['assembly_workflow_megahit']['direction'],
-                qual      = workflows['assembly_workflow_megahit']['qual']
+                qual      = workflows['assembly_workflow_megahit']['qual'],
+                direction = directions,
         )
 
 rule assembly_workflow_all:
@@ -241,13 +238,13 @@ rule assembly_workflow_all:
     input:
         expand( assembly_metaspades_output,
                 sample    = workflows['assembly_workflow_all']['sample'],
-                direction = workflows['assembly_workflow_all']['direction'],
-                qual      = workflows['assembly_workflow_all']['qual']
+                qual      = workflows['assembly_workflow_all']['qual'],
+                direction = directions,
         ),
         expand( assembly_megahit_output,
                 sample    = workflows['assembly_workflow_all']['sample'],
-                direction = workflows['assembly_workflow_all']['direction'],
-                qual      = workflows['assembly_workflow_all']['qual']
+                qual      = workflows['assembly_workflow_all']['qual'],
+                direction = directions,
         )
 
 

@@ -1,8 +1,5 @@
 from snakemake.utils import update_config
 
-# base => sample
-# ntrim => qual
-
 # Note: don"t include http:// or https://
 config_default = {
 
@@ -111,6 +108,7 @@ config_default = {
             # specify scale and k values for computing signatures
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
             "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
@@ -126,18 +124,18 @@ config_default = {
             #
             # the samples and quality variables are used in expand() to form filenames
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
-            "quality" : ["2","30"],
             # 
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            "csv_out" : "SRR606249_trim2and30_read_comparison.k{kvalue}.csv"
+            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             # 
             # specify scale and k values for computing signatures
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
             "sig_suffix" : "_scaled10k.k21_31_51.sig",
@@ -153,7 +151,6 @@ config_default = {
             #
             # the samples and quality variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
-            "quality"   : ["2","30"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
@@ -164,7 +161,6 @@ config_default = {
             #
             # the samples, quality, assembler variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10"],
-            "quality"   : ["2","30"],
             "assembler" : ["megahit","metaspades"],
             #
             # k values are passed to sourmash compare
@@ -222,22 +218,24 @@ config_default = {
             "out"  : "{sample}.kaiju_output.trim{qual}.out"
         },
 
-        "reads" : {
-            # set filename pattern for reads
-            "fq_fwd" : "{sample}_1.trim{qual}.fq.gz",
-            "fq_rev" : "{sample}_2.trim{qual}.fq.gz"
-        },
-
         "sourmash" : { 
             #
             # URL base for SBT tree
             "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
             # 
             # name of SBT tar file
-            "sbttar"  : "microbe-{database}-sbt-k{ksize}-2017.05.09.tar.gz",
+            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
             #
             # name of SBT file when unpacked
-            "sbtunpack" : "{database}-k{ksize}.sbt.json"
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            #
+            # names of valid databases
+            "databases" : ["genbank","refseq"],
+            #
+            # output csv name for sourmash gather procedure
+            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
         },
 
         "visualize_krona" : {

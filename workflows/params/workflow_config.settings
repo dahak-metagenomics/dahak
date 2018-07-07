@@ -24,6 +24,27 @@ config_default = {
             "qual" : ["2","30"],
         },
 
+        "taxonomic_classification_signatures_workflow" : {
+            #
+            # These parameters determine which samples
+            # the taxonomic classification workflow 
+            # will be run on.
+            # 
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_gather_workflow" : {
+            #
+            # These parameters determine which samples
+            # the taxonomic classification workflow 
+            # will be run on.
+            # 
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"],
+            "kvalues" : ["21","31","51"]
+        },
+
         "taxonomic_classification_filtering_workflow" : {
             #
             # These parameters determine which samples
@@ -41,8 +62,7 @@ config_default = {
             # (metaspades assembler only).
             # 
             "sample"    : ["srr606249_subset10","srr606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"   : ["2","5","30"],
+            "qual"      : ["2","30"],
         },
 
         "assembly_workflow_megahit" : {
@@ -52,8 +72,7 @@ config_default = {
             # (megahit assembler only).
             # 
             "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "qual"      : ["2","30"],
         },
 
         "assembly_workflow_all" : {
@@ -63,8 +82,7 @@ config_default = {
             # (all assemblers).
             # 
             "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"      : ["2","5","30"],
+            "qual"      : ["2","30"],
         },
 
         "comparison_workflow_reads": {

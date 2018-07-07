@@ -39,24 +39,33 @@ comparison = config['comparison']
 
 
 ##################################################
-# Comparison: compare read signatures
+# Comparison: compute read signatures
 
 # input is fwd/rev reads
-read_sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
-                    join(data_dir, taxclass['reads']['fq_rev'])]
+read_sig_input_fwd = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                direction = readfilt['direction_labels']['forward']))
+read_sig_input_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                direction = readfilt['direction_labels']['reverse']))
+read_sig_inputs  = [read_sig_input_fwd,
+                    read_sig_input_rev]
 
 # signature file output replaces .fq.gz with sig_suffix variable
-read_fq_sig = re.sub('_1','', taxclass['reads']['fq_fwd'])
+# (also remove direction)
+read_base_output_name = re.sub('_{direction}', '', 
+                        readfilt['read_patterns']['post_trimming_pattern'])
+
 read_sig_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['sig_suffix'],
-                              read_fq_sig)
+                              read_base_output_name)
 read_sig_output = join(data_dir, read_sig_output_name)
 
-
-# merge file output replaces .fq.gz with merge_suffix variable
 read_merge_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['merge_suffix'],
-                              read_fq_sig)
+                              read_base_output_name)
 read_merge_output = join(data_dir, read_merge_output_name)
 
 # scale, for command line
@@ -143,10 +152,10 @@ rule compute_assembly_signatures:
 
 # We need to use expand() to create a list of 
 # read signature files (the input files)
-compare_read_sigs_input_names = expand(
-        read_sig_output_name,
-        sample = comparison['compare_read_signatures']['samples'],
-        qual = comparison['compare_read_signatures']['quality'])
+compare_read_sigs_input_names = expand( 
+                read_sig_output_name,
+                sample = comparison['compare_read_signatures']['samples'],
+                qual = comparison['compute_read_signatures']['qual'])
 
 # Turn filename X into data/X
 compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
@@ -204,7 +213,7 @@ rule compare_read_signatures:
 compare_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
             sample = comparison['compare_assembly_signatures']['samples'],
-            qual = comparison['compare_assembly_signatures']['quality'],
+            qual = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
 # Turn filename X into data/X
@@ -261,13 +270,13 @@ rule compare_assembly_signatures:
 compare_ra_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
             sample = comparison['compare_assembly_signatures']['samples'],
-            qual = comparison['compare_assembly_signatures']['quality'],
+            qual = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler']
 )
 compare_ra_read_sigs_input_names = expand(
             read_sig_output_name,
             sample = comparison['compare_read_signatures']['samples'],
-            qual = comparison['compare_read_signatures']['quality']
+            qual = comparison['compute_read_signatures']['qual']
 )
 compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
 compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
