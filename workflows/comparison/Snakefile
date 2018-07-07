@@ -30,14 +30,6 @@ comparison = config['comparison']
 
 
 ##################################################
-# Comparison: global wildcard constraints
-
-wildcard_constraints:
-    qual="\d+",
-    kvalue="\d+"
-
-
-##################################################
 # Comparison: build rules
 
 # Skip to the very end of the file 

@@ -1,5 +1,12 @@
 from snakemake.utils import update_config
 
+# global wildcard constraints
+wildcard_constraints:
+    qual="\d+",
+    kvalue="\d+",
+    assembler="\w+",
+    sample="\w+"
+
 include: "params/workflow_config.settings"
 include: "params/default.settings"
 
