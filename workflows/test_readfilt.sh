@@ -2,7 +2,7 @@
 
 function main() {
     pretrim
-    posttrim
+    #posttrim
 }
 
 function pretrim() {

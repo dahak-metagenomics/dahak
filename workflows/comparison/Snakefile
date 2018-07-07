@@ -30,6 +30,14 @@ comparison = config['comparison']
 
 
 ##################################################
+# Comparison: global wildcard constraints
+
+wildcard_constraints:
+    qual="\d+",
+    kvalue="\d+"
+
+
+##################################################
 # Comparison: build rules
 
 # Skip to the very end of the file 
@@ -129,6 +137,7 @@ assembly_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembl
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
+
 rule compute_assembly_signatures:
     """
     Compute assembly signatures using sourmash.
@@ -216,8 +225,8 @@ compare_assembly_sigs_input_names = expand(
             qual = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
-# Turn filename X into data/X
-compare_assembly_sigs_inputs = [join(data_dir,k) for k in compare_assembly_sigs_input_names]
+# Turn filename X into data/assembly/X
+compare_assembly_sigs_inputs = [join(data_dir,assembly_dir,k) for k in compare_assembly_sigs_input_names]
 
 # User specifies CSV output file.
 # This name is used verbatim.
@@ -279,7 +288,7 @@ compare_ra_read_sigs_input_names = expand(
             qual = comparison['compute_read_signatures']['qual']
 )
 compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
-compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
+compare_ra_sigs_inputs += [join(data_dir, assembly_dir, k) for k in compare_ra_assembly_sigs_input_names]
 
 # User specifies CSV output file.
 # This name is used verbatim.
@@ -339,6 +348,7 @@ rule comparison_workflow_reads:
         expand( compare_read_sigs_output,
                 kvalue = workflows['comparison_workflow_reads']['kvalue']
        )
+
 
 rule comparison_workflow_assembly:
     """

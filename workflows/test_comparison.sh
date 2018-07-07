@@ -1,12 +1,39 @@
 #!/bin/bash
 
-#snakemake --forceall --dag comparison_workflow_reads          | dot -Tpdf > dag.pdf
-#snakemake --forceall --dag comparison_workflow_assembly       | dot -Tpdf > dag.pdf
-#snakemake --forceall --dag comparison_workflow_reads_assembly | dot -Tpdf > dag.pdf
+function main() {
+    #comparisonread
+    #comparisonassembly
+    comparisonall
+}
 
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity doit
+function comparisonread() {
+    snakemake -n -p comparison_workflow_reads
+    snakemake --forceall --dag comparison_workflow_reads  | dot -Tpdf > dag_comp_reads.pdf
+    echo "----------------------"
+    echo "rule: comparison_workflow_reads"
+    echo "task graph: dag_comp_reads.pdf"
+    echo "----------------------"
+    echo ""
+}
 
-snakemake -n -p comparison_workflow_reads
-#snakemake -n -p comparison_workflow_assembly
-#snakemake -n -p comparison_workflow_reads_assembly
+function comparisonassembly() {
+    snakemake -n -p comparison_workflow_assembly
+    snakemake --forceall --dag comparison_workflow_assembly  | dot -Tpdf > dag_comp_assembly.pdf
+    echo "----------------------"
+    echo "rule: comparison_workflow_assembly"
+    echo "task graph: dag_comp_assembly.pdf"
+    echo "----------------------"
+    echo ""
+}
 
+function comparisonall() {
+    snakemake -n -p comparison_workflow_reads_assembly
+    snakemake --forceall --dag comparison_workflow_reads_assembly  | dot -Tpdf > dag_comp_reads_assembly.pdf
+    echo "----------------------"
+    echo "rule: comparison_workflow_reads_assembly"
+    echo "task graph: dag_comp_reads_assembly.pdf"
+    echo "----------------------"
+    echo ""
+}
+
+main
