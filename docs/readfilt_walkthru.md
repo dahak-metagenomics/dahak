@@ -3,6 +3,8 @@
 The following walkthrough covers the steps in the read filtering and quality
 assessment workflow. 
 
+(All of the commands given below are bash commands.)
+
 This workflow covers the use of Docker to interactively run the workflow on a
 fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.
 
@@ -23,15 +25,14 @@ on the [Installing](installing.md) page.
 Install the open science framework [command-line client](http://osfclient.readthedocs.io/en/stable/):
 
 ```bash
-pip install osfclient
+$ pip install osfclient
 ```
 
 Install [docker](https://www.docker.com) with the following shell commands:
 
 ```bash
-wget -qO- https://get.docker.com/ | sudo sh
-sudo usermod -aG docker ubuntu
-exit
+$ wget -qO- https://get.docker.com/ | sudo sh
+$ sudo usermod -aG docker ubuntu
 ```
 
 Make a directory called data and retrieve some data using the osfclient.

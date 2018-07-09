@@ -71,20 +71,17 @@ Our **target compute system** is a generic cluster running Sun Grid Engine
 in an HPC environment; all Snakemake files are written for this target
 system.
 
-### Walkthroughs
+List of workflows:
 
-Each workflow contains a walkthrough, which is a step-by-step guide
-of shell commands to run to execute each step of the workflow.
-These workflows use docker and require sudo access. While they are
-useful "by hand" guides to the workflows, they cannot be scaled,
-so they are provided primarily for instructional purposes.
-
-* [Read Filtering](readfilt_walkthru.md)
-* [Taxonomic Classification](taxclass_walkthru.md)
-* [Assembly](assembly_walkthru.md)
+* Read Filtering
+* Assembly
 * Metagenomic Comparison
+* Taxonomic Classification
 * Variant Calling
 * Functional Inference
+
+To get started with a particular workflow, select it from the 
+navigation menu on the left side of the page.
 
 
 ## Parameters and Configuration

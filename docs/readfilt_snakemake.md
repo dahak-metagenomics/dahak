@@ -1,5 +1,25 @@
 # Read Filtering: Snakemake Rules
 
+As mentioned on the [Running Workflows](running_workflows.md) page,
+Snakemake can be called with two different types of targets:
+build rules (which trigger all rules associated with a workflow)
+and target files (which trigger any rules required to produce the
+requested file).
+
+The [Running Workflows](running_workflows.md) page also shows
+how to call Snakemake and ask for a particular target:
+
+```
+$ snakemake [FLAGS] <target>
+```
+
+You can replace `<target>` with any of the build rules below.
+Note that you should also provide a Snakemake configuration file
+that specifies which samples, quality values, k values, etc. to use
+when running the workflow.
+
+(Also see [Read Filtering: Snakemake Configuration](readfilt_params.md).)
+
 List of available build rules in the read filtering workflow:
 
 ```
@@ -35,7 +55,7 @@ quality_trimming
 ```
 
 List of other target rules in the read filtering workflow
-(these should not need to be called directly):
+(these should not be called directly):
 
 ```
 read_filtering_pretrim_workflow
