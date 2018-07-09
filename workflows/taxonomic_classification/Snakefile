@@ -53,8 +53,8 @@ rule download_sourmash_sbts:
     """
     Download the sourmash SBTs
     """
-    #input:
-    #    download_sourmash_sbt_input
+    input:
+        download_sourmash_sbt_input
     output:
         unpack_sourmash_sbt_input
     message: 
