@@ -1,0 +1,1212 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+        <link rel="canonical" href="https://dahak-metagenomics.github.io/dahak/taxclass_walkthru/">
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../">
+      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.2">
+    
+    
+      
+        <title>Walkthrough - Dahak Metagenomics</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.8d40d89b.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.6079476c.css">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700|Ubuntu+Mono">
+        <style>body,input{font-family:"Ubuntu","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Ubuntu Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../css/custom.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="brown" data-md-color-accent="brown">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#taxonomic-classification-workflow" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://dahak-metagenomics.github.io/dahak" title="Dahak Metagenomics" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">line_style</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                Dahak Metagenomics
+              </span>
+              <span class="md-header-nav__topic">
+                Walkthrough
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+
+  <a href="https://github.com/dahak-metagenomics/dahak" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      dahak-metagenomics/dahak
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon">line_style</i>
+      
+    </span>
+    Dahak Metagenomics
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/dahak-metagenomics/dahak" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      dahak-metagenomics/dahak
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Index" class="md-nav__link">
+      Index
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../installing/" title="Installing" class="md-nav__link">
+      Installing
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../running_workflows/" title="Running Workflows" class="md-nav__link">
+      Running Workflows
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../config/" title="Workflow Configuration" class="md-nav__link">
+      Workflow Configuration
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../quickstart/" title="Quick Start" class="md-nav__link">
+      Quick Start
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Read Filtering
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Read Filtering
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../readfilt_overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../readfilt_walkthru/" title="Walkthrough" class="md-nav__link">
+      Walkthrough
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../readfilt_snakemake/" title="Snakemake Rules" class="md-nav__link">
+      Snakemake Rules
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../readfilt_config/" title="Snakemake Configuration" class="md-nav__link">
+      Snakemake Configuration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Assembly
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Assembly
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../assembly_overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../assembly_walkthru/" title="Walkthrough" class="md-nav__link">
+      Walkthrough
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../assembly_snakemake/" title="Snakemake Rules" class="md-nav__link">
+      Snakemake Rules
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../assembly_config/" title="Snakemake Configuration" class="md-nav__link">
+      Snakemake Configuration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Comparison
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        Comparison
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../comparison_overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../comparison_walkthru/" title="Walkthrough" class="md-nav__link">
+      Walkthrough
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../comparison_snakemake/" title="Snakemake Rules" class="md-nav__link">
+      Snakemake Rules
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../comparison_config/" title="Snakemake Configuration" class="md-nav__link">
+      Snakemake Configuration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9" checked>
+    
+    <label class="md-nav__link" for="nav-9">
+      Taxonomic Classification
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        Taxonomic Classification
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../taxclass_overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Walkthrough
+      </label>
+    
+    <a href="./" title="Walkthrough" class="md-nav__link md-nav__link--active">
+      Walkthrough
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-of-rules" title="List of Rules" class="md-nav__link">
+    List of Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-rules" title="Running Rules" class="md-nav__link">
+    Running Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#walkthrough" title="Walkthrough" class="md-nav__link">
+    Walkthrough
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-steps" title="Walkthrough Steps" class="md-nav__link">
+    Walkthrough Steps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../taxclass_snakemake/" title="Snakemake Rules" class="md-nav__link">
+      Snakemake Rules
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../taxclass_config/" title="Snakemake Configuration" class="md-nav__link">
+      Snakemake Configuration
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../contrib/" title="Contributing" class="md-nav__link">
+      Contributing
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-of-rules" title="List of Rules" class="md-nav__link">
+    List of Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-rules" title="Running Rules" class="md-nav__link">
+    Running Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#walkthrough" title="Walkthrough" class="md-nav__link">
+    Walkthrough
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-steps" title="Walkthrough Steps" class="md-nav__link">
+    Walkthrough Steps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="taxonomic-classification-workflow">Taxonomic Classification Workflow<a class="headerlink" href="#taxonomic-classification-workflow" title="Permanent link">&para;</a></h1>
+<p>To run the taxonomic classification workflow, use the Snakefile in the
+top level of the repository.</p>
+<p>Workflow rules for taxonomic classification are defined in the file
+<code>workflows/taxonomic_classification/Snakefile</code>.
+are defined in <code>workflows/read_filtering/Snakefile</code>.</p>
+<h2 id="list-of-rules">List of Rules<a class="headerlink" href="#list-of-rules" title="Permanent link">&para;</a></h2>
+<p>The build rules trigger portions of the workflow to run.
+These are listed below:</p>
+<ul>
+<li>
+<p><code>genbank</code> - download pre-assembled SBTs for sourmash built from genome
+  and protein databases (Genbank).</p>
+</li>
+<li>
+<p><code>sbts</code> - unpack pre-assembled SBTs for sourmash built from genome and protein
+  databases (Genbank).</p>
+</li>
+<li>
+<p><code>merge</code> - merge read files and calculate signature file</p>
+</li>
+<li>
+<p><code>usekaij</code> - download and unpack the kaiju database</p>
+</li>
+<li>
+<p><code>runkaiju</code> - run the kaiju classifier on specified input files</p>
+</li>
+<li>
+<p><code>runkrona</code> - run the krona tool to visualize kaiju output</p>
+</li>
+</ul>
+<p>You can see a list of all available rules and brief descriptions
+of each by using the Snakemake list command:</p>
+<div class="codehilite"><pre><span></span>snakemake -l
+</pre></div>
+
+
+<h2 id="running-rules">Running Rules<a class="headerlink" href="#running-rules" title="Permanent link">&para;</a></h2>
+<p>To run a rule, call Snakemake with specified environment variables,
+command line flags, and options, and pass it the name of the rule.
+For example, the following command uses Singularity to run all rules
+that have a singularity directive:</p>
+<div class="codehilite"><pre><span></span>SINGULARITY_BINDPATH=&quot;data:/data&quot; snakemake --with-singularity post_trim
+</pre></div>
+
+
+<h2 id="walkthrough">Walkthrough<a class="headerlink" href="#walkthrough" title="Permanent link">&para;</a></h2>
+<p>The following walkthrough covers the steps in the taxonomic classification
+workflow.</p>
+<p>This workflow covers the use of Docker to interactively run the workflow on a
+fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.</p>
+<p>The Snakefiles contained in this repository utilize Singularity containers
+instead of Docker containers, but run analogous commands to those given in this
+walkthrough.</p>
+<p>This walkthrough presumes that the steps covered on the <a href="../installing/">Installing</a>
+page have been run, and that a version of Python, Conda, and Snakemake are available.
+See the <a href="../installing/">Installing</a> page for instructions on installing
+required software.</p>
+<h3 id="walkthrough-steps">Walkthrough Steps<a class="headerlink" href="#walkthrough-steps" title="Permanent link">&para;</a></h3>
+<p>Additional requirements:</p>
+<ul>
+<li>At least 120 GB disk space </li>
+<li>At least 64 GB RAM </li>
+</ul>
+<p>Software required:</p>
+<ul>
+<li>Docker (covered in this walkthrough) or Singularity (if using Snakefile)</li>
+<li>Updated packages (see the <a href="../installing/">Installing</a> page)</li>
+<li>(Optional) OSF CLI (command-line interface; see <a href="../installing/">Installing</a>
+    and <a href="../readfilt_snakemake/">Read Filtering Snakemake</a> pages)</li>
+</ul>
+<p>Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash gather
+allows us to taxonomically classify the components of a metagenome by comparing hashes
+in our dataset to hashes in a sequence bloom tree (SBT) representing genomes. </p>
+<p>First, let's download two SBTs containing hashes that represent the microbial genomes in
+the <a href="#">NCBI GenBank</a> and <a href="#">RefSeq</a> databases. </p>
+<p>(Note: these are each several GB in size, and unzipped they take up around 100 GB of
+space.)</p>
+<div class="codehilite"><pre><span></span>mkdir data/
+cd data/
+
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k51-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k31-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-refseq-sbt-k21-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k51-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k31-2017.05.09.tar.gz
+curl -O https://s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu/microbe-genbank-sbt-k21-2017.05.09.tar.gz
+
+tar xzf microbe-refseq-sbt-k51-2017.05.09.tar.gz
+tar xzf microbe-refseq-sbt-k31-2017.05.09.tar.gz
+tar xzf microbe-refseq-sbt-k21-2017.05.09.tar.gz
+tar xzf microbe-genbank-sbt-k51-2017.05.09.tar.gz
+tar xzf microbe-genbank-sbt-k31-2017.05.09.tar.gz
+tar xzf microbe-genbank-sbt-k21-2017.05.09.tar.gz
+
+rm -r microbe-refseq-sbt-k51-2017.05.09.tar.gz
+rm -r microbe-refseq-sbt-k31-2017.05.09.tar.gz
+rm -r microbe-refseq-sbt-k21-2017.05.09.tar.gz
+rm -r microbe-genbank-sbt-k51-2017.05.09.tar.gz
+rm -r microbe-genbank-sbt-k31-2017.05.09.tar.gz
+rm -r microbe-genbank-sbt-k21-2017.05.09.tar.gz
+
+cd ../
+</pre></div>
+
+
+<p>If you have not made the trimmed data, you can download it from OSF.</p>
+<p>Start with a file that contains two columns, a filename and a location, separated by a space.</p>
+<p>The location should be a URL (currently works) or a local path (not implemented yet).
+If no location is given, the script will look for the given file in the current directory.</p>
+<p>Example data file <strong>trimmed.data</strong>:</p>
+<div class="codehilite"><pre><span></span>SRR606249_1.trim2.fq.gz             https://osf.io/tzkjr/download      
+SRR606249_2.trim2.fq.gz             https://osf.io/sd968/download  
+SRR606249_subset50_1.trim2.fq.gz    https://osf.io/acs5k/download 
+SRR606249_subset50_2.trim2.fq.gz    https://osf.io/bem28/download 
+SRR606249_subset25_1.trim2.fq.gz    https://osf.io/syf3m/download 
+SRR606249_subset25_2.trim2.fq.gz    https://osf.io/zbcrx/download 
+SRR606249_subset10_1.trim2.fq.gz    https://osf.io/ksu3e/download 
+SRR606249_subset10_2.trim2.fq.gz    https://osf.io/k9tqn/download 
+</pre></div>
+
+
+<p>This can be turned into download commands using a shell script (cut and xargs) or using a Python script.</p>
+<div class="codehilite"><pre><span></span>import subprocess
+
+with open(&#39;trimmed.data&#39;,&#39;r&#39;) as f:
+    for ln in f.readlines():
+        line = ln.split()
+        cmd = [&quot;wget&quot;,line[1],&quot;-O&quot;,line[0]]
+        print(&quot;Calling command %s&quot;%(&quot; &quot;.join(cmd)))
+        subprocess.call(cmd)
+</pre></div>
+
+
+<p>Next, calculate signatures for our data:</p>
+<div class="codehilite"><pre><span></span>sourmashurl=&quot;quay.io/biocontainers/sourmash:2.0.0a3--py36_0&quot;
+
+for filename in *_1.trim2.fq.gz
+do
+    #Remove _1.trim.fq from file name to create base
+    base=$(basename $filename _1.trim2.fq.gz)
+    sigsuffix=&quot;.trim2.scaled10k.k21_31_51.sig&quot;
+    echo $base
+
+    if [ -f ${base}${sigsuffix} ]
+    then
+        # skip
+        echo &quot;Skipping file ${base}${sigsuffix}, file exists.&quot;
+    else
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash compute \
+            --merge /data/${base}.trim2.fq.gz \
+            --track-abundance \
+            --scaled 10000 \
+            -k 21,31,51 \
+            /data/${base}_1.trim2.fq.gz \
+            /data/${base}_2.trim2.fq.gz \
+            -o /data/${base}${sigsuffix}
+    fi
+done
+
+for filename in *_1.trim30.fq.gz
+do
+    #Remove _1.trim.fq from file name to create base
+    base=$(basename $filename _1.trim30.fq.gz)
+    sigsuffix=&quot;.trim30.scaled10k.k21_31_51.sig&quot;
+    echo $base
+
+    if [ -f ${base}${sigsuffix} ]
+    then
+        # skip
+        echo &quot;Skipping file ${base}${sigsuffix}, file exists.&quot;
+    else
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash compute \
+            --merge /data/${base}.trim30.fq.gz \
+            --track-abundance \
+            --scaled 10000 \
+            -k 21,31,51 \
+            /data/${base}_1.trim30.fq.gz \
+            /data/${base}_2.trim30.fq.gz \
+            -o /data/${base}${sigsuffix}
+    fi
+done
+</pre></div>
+
+
+<p>And compare those signatures to our database to classify the components.</p>
+<div class="codehilite"><pre><span></span>sourmashurl=&quot;quay.io/biocontainers/sourmash:2.0.0a3--py36_0&quot;
+for kmer_len in 21 31 51
+do
+    for sig in *sig
+    do
+        docker run \
+            -v ${PWD}:/data \
+            ${sourmashurl} \
+            sourmash gather \
+            -k ${kmer_len} \
+            ${sig} \
+            genbank-k${kmer_len}.sbt.json \
+            refseq-k${kmer_len}.sbt.json \
+            -o ${sig}.k${kmer_len}.gather.output.csv \
+            --output-unassigned ${sig}.k${kmer_len}gather_unassigned.output.csv \
+            --save-matches ${sig}.k${kmer_len}.gather_matches
+    done
+done
+</pre></div>
+
+
+<p>Now, let's download and unpack the kaiju database (this takes about 15 minutes on my machine):</p>
+<div class="codehilite"><pre><span></span>kaijudir=&quot;${PWD}/kaijudb&quot;
+tarfile=&quot;kaiju_index_nr_euk.tgz&quot;
+
+mkdir ${kaijudir}
+curl -LO &quot;http://kaiju.binf.ku.dk/database/${tarfile}&quot;
+tar xzf ${tarfile}
+rm -f ${tarfile}
+</pre></div>
+
+
+<p>and then link the data and run kaiju:</p>
+<div class="codehilite"><pre><span></span>for filename in *1.trim2.fq.gz
+do
+    #Remove _1.trim2.fq from file name to create base
+    base=$(basename $filename _1.trim2.fq.gz)
+    echo $base
+
+    # Command to run container interactively:
+    #docker run -it --rm -v ${PWD}:/data quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 /bin/bash
+
+    docker run \
+        -v ${PWD}:/data \
+        quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 \
+        kaiju \
+        -x \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -f /data/kaijudb/kaiju_db_nr_euk.fmi \
+        -i /data/${base}_1.trim2.fq.gz \
+        -j /data/${base}_2.trim2.fq.gz \
+        -o /data/${base}.kaiju_output.trim2.out \
+        -z 4
+done
+
+for filename in *1.trim30.fq.gz
+do
+    #Remove _1.trim30.fq from file name to create base
+    base=$(basename $filename _1.trim30.fq.gz)
+    echo $base
+
+    docker run \
+        -v ${PWD}:/data \
+        quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0 \
+        kaiju \
+        -x \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -f data/kaijudb/kaiju_db_nr_euk.fmi \
+        -i /data/${base}_1.trim30.fq.gz \
+        -j /data/${base}_2.trim30.fq.gz \
+        -o /data/${base}.kaiju_output.trim30.out \
+        -z 4
+done
+</pre></div>
+
+
+<p>Next, convert kaiju output to format readable by krona. Note that the taxonomic rank for classification (e.g. genus) is determined with the -r flag. </p>
+<div class="codehilite"><pre><span></span>kaijuurl=&quot;quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0&quot;
+kaijudir=&quot;kaijudb&quot;
+for i in *trim{&quot;2&quot;,&quot;30&quot;}.out
+do
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaiju2krona \
+        -v \
+        -t \
+        /data/${kaijudir}/nodes.dmp \
+        -n /data/${kaijudir}/names.dmp \
+        -i /data/${i} \
+        -o /data/${i}.kaiju.out.krona
+done
+
+for i in *trim{&quot;2&quot;,&quot;30&quot;}.out
+do
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport \
+        -v \
+        -t \
+        /data/${kaijudir}/nodes.dmp \
+        -n /data/${kaijudir}/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -o /data/${i}.kaiju_out_krona.summary 
+done
+</pre></div>
+
+
+<p>Now let's filter out taxa with low abundances by obtaining genera that comprise at least 1 percent of the total reads:</p>
+<div class="codehilite"><pre><span></span>kaijuurl=&quot;quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0&quot;
+for i in *trim{&quot;2&quot;,&quot;30&quot;}.out
+do
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport 
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -n /data/kaijudb/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -m 1 \
+        -o /data/${i}.kaiju_out_krona.1percenttotal.summary
+done
+</pre></div>
+
+
+<p>Now for comparison, let's take the genera that comprise at least 1 percent of all of the classified reads:</p>
+<div class="codehilite"><pre><span></span>for i in *trim{&quot;2&quot;,&quot;30&quot;}.out
+do
+    docker run \
+        -v ${PWD}:/data \
+        ${kaijuurl} \
+        kaijuReport \
+        -v \
+        -t /data/kaijudb/nodes.dmp \
+        -n /data/kaijudb/names.dmp \
+        -i /data/${i} \
+        -r genus \
+        -m 1 \
+        -u \
+        -o /data/${i}.kaiju_out_krona.1percentclassified.summary
+done
+</pre></div>
+
+
+<p>Download the krona image from quay.io so we can visualize the results from kaiju:</p>
+<div class="codehilite"><pre><span></span>kaijudir=&quot;${PWD}/kaijudb&quot;
+suffix=&quot;kaiju_out_krona&quot;
+kronaurl=&quot;quay.io/biocontainers/krona:2.7--pl5.22.0_1&quot;
+docker pull ${kronaurl}
+</pre></div>
+
+
+<p>Generate krona html with output from all of the reads:</p>
+<div class="codehilite"><pre><span></span>suffix=&quot;kaiju_out_krona&quot;
+for i in *${suffix}.summary
+do
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
+done
+</pre></div>
+
+
+<p>Generate krona html with output from genera at least 1 percent of the total reads:</p>
+<div class="codehilite"><pre><span></span>suffix=&quot;kaiju_out_krona.1percenttotal&quot;
+for i in *${suffix}.summary
+do
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
+done
+</pre></div>
+
+
+<p>Generate krona html with output from genera at least 1 percent of all classified reads:</p>
+<div class="codehilite"><pre><span></span>suffix=&quot;kaiju_out_krona.1percentclassified&quot;
+for i in *${suffix}.summary
+do
+        docker run \
+            -v ${kaijudir}:/data \
+            ${kronaurl} \
+            ktImportText \
+            -o /data/${i}.${suffix}.html \
+            /data/${i}
+done
+</pre></div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../taxclass_overview/" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Overview
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../taxclass_snakemake/" title="Snakemake Rules" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Snakemake Rules
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2017, The Regents of the University of California.<br /> Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br /> Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />
+          </div>
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.0cf9b500.js"></script>
+      
+      <script>app.initialize({version:"0.17.3",url:{base:".."}})</script>
+      
+        <script src="../search/require.js"></script>
+      
+        <script src="../search/search.js"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>
