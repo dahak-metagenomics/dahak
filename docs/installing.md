@@ -14,9 +14,9 @@ The instructions below will help you get started running the software above.
 <br />
 <br />
 
-# Installing Docker/Singularity
+## Installing Docker or Singularity
 
-## Getting Started with Singularity
+### (Recommended) Singularity
 
 [Singularity](http://singularity.lbl.gov) is a tool for running Docker
 containers in higher security environments (e.g., high performance computing
@@ -53,7 +53,7 @@ singularity --version
 ```
 
 
-## (Optional) Getting Started with Docker
+## (Optional) Docker
 
 If you wish to follow along with the walkthroughs, which cover the use of
 Docker containers to run the workflows interactively, you will need to install
@@ -80,7 +80,7 @@ sudo usermod -aG docker ubuntu
 <br />
 <br />
 
-# Installing Python 
+## Installing Python 
 
 To run Dahak workflows, we utilize [Snakemake](http://snakemake.readthedocs.io/en/stable/),
 a Python build tool. To use Snakemake, we must first install Python.
@@ -97,7 +97,7 @@ We provide installation instructions using two methods:
 Pyenv is a command-line tool for managing multiple
 Python versions, including Conda.
 
-## Installing Aptitude Python
+### (Recommended) Installing Aptitude Python
 
 To install Python with Aptitude:
 
@@ -106,7 +106,7 @@ sudo apt-get -y update
 sudo apt-get -y install python-pip python-dev
 ```
 
-## (Optional) Installing Pyenv
+### (Optional) Installing Pyenv
 
 Start by running the pyenv installer:
 
@@ -167,7 +167,7 @@ pip install --upgrade pip
 <br />
 <br />
 
-# Installing Conda
+## Installing Conda
 
 Now we set the version of conda we wish to install. We will install
 Miniconda 4.3.30 with Python 3:
@@ -209,7 +209,7 @@ conda config --add channels bioconda
 <br />
 <br />
 
-# Installing Snakemake
+## Installing Snakemake
 
 Now install snakemake from the bioconda channel,
 or install it using pip:
