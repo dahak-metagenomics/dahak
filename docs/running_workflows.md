@@ -1,5 +1,10 @@
 # Running Workflows
 
+A flowchart illustrating how each workflow component fits 
+together with tools into the overall process is included below:
+
+![workflow flowchart](img/WorkflowFlowchartOriginal.png)
+
 Dahak workflows are run from the command line using Snakemake, a Python package
 that provides similar capabilities to GNU make. Each workflow consists of a set
 of Snakemake rules.
@@ -68,7 +73,7 @@ $ SINGULARITY_BINDPATH="my_data:/data" snakemake --use-singularity <target>
 This bind-mounts the directory `my_data/` into the Singularity container at `/data/`.
 
 
-## Running Workflows with Configuration Files
+## Running Workflows with Custom Configuration Files
 
 To use a custom configuration file (JSON or YAML format), use the
 `--configfile` flag:
@@ -76,6 +81,9 @@ To use a custom configuration file (JSON or YAML format), use the
 ```
 $ snakemake --configfile my_workflow_params.json ...
 ```
+
+Workflow configuration is covered in much greater detail on the 
+[Workflow Configuration](config.md) page.
 
 
 ## Summary
