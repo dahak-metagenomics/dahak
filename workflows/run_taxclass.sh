@@ -30,14 +30,8 @@ function taxclass_kaijureport_filteredclass() {
 
 function run() {
     target=$1
-    snakemake -n -p ${target}
     snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
-    echo "----------------------"
-    echo "rule: ${target}"
-    echo "task graph: dag_${target}.pdf"
-    echo "----------------------"
-    echo ""
+    SINGULARITY_BINDPATH="data:/data" snakemake -p --use-singularity ${target}
 }
 
 main
-

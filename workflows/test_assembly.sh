@@ -6,14 +6,14 @@ function main() {
 }
 
 function metaspades() {
-    doit "assembly_workflow_metaspades"
+    run "assembly_workflow_metaspades"
 }
 
 function megahit() {
-    doit "assembly_workflow_megahit"
+    run "assembly_workflow_megahit"
 }
 
-function doit() {
+function run() {
     target=$1
     snakemake -n -p ${target}
     snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf

@@ -6,14 +6,14 @@ function main() {
 }
 
 function pretrim() {
-    doit read_filtering_pretrim_workflow
+    run read_filtering_pretrim_workflow
 }
 
 function posttrim() {
-    doit read_filtering_posttrim_workflow
+    run read_filtering_posttrim_workflow
 }
 
-function doit() {
+function run() {
     target=$1
     snakemake -n -p ${target}
     snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
