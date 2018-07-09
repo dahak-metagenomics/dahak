@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function main() {
-    #taxclass_signatures
-    #taxclass_gather
-    #taxclass_kaijureport
-    #taxclass_kaijureport_filtered
+    taxclass_signatures
+    taxclass_gather
+    taxclass_kaijureport
+    taxclass_kaijureport_filtered
     taxclass_kaijureport_filteredclass
 }
 

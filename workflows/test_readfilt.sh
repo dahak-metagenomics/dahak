@@ -6,11 +6,11 @@ function main() {
 }
 
 function pretrim() {
-    doit "read_filtering_pretrim_workflow"
+    doit read_filtering_pretrim_workflow
 }
 
 function posttrim() {
-    doit "read_filtering_posttrim_workflow"
+    doit read_filtering_posttrim_workflow
 }
 
 function doit() {
