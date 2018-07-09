@@ -25,7 +25,6 @@ For purposes of benchmarking this project will use the following datasets:
 
 <sup>*</sup>[Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
 
-
 ## Requirements and Installation
 
 Dahak is not a standalone program, but rather a collection of workflows
@@ -49,24 +48,24 @@ The following software is required to run Dahak workflows:
 * (Optional) Sun Grid Compute Engine
 * (Optional) Ubuntu 16.04 (Xenial)
 
-See [Installing](installing.md) for detailed instructions
+See the [Installing](installing.md) page for detailed instructions
 on installing each of the required components listed above,
 including Singularity and Docker.
 
-See [Quick Start](quickstart.md) for instructions on getting 
+See the [Quickstart](quickstart.md) page for instructions on getting 
 started running dahak workflows with Snakemake.
 
 
 ## Workflows 
 
 Dahak provides a set of workflow components that all fit together to perform 
-various useful tasks.
+various useful tasks. 
 
-See the [Workflows Overview](workflows_overview.md) page for an overview of the
-metagenomic workflows provided by dahak and how these workflows fit together.
+See the [Running Workflows](running_workflows.md) page for some background
+on how to run workflows using singularity and snakemake.
 
-See the [Running Workflows](workflows_running.md) page for instructions on 
-running workflows.
+See the [Quickstart](quickstart.md) guide if you just want to get
+up and running with workflows.
 
 Our **target compute system** is a generic cluster running Sun Grid Engine
 in an HPC environment; all Snakemake files are written for this target
@@ -94,13 +93,13 @@ See the [Parameters and Configuration](config.md) page for details about
 controlling how each workflow operates, and how to use parameter presets.
 
 
-# Contributing
+## Contributing
 
 Please read
 [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md)
 for details on our code of conduct and the process for submitting pull requests to us.
 
-# Contributors
+## Contributors
 
 Phillip Brooks<sup>1</sup>, Charles Reid<sup>1</sup>, Bruce Budowle<sup>2</sup>, Chris Grahlmann<sup>3</sup>, Stephanie L. Guertin<sup>3</sup>, F. Curtis Hewitt<sup>3</sup>, Alexander F. Koeppel<sup>4</sup>, Oana I. Lungu<sup>3</sup>, Krista L. Ternus<sup>3</sup>, Stephen D. Turner<sup>4,</sup><sup>5</sup>, C. Titus Brown<sup>1</sup>
 
@@ -115,7 +114,6 @@ Phillip Brooks<sup>1</sup>, Charles Reid<sup>1</sup>, Bruce Budowle<sup>2</sup>,
 <sup>5</sup>Bioinformatics Core, University of Virginia School of Medicine, Charlottesville, VA, United States of America
 
 See also the list of [contributors](https://github.com/dahak-metagenomics/dahak/graphs/contributors) who participated in this project.
-
 
 ## License
 

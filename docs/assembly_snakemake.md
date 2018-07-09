@@ -1,14 +1,40 @@
 # Assembly: Snakemake Rules
 
-Two kinds of rules: **build rules** and **target file rules**.
+List of available build rules in the assembly workflow:
 
-**Build rules** are high-level rules that only require input files and
-do not perform any actions. These rules trigger other rules
-and often start the entire workflow.
+```
+assembly_workflow_metaspades
+    
+    Build rule: trigger the metaspades assembly step.
+    
+assembly_workflow_megahit
+    
+    Build rule: trigger the megahit assembly step.
+    
+assembly_workflow_all
+    
+    Build rule: trigger the assembly step with all assemblers.
+    
+```
 
-**Target file rules** are rules where the user asks for a specific
-output file name, and snakemake determines the rule that produces
-that file, as well as the rules it depends on.
+List of other target rules in the assembly workflow
+(these should not need to be called directly):
 
+```
+assembly_metaspades
+    
+    Perform read assembly of trimmed reads using metaspades.
+    
+assembly_megahit
+    
+    Perform read assembly of trimmed reads using megahit.
+    
+assembly_statistics_quast
+    
+    Compute assembly statistics with quast
+    
+assembly_statistics_multiqc
+    
+    Compute assembly statistics with multiqc
+```
 
-TODO: Finish

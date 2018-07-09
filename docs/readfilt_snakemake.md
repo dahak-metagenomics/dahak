@@ -1,81 +1,50 @@
 # Read Filtering: Snakemake Rules
 
-Two kinds of rules: **build rules** and **target file rules**.
+List of available build rules in the read filtering workflow:
 
-**Build rules** are high-level rules that only require input files and
-do not perform any actions. These rules trigger other rules
-and often start the entire workflow.
+```
+download_reads
+    
+    Fetch user-requested files from OSF containing reads that will be used in
+    the read filtering process.
 
-**Target file rules** are rules where the user asks for a specific
-output file name, and snakemake determines the rule that produces
-that file, as well as the rules it depends on.
-
-## Read Filtering: Build Rules
-
-There are three basic build rules for read filtering:
-
-```plain
-fetch
+    Note that this defines wildcard-based download rules, rather than
+    downloading all files all at once, to keep things flexible and fast.
     
-    Fetch read data from OSF. Uses full reads.
+download_read_adapters
     
-pre_trim
+    Download FASTA read adapaters (TruSeq2-PE sequencer by default).
     
-    Pre-trimming quality assessment of read data. Uses full reads.
+pre_trimming_quality_assessment
     
-post_trim
+    Perform a pre-trimming quality check of the reads from the sequencer.
     
-    Post-trimming quality assessment of read data. Uses full reads.
+post_trimming_quality_assessment
+    
+    Perform a post-trimming quality check 
+    of the reads from the sequencer.
+    
+interleave_reads
+    
+    Interleave paired-end reads using khmer.
+    The trim quality comes from the filename.
+    
+quality_trimming
+    
+    Trim reads from the sequencer by dropping low-quality reads.
 ```
 
-Additionally, there are build rules for the subsampled
-reads, which make the workflows faster for testing:
+List of other target rules in the read filtering workflow
+(these should not need to be called directly):
 
-10% subsampled reads:
-
-```plain
-fetch_subset10
-    
-    Fetch read data from OSF. Uses 10% subsampled reads.
-    
-pre_trim_subset10
-    
-    Pre-trimming quality assessment of read data. Uses 10% subsampled reads.
-    
-post_trim_subset10
-    
-    Post-trimming quality assessment of read data. Uses 10% subsampled reads.
 ```
-
-25% subsampled reads:
-
-```plain
-fetch_subset25
+read_filtering_pretrim_workflow
     
-    Fetch read data from OSF. Uses 25% subsampled reads.
+    Build rule: trigger the read filtering workflow
     
-pre_trim_subset25
+read_filtering_posttrim_workflow
     
-    Pre-trimming quality assessment of read data. Uses 25% subsampled reads.
+    Build rule: trigger the read filtering workflow
     
-post_trim_subset25
-    
-    Post-trimming quality assessment of read data. Uses 25% subsampled reads.
-```    
-
-50% subsampled reads:
-
-```plain
-fetch_subset50
-    
-    Fetch read data from OSF. Uses 50% subsampled reads.
-    
-pre_trim_subset50
-    
-    Pre-trimming quality assessment of read data. Uses 50% subsampled reads.
-    
-post_trim_subset50
-    
-    Post-trimming quality assessment of read data. Uses 50% subsampled reads.
 ```
 

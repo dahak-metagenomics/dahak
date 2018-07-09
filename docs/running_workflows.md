@@ -85,6 +85,7 @@ All together, this will look like:
 ```
 $ SINGULARITY_BINDPATH="data:/data" snakemake \
     --configfile my_workflow_params.json \
-    --use-singularity <target>
+    --use-singularity \
+    <snakemake-target>
 ``` 
 
