@@ -1,8 +1,27 @@
 #!/bin/bash
 
-#SINGULARITY_BINDPATH="data:/data" snakemake -n -p --use-singularity metaspades
-#SINGULARITY_BINDPATH="data:/data" snakemake -p --use-singularity metaspades
+function main() {
+    metaspades
+    megahit
+}
 
-snakemake -n -p assembly_workflow_metaspades
-snakemake -n -p assembly_workflow_megahit
+function metaspades() {
+    doit "assembly_workflow_metaspades"
+}
 
+function megahit() {
+    doit "assembly_workflow_megahit"
+}
+
+function doit() {
+    target=$1
+    snakemake -n -p ${target}
+    snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
+    echo "----------------------"
+    echo "rule: ${target}"
+    echo "task graph: dag_${target}.pdf"
+    echo "----------------------"
+    echo ""
+}
+
+main

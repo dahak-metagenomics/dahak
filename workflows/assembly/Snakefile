@@ -14,7 +14,6 @@ import os, re
 # Assembly: default config
 
 data_dir = config['data_dir']
-assembly_dir = config['assembly_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
 assembly = config['assembly']
@@ -38,6 +37,7 @@ readfilt = config['read_filtering']
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
 assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+
 assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
@@ -50,7 +50,7 @@ assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
 )
 
 assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
-assembly_metaspades_output = join(data_dir, assembly_dir, assembly['assembly_patterns']['metaspades_pattern'])
+assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
 
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
@@ -103,8 +103,7 @@ assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
 
 # just the name
 assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
-
-assembly_megahit_output = join(data_dir, assembly_dir, assembly['assembly_patterns']['megahit_pattern'])
+assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
 assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
@@ -152,9 +151,9 @@ rule assembly_megahit:
 ###################################
 # Assembly: quast statistics
 
-assembly_quast_input = join(data_dir, assembly_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 
-assembly_quast_output = join(data_dir, assembly_dir, assembly['assembly_patterns']['quast_pattern'])
+assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
 
 quast_image = container_image_name(biocontainers, 'quast')
 
@@ -178,9 +177,9 @@ rule assembly_statistics_quast:
 ###################################
 # Assembly: multiqc statistics
 
-assembly_multiqc_input = join(data_dir, assembly_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_multiqc_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 
-assembly_multiqc_output = join(data_dir, assembly_dir, assembly['assembly_patterns']['multiqc_pattern'])
+assembly_multiqc_output = join(data_dir, assembly['assembly_patterns']['multiqc_pattern'])
 
 multiqc_image = container_image_name(biocontainers, 'multiqc')
 
@@ -208,6 +207,7 @@ workflows = config['workflows']
 
 directions = [readfilt['direction_labels']['forward'],
               readfilt['direction_labels']['reverse']]
+
 
 rule assembly_workflow_metaspades:
     """

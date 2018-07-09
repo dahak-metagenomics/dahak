@@ -2,49 +2,42 @@
 
 function main() {
     #taxclass_signatures
-    #taxclass_filter
-    taxclass_gather
-    #taxclass
+    #taxclass_gather
+    #taxclass_kaijureport
+    #taxclass_kaijureport_filtered
+    taxclass_kaijureport_filteredclass
 }
 
 function taxclass_signatures() {
-    snakemake -n -p taxonomic_classification_workflow_signatures
-    snakemake --forceall --dag taxonomic_classification_workflow_signatures | dot -Tpdf > dag_taxclass_sig.pdf
-    echo "----------------------"
-    echo "rule: taxonomic_classification_sig"
-    echo "task graph: dag_taxclass_sig.pdf"
-    echo "----------------------"
-    echo ""
+    doit taxonomic_classification_signatures_workflow
 }
 
 function taxclass_gather() {
-    snakemake -n -p taxonomic_classification_gather_workflow
-    snakemake --forceall --dag taxonomic_classification_gather_workflow | dot -Tpdf > dag_taxclass_gather.pdf
-    echo "----------------------"
-    echo "rule: taxonomic_classification_gather_workflow"
-    echo "task graph: dag_taxclass_gather.pdf"
-    echo "----------------------"
-    echo ""
+    doit taxonomic_classification_gather_workflow
 }
 
-function taxclass_filter() {
-    snakemake -n -p taxonomic_classification_filter_workflow
-    snakemake --forceall --dag taxonomic_classification_filter_workflow | dot -Tpdf > dag_taxclass_filter.pdf
-    echo "----------------------"
-    echo "rule: taxonomic_classification_filter_workflow"
-    echo "task graph: dag_taxclass_filter.pdf"
-    echo "----------------------"
-    echo ""
+function taxclass_kaijureport() {
+    doit taxonomic_classification_kaijureport_workflow
 }
 
-function taxclass() {
-    snakemake -n -p taxonomic_classification_workflow
-    snakemake --forceall --dag taxonomic_classification_workflow | dot -Tpdf > dag_taxclass.pdf
+function taxclass_kaijureport_filtered() {
+    doit taxonomic_classification_kaijureport_filtered_workflow
+}
+
+function taxclass_kaijureport_filteredclass() {
+    doit taxonomic_classification_kaijureport_filteredclass_workflow
+}
+
+function doit() {
+    target=$1
+    snakemake -n -p ${target}
+    snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
     echo "----------------------"
-    echo "rule: taxonomic_classification_workflow"
-    echo "task graph: dag_taxclass.pdf"
+    echo "rule: ${target}"
+    echo "task graph: dag_${target}.pdf"
     echo "----------------------"
     echo ""
 }
 
 main
+

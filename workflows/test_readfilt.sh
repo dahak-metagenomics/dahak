@@ -2,25 +2,24 @@
 
 function main() {
     pretrim
-    #posttrim
+    posttrim
 }
 
 function pretrim() {
-    snakemake -n -p read_filtering_pretrim_workflow
-    snakemake --forceall --dag read_filtering_pretrim_workflow | dot -Tpdf > dag_readfilt_pre.pdf
-    echo "----------------------"
-    echo "rule: read_filtering_workflow"
-    echo "task graph: dag_readfilt_pre.pdf"
-    echo "----------------------"
-    echo ""
+    doit "read_filtering_pretrim_workflow"
 }
 
 function posttrim() {
-    snakemake -n -p read_filtering_posttrim_workflow
-    snakemake --forceall --dag read_filtering_posttrim_workflow | dot -Tpdf > dag_readfilt_post.pdf
+    doit "read_filtering_posttrim_workflow"
+}
+
+function doit() {
+    target=$1
+    snakemake -n -p ${target}
+    snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
     echo "----------------------"
-    echo "rule: read_filtering_posttrim_workflow"
-    echo "task graph: dag_readfilt_post.pdf"
+    echo "rule: ${target}"
+    echo "task graph: dag_${target}.pdf"
     echo "----------------------"
     echo ""
 }

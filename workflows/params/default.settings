@@ -110,6 +110,9 @@ config_default = {
             "kvalues"       : [21,31,51],
             "qual"          : ["2","30"],
             #
+            # the signature file suffixes specified below 
+            # should match the scale and k values above.
+            #
             # sig_suffix is used to replace .fq.gz with a signature suffix
             "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
             #
@@ -202,12 +205,6 @@ config_default = {
             "pct_threshold" : 1
         },
 
-        "kaiju2krona" : {
-            #
-            # specify the taxonomic rank for kaiju2krona to use
-            "taxonomic_rank" : "genus"
-        },
-
         "kaiju" : {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
@@ -216,6 +213,16 @@ config_default = {
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "url"  : "http://kaiju.binf.ku.dk/database",
             "out"  : "{sample}.kaiju_output.trim{qual}.out"
+        },
+
+        "kaiju_report" : {
+            #
+            # specify the taxonomic rank for kaiju report to use
+            "taxonomic_rank" : "genus",
+            #
+            # if the user asks for a kaiju report with filtered taxa,
+            # use this as the percent threshold
+            "pct_threshold"  : 1
         },
 
         "sourmash" : { 

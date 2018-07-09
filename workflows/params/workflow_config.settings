@@ -20,38 +20,33 @@ config_default = {
             # the taxonomic classification workflow 
             # will be run on.
             # 
-            "sample"  : ["SRR606249_subset10"],
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_signatures_workflow" : {
-            #
-            # These parameters determine which samples
-            # the taxonomic classification workflow 
-            # will be run on.
-            # 
-            "sample"  : ["SRR606249_subset10"],
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_gather_workflow" : {
-            #
-            # These parameters determine which samples
-            # the taxonomic classification workflow 
-            # will be run on.
-            # 
             "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
             "qual" : ["2","30"],
             "kvalues" : ["21","31","51"]
         },
 
-        "taxonomic_classification_filtering_workflow" : {
-            #
-            # These parameters determine which samples
-            # the taxonomic classification filtering 
-            # workflow will be run on.
-            # 
-            "sample"  : ["SRR606249_subset10"],
+        "taxonomic_classification_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
             "qual" : ["2","30"],
         },
 
@@ -61,7 +56,7 @@ config_default = {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
             # 
-            "sample"    : ["srr606249_subset10","srr606249_subset25"],
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
             "qual"      : ["2","30"],
         },
 

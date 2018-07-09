@@ -1,37 +1,30 @@
 #!/bin/bash
 
 function main() {
-    #comparisonread
-    #comparisonassembly
+    comparisonread
+    comparisonassembly
     comparisonall
 }
 
 function comparisonread() {
-    snakemake -n -p comparison_workflow_reads
-    snakemake --forceall --dag comparison_workflow_reads  | dot -Tpdf > dag_comp_reads.pdf
-    echo "----------------------"
-    echo "rule: comparison_workflow_reads"
-    echo "task graph: dag_comp_reads.pdf"
-    echo "----------------------"
-    echo ""
+    doit "comparison_workflow_reads"
 }
 
 function comparisonassembly() {
-    snakemake -n -p comparison_workflow_assembly
-    snakemake --forceall --dag comparison_workflow_assembly  | dot -Tpdf > dag_comp_assembly.pdf
-    echo "----------------------"
-    echo "rule: comparison_workflow_assembly"
-    echo "task graph: dag_comp_assembly.pdf"
-    echo "----------------------"
-    echo ""
+    doit "comparison_workflow_assembly"
 }
 
 function comparisonall() {
-    snakemake -n -p comparison_workflow_reads_assembly
-    snakemake --forceall --dag comparison_workflow_reads_assembly  | dot -Tpdf > dag_comp_reads_assembly.pdf
+    doit "comparison_workflow_reads_assembly"
+}
+
+function doit() {
+    target=$1
+    snakemake -n -p ${target}
+    snakemake --forceall --dag ${target} | dot -Tpdf > dag_${target}.pdf
     echo "----------------------"
-    echo "rule: comparison_workflow_reads_assembly"
-    echo "task graph: dag_comp_reads_assembly.pdf"
+    echo "rule: ${target}"
+    echo "task graph: dag_${target}.pdf"
     echo "----------------------"
     echo ""
 }

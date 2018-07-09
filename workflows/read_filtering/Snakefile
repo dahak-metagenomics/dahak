@@ -60,6 +60,7 @@ def download_reads_read_data_file(wildcards):
     # Get the relative path and do wildcard substitution
     return pre_trimming_relative_path.format(**wildcards)
 
+
 rule download_reads:
     """
     Fetch user-requested files from OSF containing reads that will be used in
