@@ -7,38 +7,6 @@ config_default = {
     "data_dir" : "data",
     "assembly_dir" : "assembly",
 
-    "files" : {
-        #
-        # URLs for full and subsampled reads
-        # these must match the pre_trimming pattern given below
-        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
-        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
-        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
-        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-        "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
-        "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77",
-        #
-        # URLs for reads that have already been trimmed
-        "SRR606249_1.trim2.fq.gz":             "osf.io/tzkjr/download",
-        "SRR606249_2.trim2.fq.gz":             "osf.io/sd968/download",
-        "SRR606249_subset50_1.trim2.fq.gz":    "osf.io/acs5k/download",
-        "SRR606249_subset50_2.trim2.fq.gz":    "osf.io/bem28/download",
-        "SRR606249_subset25_1.trim2.fq.gz":    "osf.io/syf3m/download",
-        "SRR606249_subset25_2.trim2.fq.gz":    "osf.io/zbcrx/download",
-        "SRR606249_subset10_1.trim2.fq.gz":    "osf.io/ksu3e/download",
-        "SRR606249_subset10_2.trim2.fq.gz":    "osf.io/k9tqn/download",
-        "SRR606249_1.trim30.fq.gz":            "osf.io/qtzyk/download",
-        "SRR606249_2.trim30.fq.gz":            "osf.io/dumz6/download",
-        "SRR606249_subset50_1.trim30.fq.gz":   "osf.io/v5jhs/download",
-        "SRR606249_subset50_2.trim30.fq.gz":   "osf.io/q4cfa/download",
-        "SRR606249_subset25_1.trim30.fq.gz":   "osf.io/jcp5n/download",
-        "SRR606249_subset25_2.trim30.fq.gz":   "osf.io/qevh9/download",
-        "SRR606249_subset10_1.trim30.fq.gz":   "osf.io/rtvuz/download",
-        "SRR606249_subset10_2.trim30.fq.gz":   "osf.io/zq4f9/download"
-    },
-
     "biocontainers" : {
         "sourmash" : {
             "use_local" : False,
@@ -208,10 +176,10 @@ config_default = {
         "kaiju" : {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk.tgz",
-            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "fmi"  : "kaiju_db_nr.fmi",
+            "tar"  : "kaiju_index_nr.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
+            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "out"  : "{sample}.kaiju_output.trim{qual}.out"
         },
 
@@ -260,7 +228,7 @@ config_default = {
         "read_patterns" : {
             #
             # filename pattern for pre-trimmed reads
-            # Note: the files section (top) listing URLS for read files
+            # Note: the read files section listing URLS for read files
             # MUST match the pre_trimmming_pattern.
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #

@@ -7,8 +7,9 @@ wildcard_constraints:
     assembler="\w+",
     sample="\w+"
 
-include: "params/workflow_config.settings"
-include: "params/default.settings"
+include: "config/default_datafiles.settings"
+include: "config/default_parameters.settings"
+include: "config/default_workflows.settings"
 
 include: "read_filtering/Snakefile"
 include: "assembly/Snakefile"
