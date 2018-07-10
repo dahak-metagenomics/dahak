@@ -102,6 +102,10 @@ quality assessment):
 }
 ```
 
+The `sample` list specifies the prefixes of the sample reads to 
+run the read filtering workflow on. The `qual` list specifies the 
+values to use for quality trimming (for the post-trimming workflow).
+
 Put these in a JSON file (e.g., `config/custom_workflowconfig.json` 
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
@@ -148,9 +152,31 @@ to a dictionary containing various child dictionaries and key-value pairs:
 }
 ```
 
-Put these in a JSON file (e.g., `config/custom_workflowparams.json` 
-in the `workflows` directory) and pass the name of the config file
-to Snakemake using the `--configfile` flag:
+The `pre_trimming_pattern` must match the filename pattern of the reads 
+that are provided in the `files` key. The `{sample}` and `{direction}`
+notation is for Snakemake to match wildcards. For example, the pattern
+
+```
+{sample}_{direction}_reads.fq.gz
+```
+
+match the filename
+
+```
+SRR606249_subset10_1_reads.fq.gz
+```
+
+such that the wildcard values are `sample=SRR606249_subset10`
+and `direction=1`.
+
+The `direction_labels` key is used to indicate the suffix used for
+forward and reverse reads; this is typically `1` and `2` but can be
+customized by the user if needed.
+
+To use custom values for these parameters, put the configuration dictionary
+above (or any subset of it) into a JSON file (e.g.,
+`config/custom_workflowparams.json` in the `workflows` directory) and pass the
+name of the config file to Snakemake using the `--configfile` flag:
 
 ```
 $ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>

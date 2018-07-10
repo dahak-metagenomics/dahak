@@ -145,7 +145,6 @@ as shown below:
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_read_signatures" : {
-            "kvalues" : [21, 31, 51],
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
             "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
@@ -157,7 +156,6 @@ as shown below:
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_assembly_signatures" : {
-            "kvalues"   : [21, 31, 51],
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
             "assembler" : ["megahit","metaspades"],
             "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
@@ -172,9 +170,16 @@ as shown below:
 }
 ```
 
-Put these in a JSON file (e.g., `config/custom_workflowparams.json` 
-in the `workflows` directory) and pass the name of the config file
-to Snakemake using the `--configfile` flag:
+(Note that there are multiple "k values" being specified here, but these
+correspond to different steps in the workflow. The `kvalues` key in
+the `compute_read_signatures` and `compute_assembly_signatures` section
+provides the k values used in the intermediate steps of the workflow,
+and should be a superset of the the k values provided to the build rule.
+
+To use custom values for these parameters, put the configuration dictionary
+above (or any subset of it) into a JSON file (e.g.,
+`config/custom_workflowparams.json` in the `workflows` directory) and pass the
+name of the config file to Snakemake using the `--configfile` flag:
 
 ```
 $ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>

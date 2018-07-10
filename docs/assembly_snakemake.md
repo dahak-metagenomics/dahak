@@ -146,9 +146,10 @@ as shown below:
 }
 ```
 
-Put these in a JSON file (e.g., `config/custom_workflowparams.json` 
-in the `workflows` directory) and pass the name of the config file
-to Snakemake using the `--configfile` flag:
+To use custom values for these parameters, put the configuration dictionary
+above (or any subset of it) into a JSON file (e.g.,
+`config/custom_workflowparams.json` in the `workflows` directory) and pass the
+name of the config file to Snakemake using the `--configfile` flag:
 
 ```
 $ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
