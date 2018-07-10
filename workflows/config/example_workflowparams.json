@@ -1,70 +1,65 @@
-from snakemake.utils import update_config
-
-# Note: don"t include http:// or https://
-config_default = {
-
-    # the name of the directory where everything is being stored
+{
     "data_dir" : "data",
     "assembly_dir" : "assembly",
 
     "biocontainers" : {
         "sourmash" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/sourmash",
             "version" : "2.0.0a3--py36_0"
         },
         "sourmash_compare" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/sourmash",
             "version" : "2.0.0a3--py36_0"
         },
         "trimmomatic" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/trimmomatic",
             "version" : "0.36--5"
         },
         "fastqc" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/fastqc",
             "version" : "0.11.7--pl5.22.0_2"
         },
         "khmer" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/khmer",
             "version" : "2.1.2--py35_0"
         },
         "kaiju" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/kaiju",
             "version" : "1.6.1--pl5.22.0_0"
         },
         "krona" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
         },
         "metaspades" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/spades",
             "version" : "3.11.1--py27_zlib1.2.8_0"
         },
         "megahit" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/megahit",
             "version" : "1.1.2--py35_0"
         },
         "quast" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/quast",
             "version" : "4.5--boost1.61_1"
         },
         "multiqc" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/biocontainers/multiqc",
             "version" : "1.4--py35_0"
         },
         "osf" : {
-            "use_local" : False,
+            "use_local" : false,
             "quayurl" : "quay.io/centerforopenscience/osf",
             "version" : "master"
         }
@@ -72,65 +67,34 @@ config_default = {
 
     "comparison" : {
         "compute_read_signatures" : {
-            #
-            # specify scale and k values for computing signatures
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
             "qual"          : ["2","30"],
-            #
-            # the signature file suffixes specified below 
-            # should match the scale and k values above.
-            #
-            # sig_suffix is used to replace .fq.gz with a signature suffix
             "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
-            #
-            # merge_suffix is used to replace .fq.gz with a merge file suffix
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_read_signatures" : {
-            #
-            # the samples and quality variables are used in expand() to form filenames
+            "kvalues" : [21, 31, 51],
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
-            # 
-            # csv_out is the single output file containing comparisons of all input files.
-            # {kvalue} is replaced with the k value used in the comparison.
-            # note that the file prefix does not need to be/should not be modified.
             "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
-            # 
-            # specify scale and k values for computing signatures
             "scale"         : 10000,
             "kvalues"       : [21,31,51],
             "qual"          : ["2","30"],
-            #
-            # sig_suffix is used to replace .fq.gz with a signature suffix
             "sig_suffix" : "_scaled10k.k21_31_51.sig",
-            #
-            # merge_suffix is used to replace .fq.gz with a merge file suffix
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_assembly_signatures" : {
-            #
-            # the samples and quality variables are used in expand() to form filenames
+            "kvalues"   : [21, 31, 51],
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
             "assembler" : ["megahit","metaspades"],
-            #
-            # csv_out is the single output file containing comparisons of all input files
-            # {kvalue} is replaced with the k value used in the comparison
             "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
         },
         "compare_read_assembly_signatures" : {
-            #
-            # the samples, quality, assembler variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
-            #
-            # k values are passed to sourmash compare
             "kvalues"   : [21, 31, 51],
-            #
-            # csv_out is the single output file containing
-            # comparison results among all of the above files.
             "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
         }
     },
@@ -138,20 +102,10 @@ config_default = {
 
     "assembly" : {
         "assembly_patterns" : {
-            # 
-            # filename pattern for metaspades output
             "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
-            #
-            # filename pattern for megahit output
             "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
-            #
-            # general assembler output filename pattern
             "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
-            #
-            # quast output filename pattern
             "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
-            #
-            # multiqc output filename pattern
             "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
         }
     },
@@ -160,71 +114,43 @@ config_default = {
     "taxonomic_classification" : {
 
         "filter_taxa" : {
-            #
-            # percent threshold for taxa filtering
             "pct_threshold" : 1
         },
 
         "kaiju" : {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk_2018-02-23.tgz",
+            "fmi"  : "kaiju_db_nr.fmi",
+            "tar"  : "kaiju_index_nr.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
-            "out"  : "{sample}.kaiju_output.trim{qual}.out"
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "out"  : "{sample}.kaiju_output.trim{qual}.out"
         },
 
         "kaiju_report" : {
-            #
-            # specify the taxonomic rank for kaiju report to use
             "taxonomic_rank" : "genus",
-            #
-            # if the user asks for a kaiju report with filtered taxa,
-            # use this as the percent threshold
             "pct_threshold"  : 1
         },
 
         "sourmash" : { 
-            #
-            # URL base for SBT tree
             "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
-            # 
-            # name of SBT tar file
             "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
-            #
-            # name of SBT file when unpacked
             "sbtunpack" : "{database}-k{kvalue}.sbt.json",
-            #
-            # names of valid databases
             "databases" : ["genbank","refseq"],
-            #
-            # output csv name for sourmash gather procedure
             "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
             "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
             "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
         },
 
         "visualize_krona" : {
-            #
-            # .summary will be replaced with .html for the final report
             "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
         }
     },
 
 
     "read_filtering" : {
-        # 
-        # The read filtering workflow actually builds the rules to download 
-        # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
-            #
-            # filename pattern for pre-trimmed reads
-            # Note: the read files section listing URLS for read files
-            # MUST match the pre_trimmming_pattern.
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
-            #
-            # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
         },
 
@@ -234,34 +160,20 @@ config_default = {
         },
 
         "quality_assessment" : {
-            #
-            # optional, modifiers for the .fq.gz --> .zip --> results workflow
             "fastqc_suffix": "fastqc",
         },
 
         "quality_trimming" : {
-            # 
-            # suffix for quality trimming files (replaces .fq.gz)
             "trim_suffix" : "se"
         },
 
         "interleaving" : {
-            # 
-            # suffix for interleaved reads files (replaces .fq.gz)
             "interleave_suffix" : "pe"
         },
 
-        #
-        # Set the read adapter file
         "adapter_file" : {
-            # 
-            # name and URL for the sequencer adapter file
             "name" : "TruSeq2-PE.fa",
             "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
         }
     }
 }
-
-update_config(config_default, config)
-config = config_default
-
