@@ -38,7 +38,7 @@ Targets for each workflow are listed on the respective
 
 There are two types of targets defined:
 
-**Target Files:** The user can ask Snakemake to generate a paritcular file, and
+**Target Files:** The user can ask Snakemake to generate a particular file, and
 Snakemake will dynamically determine the rules that are required to generate the
 requested file. Snakemake uses a dependency graph to determine what rules to run
 to generate the file.
@@ -53,7 +53,7 @@ assembling filenames and passing target filenames to Snakemake.)
 Users should use the build rules to trigger workflows.
 
 The build rules require workflow configuration details to be
-set using snakemake's configuration dictionary. See 
+set using Snakemake's configuration dictionary. See 
 
 Each workflow has a set of "build rules" that will trigger
 rules for a given workflow or portion of a workflow. Available
@@ -177,5 +177,5 @@ look like this:
 $ SINGULARITY_BINDPATH="data:/data" snakemake \
     --configfile my_workflow_params.json \
     --use-singularity \
-    <snakemake-target>
+    <target>
 ``` 
