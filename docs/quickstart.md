@@ -1,14 +1,10 @@
 # Quick Start
 
-A flowchart illustrating how each workflow component fits 
-together with tools into the overall process is included below:
+## Getting Set Up to Run Workflows
 
-![workflow flowchart](img/WorkflowFlowchartOriginal.png)
-
-
-# Getting Your Workflow Set Up
-
-## How do I run workflows?
+**NOTE:** This guide assumes familiarity with Dahak workflows and how they work.
+For a more clear explanation of what's going on and how things work, see the 
+start with the [Running Workflows](running_workflows.md) page.
 
 Start by cloning a copy of the repository:
 
@@ -22,6 +18,9 @@ then move into the `workflows/` directory in the Dahak repository:
 $ cd dahak/workflows/
 ```
 
+The quick start assumes that all commands are run from the `workflows/` directory
+unless stated otherwise.
+
 As covered on the [Running Workflows](running_workflows.md) page, workflows are
 run by using Snakemake from the command line. The basic syntax is:
 
@@ -34,43 +33,34 @@ Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html#all-option
 page of the Snakemake documentation for a full list of options that can be used
 with Snakemake.)
 
-Passing the `--config` flag to Snakemake allows users to specify configuration
-variables that are passed on to Snakemake and used to assemble and carry out
-workflow tasks.
+The most important flag to pass is the `--config` flag, which allows users to
+specify a Snakemake configuration dictionary to customize their Dahak workflows.
 
-To run via Singularity, set the `SINGULARLITY_BINDPATH` variable (below we tell
-Singularity to bind-mount the local `data/` directory into the container at `/data`)
-and pass the `--use-singularity` flag to Snakemake:
+The user should also pass the `--use-singularity` flag to tell Snakemake to use
+Singularity containers. This also requires the `SINGULARITY_BINDPATH` variable
+to be set, to bind-mount a local directory into the container. 
+
+The user should use build targets. Each workflow's build targets and details
+are listed on the respective workflow's Snakkemake Rules" page.
+
+All together, commands to run Dahak workflows will look like this:
 
 ```bash
-$ SINGULARITY_BINDPATH="data:/data" snakemake --use-singularity \
+$ SINGULARITY_BINDPATH="data:/data" \
+        snakemake --use-singularity \
         [FLAGS] <target>
 ```
 
 
-## How do I customize my workflow?
+## Configuring Snakemake
 
-You can customize your workflow using the Snakemake configuration dictionary.
-This can be set by setting key-value pairs in a JSON file and passing the JSON
-file to Snakemake via the `--config` command line option:
+See [Configuring Snakemake](config.md) for more details about Snakemake
+configuration files. We cover the basics below.
 
-```
-$ snakemake --config=config/custom_datafiles.json  [FLAGS]  <targets>
-```
+### How do I specify my data files?
 
-See the [Workflow Configuration](config.md) page or the examples below 
-for details.
-
-
-## How do I specify my data files?
-
-To set the names and URLs of read files, set the `files` key in the Snakemake
-configuration dictionary to a list of key-value pairs, where the key is the 
-name of the read file and the value is the URL of the file (do not include 
-`http://` or `https://` in the URL).
-
-For example, the following JSON block will provide a list of reads and their
-corresponding URLs:
+Specify the locations of your data files by assigning a key-value map
+(keys are filenames, values are URLs) to the `files` key:
 
 ```
 {
@@ -87,65 +77,95 @@ corresponding URLs:
 }
 ```
 
-This can be placed in a JSON file like `dahak/workflows/config/custom_datafiles.json` 
-and passed to Snakemake using the `--config` flag like:
+If your read files are present locally, they must be in the same
+directory as the Snakemake working directory, which is specified by
+the `data_dir` key.
 
-```
-$ snakemake --config=config/custom_datafiles.json \
-        [FLAGS] <target>
-```
+!!! warning "Example"
 
-**NOTE:** The read trimming workflow assumes the read files are not available
-locally and uses a rule to download them from the given URL using `wget` if they
-are not present.  If your read files *are* present locally, they must be placed
-in the working directory (`data/` by default, also see the "Where will data
-files live?" section below). If the read files are present, Snakemake will not
-run the rule to download read files, so you can use an empty string for the URL.
+    Also see [workflows/config/example_datafiles.json](#)
+    in the Dahak repository.
 
 
-## What targets do I use?
+### How do I specify my workflow configuration?
 
-Each workflow has a set of "build rules" that will trigger
-all rules required to run a particular workflow.
+The workflow configuration is the section of the Snakemake configuration file
+where you specify any information that will end up in the final file name of the
+file that the workflow generates. This is generally a small number of parameters.
 
-Each workflow lists the available build rules on the respective
-"Snakemake Rules" page for that workflow (see left side navigation menu).
-The build rules require some information about which read files
-to run the workflow on; the information required is covered on
-each "Snakemake Rules" page.
+Each workflow has different build rules requiring different information.
+See the "Snakemake Rules" page for a list of available build rules.
+See the "Snakemake Configuration" page for a list of key-value pairs the
+build rule extracts from the Snakemake configuration dictionary.
 
-We also cover usage of several build rules below.
-
-
-## How do I specify workflow parameters?
-
-The default workflow parameter values are set in `default_workflowparams.settings`.
-Any of these values can be overridden using a custom JSON file, as described
-above and on the [Workflow Configuration](config.md) page. For example,
-the default version of trimmomatic used is 0.36, obtained from the biocontainers
-project. To override the version of trimmomatic, the following JSON file
-could be used:
+For example, to evaluate the quality of reads from a sequencer before
+quality trimming, we can configure the `read_filtering_pretrim_workflow`
+Snakemake rule is used, and the workflow configuration JSON looks like this:
 
 ```
 {
-    "biocontainers" : {
-        "trimmomatic" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/trimmomatic",
-            "version" : "0.38--5"
+    "workflows" : {
+        "read_filtering_pretrim_workflow" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
         }
     }
 }
 ```
 
-This can be placed in a JSON file like `dahak/workflows/config/custom_workflowparams.json` 
-and passed to Snakemake using the `--config` flag like:
+To evaluate the quality of reads from a sequencer after quality trimming, the
+`read_filtering_posttrim_workflow` Snakemake rule is used, and the workflow
+configuration JSON looks like this:
 
 ```
-$ snakemake --config=config/custom_workflowparams.json \
-        [FLAGS] <target>
+{
+    "workflows" : {
+        "read_filtering_posttrim_workflow" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"   : ["2","30"]
+        },
+    }
+}
 ```
 
+
+
+The `sample` list specifies the prefixes of the sample reads to 
+run the read filtering workflow on.
+
+
+
+!!! warning "Example"
+
+    Also see [workflows/config/example_workflowconfig.json](#)
+    in the Dahak repository.
+
+
+## How do I specify my workflow parameters?
+
+
+
+
+!!! warning "Example"
+
+    Also see [workflows/config/example_datafiles.json](#)
+    in the Dahak repository.
+
+
+
+
+
+
+
+
+## How do I specify workflow parameters?
+
+See the [Running Workflows](running_workflows.md) and 
+[Snakemake Configuration](config.md) pages for details.
+
+
+## What targets do I use?
+
+See [Running Workflows](running_workflows.md)
 
 ## Where will data files live?
 

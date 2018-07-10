@@ -53,7 +53,7 @@ singularity --version
 ```
 
 
-## (Optional) Docker
+### (Optional) Docker
 
 If you wish to follow along with the walkthroughs, which cover the use of
 Docker containers to run the workflows interactively, you will need to install

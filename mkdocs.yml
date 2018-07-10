@@ -19,33 +19,29 @@ pages:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
   - 'Running Workflows' : 'running_workflows.md'
+  - 'Workflow Configuration' : 'config.md'
   - 'Quick Start' : 'quickstart.md'
 
   - 'Read Filtering':
     - 'Overview' : 'readfilt_overview.md'
     - 'Walkthrough' : 'readfilt_walkthru.md'
-    - 'Snakemake Rules' : 'readfilt_snakemake.md'
-    - 'Snakemake Configuration' : 'readfilt_config.md'
+    - 'Snakemake' : 'readfilt_snakemake.md'
 
   - 'Assembly':
     - 'Overview' : 'assembly_overview.md'
     - 'Walkthrough' : 'assembly_walkthru.md'
-    - 'Snakemake Rules' : 'assembly_snakemake.md'
-    - 'Snakemake Configuration' : 'assembly_config.md'
+    - 'Snakemake' : 'assembly_snakemake.md'
 
   - 'Comparison':
     - 'Overview' : 'comparison_overview.md'
     - 'Walkthrough' : 'comparison_walkthru.md'
-    - 'Snakemake Rules' : 'comparison_snakemake.md'
-    - 'Snakemake Configuration' : 'comparison_config.md'
+    - 'Snakemake' : 'comparison_snakemake.md'
 
   - 'Taxonomic Classification':
     - 'Overview' : 'taxclass_overview.md'
     - 'Walkthrough' : 'taxclass_walkthru.md'
-    - 'Snakemake Rules' : 'taxclass_snakemake.md'
-    - 'Snakemake Configuration' : 'taxclass_config.md'
+    - 'Snakemake' : 'taxclass_snakemake.md'
 
-  - 'Parameters and Configuration' : 'config.md'
   - 'Contributing' : 'contrib.md'
 
 theme:
