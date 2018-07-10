@@ -74,7 +74,6 @@
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_read_signatures" : {
-            "kvalues" : [21, 31, 51],
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
             "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
@@ -86,7 +85,6 @@
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_assembly_signatures" : {
-            "kvalues"   : [21, 31, 51],
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
             "assembler" : ["megahit","metaspades"],
             "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
