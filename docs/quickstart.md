@@ -1,7 +1,7 @@
 # Quick Start
 
 Note for the *very* impatient: skip straight to [The Really Quick Copy And Paste
-Quick Start](#the-really-quick-copy-and-paste-quickstart) section.
+Quick Start](#the-really-quick-copy-and-paste-quick-start) section.
 
 ## Getting Set Up to Run Workflows
 
