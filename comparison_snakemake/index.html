@@ -823,7 +823,6 @@ as shown below:</p>
             &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
         },
         &quot;compare_read_signatures&quot; : {
-            &quot;kvalues&quot; : [21, 31, 51],
             &quot;samples&quot; : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
             &quot;csv_out&quot; : &quot;SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv&quot;
         },
@@ -835,7 +834,6 @@ as shown below:</p>
             &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
         },
         &quot;compare_assembly_signatures&quot; : {
-            &quot;kvalues&quot;   : [21, 31, 51],
             &quot;samples&quot;   : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
             &quot;assembler&quot; : [&quot;megahit&quot;,&quot;metaspades&quot;],
             &quot;csv_out&quot;   : &quot;SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv&quot;
@@ -851,6 +849,11 @@ as shown below:</p>
 </pre></div>
 
 
+<p>(Note that there are multiple "k values" being specified here, but these
+correspond to different steps in the workflow. The <code>kvalues</code> key in
+the <code>compute_read_signatures</code> and <code>compute_assembly_signatures</code> section
+provides the k values used in the intermediate steps of the workflow,
+and should be a superset of the the k values provided to the build rule.</p>
 <p>Put these in a JSON file (e.g., <code>config/custom_workflowparams.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
