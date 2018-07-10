@@ -633,7 +633,7 @@ rule taxonomic_classification_gather_workflow:
 
 rule taxonomic_classification_kaijureport_workflow:
     """
-    Run kaiju
+    Run kaiju and generate a report from all results.
     """
     input:
         expand( kaiju_report_output_file,

@@ -89,10 +89,6 @@ config_default = {
         },
         "compare_read_signatures" : {
             #
-            # scale value comes from above, not specified here.
-            # the k values below must be a subset of the k values above.
-            "kvalues" : [21, 31, 51],
-            #
             # the samples and quality variables are used in expand() to form filenames
             "samples" : ["SRR606249_subset10","SRR606249_subset25"],
             # 
@@ -115,10 +111,6 @@ config_default = {
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
         },
         "compare_assembly_signatures" : {
-            #
-            # scale value comes from above, not specified here.
-            # the k values below must be a subset of the k values above.
-            "kvalues"   : [21, 31, 51],
             #
             # the samples and quality variables are used in expand() to form filenames
             "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
