@@ -16,7 +16,8 @@ You can replace `<target>` with any of the build rules below.
 ## Build Rules
 
 The build rules are the rules that the end user should be calling.
-A list of available build rules in the read filtering workflow:
+A list of available build rules in the read filtering workflow is
+given below.
 
 ```
 read_filtering_pretrim_workflow
@@ -33,9 +34,7 @@ Pass the name of the build rule directly to Snakemake
 on the command line:
 
 ```
-$ snakemake [FLAGS] read_filtering_pretrim_workflow
-
-$ snakemake [FLAGS] read_filtering_posttrim_workflow
+$ snakemake [FLAGS] read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
 
 See the [Quick Start](quickstart.md) for details on the process of running this workflow.
@@ -84,7 +83,8 @@ configuration values are values that will end up in the final output file's
 filename.
 
 Here is the structure of the configuration dictionary
-for the read filtering workflow:
+for read filtering workflows (pre-trimming and post-trimming
+quality assessment):
 
 ```
 {
