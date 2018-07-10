@@ -112,6 +112,12 @@ for assembly workflows:
 }
 ```
 
+The `sample` and `qual` keys are used by Snakemake to generate a list of
+input files required for the rule, and to generate the name of the output
+file from the workflow. These should be lists of strings. `sample` should
+match the read files listed in the `files` section, while `qual` should be 
+the quality trimming value to use.
+
 Put these in a JSON file (e.g., `config/custom_workflowconfig.json` 
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
@@ -147,6 +153,4 @@ to Snakemake using the `--configfile` flag:
 ```
 $ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
 ```
-
-
 

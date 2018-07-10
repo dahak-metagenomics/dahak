@@ -242,6 +242,9 @@ $ SINGULARITY_BINDPATH="work:/work" \
         [FLAGS] <target>
 ```
 
+<br />
+<br />
+
 ## The Really Quick Copy-And-Paste Quick Start
 
 Now that we've provided some examples that you can use, let's run through
@@ -323,7 +326,9 @@ Now create a configuration JSON file that:
 
 Put this file into `config/custom_readfilt_workflow.json` (in the `workflows`
 directory of the repository). We want to run two workflows: one pre-trimming
-quality assessment, and one post-trimming quality assessment.
+quality assessment, and one post-trimming quality assessment, so we call
+Snakemake and pass it two build targets: `read_filtering_pretrim_workflow`
+and `read_filtering_posttrim_workflow`.
 
 We add two flags to the Snakemake command: `-n` and `-p`.
 
@@ -369,4 +374,91 @@ $ snakemake -p \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
+
+<br />
+<br />
+
+### Assembly
+
+We will run two assembler workflows using the two assemblers
+implemented in Dahak, SPAdes and Megahit.
+
+Before you begin, make sure you have everything listed on the
+[Installing](installing.md) page available on your command line.
+
+If you have not already, clone a copy of the repository and move
+to the `workflows/` directory:
+
+```
+$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+$ cd dahak/workflows/
+```
+
+Now create a configuration JSON file that:
+
+* Provides URLs at which each read filtering file can be accessed
+* Provides a set of 
+* Sets all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)
+
+
+```
+{
+    "files" : {
+        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486"
+    },
+
+    "workflows" : {
+        "assembly_workflow_all" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"],
+        }
+    },
+
+    "assembly" : {
+        "assembly_patterns" : {
+            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
+        }
+    },
+
+}
+```
+
+Put this file into `config/custom_assembly_workflow.json` (in the `workflows`
+directory of the repository). We want to run the assembly workflow with
+two assemblers, so we call Snakemake and the `assembly_workflow_all` target.
+
+```
+$ export SINGULARITY_BINDPATH="data:/data"
+
+$ snakemake -p -n \
+        --configfile=config/custom_assembly_workflow.json \
+        assembly_workflow_all
+```
+
+Once we have reviewed the output from Snakemake and are satisfied
+it is running the correct workflow and commands, we can actually
+run the workflow by removing the `-n` flag: 
+
+```
+$ export SINGULARITY_BINDPATH="data:/data"
+
+$ snakemake -p \
+        --configfile=config/custom_assembly_workflow.json \
+        assembly_workflow_all
+```
+
+<br />
+<br />
+
+
 
