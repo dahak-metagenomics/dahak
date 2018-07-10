@@ -477,8 +477,8 @@ rule read_filtering_pretrim_workflow:
     """
     input:
         expand( pre_trimming_outputs,
-                sample    = workflows['read_filtering_workflow']['sample'],
-                direction = directions,
+                sample    = workflows['read_filtering_pretrim_workflow']['sample'],
+                direction = directions
         )
 
 rule read_filtering_posttrim_workflow:
@@ -487,8 +487,8 @@ rule read_filtering_posttrim_workflow:
     """
     input:
         expand( post_trimming_outputs,
-                sample    = workflows['read_filtering_workflow']['sample'],
-                qual      = workflows['read_filtering_workflow']['qual'],
+                sample    = workflows['read_filtering_posttrim_workflow']['sample'],
+                qual      = workflows['read_filtering_posttrim_workflow']['qual'],
                 direction = directions, 
         )
 
