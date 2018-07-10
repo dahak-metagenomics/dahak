@@ -376,6 +376,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#assembly" title="Assembly" class="md-nav__link">
+    Assembly
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -727,6 +734,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#assembly" title="Assembly" class="md-nav__link">
+    Assembly
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -953,6 +967,8 @@ passed to Snakemake via the <code>--configfile</code> flag:</p>
 </pre></div>
 
 
+<p><br />
+<br /></p>
 <h2 id="the-really-quick-copy-and-paste-quick-start">The Really Quick Copy-And-Paste Quick Start<a class="headerlink" href="#the-really-quick-copy-and-paste-quick-start" title="Permanent link">&para;</a></h2>
 <p>Now that we've provided some examples that you can use, let's run through
 the entire process start to finish to illustrate how this works.</p>
@@ -1027,7 +1043,9 @@ assessment of our reads both before and after quality trimming.</p>
 
 <p>Put this file into <code>config/custom_readfilt_workflow.json</code> (in the <code>workflows</code>
 directory of the repository). We want to run two workflows: one pre-trimming
-quality assessment, and one post-trimming quality assessment.</p>
+quality assessment, and one post-trimming quality assessment, so we call
+Snakemake and pass it two build targets: <code>read_filtering_pretrim_workflow</code>
+and <code>read_filtering_posttrim_workflow</code>.</p>
 <p>We add two flags to the Snakemake command: <code>-n</code> and <code>-p</code>.</p>
 <p><code>-n</code> does a <em>dry-run</em>, meaning Snakemake will print out what tasks it is
 going to run, but will not acutally run them.</p>
@@ -1066,6 +1084,84 @@ $ snakemake -p \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 </pre></div>
+
+
+<p><br />
+<br /></p>
+<h3 id="assembly">Assembly<a class="headerlink" href="#assembly" title="Permanent link">&para;</a></h3>
+<p>We will run two assembler workflows using the two assemblers
+implemented in Dahak, SPAdes and Megahit.</p>
+<p>Before you begin, make sure you have everything listed on the
+<a href="../installing/">Installing</a> page available on your command line.</p>
+<p>If you have not already, clone a copy of the repository and move
+to the <code>workflows/</code> directory:</p>
+<div class="codehilite"><pre><span></span>$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+$ cd dahak/workflows/
+</pre></div>
+
+
+<p>Now create a configuration JSON file that:</p>
+<ul>
+<li>Provides URLs at which each read filtering file can be accessed</li>
+<li>Provides a set of </li>
+<li>Sets all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)</li>
+</ul>
+<div class="codehilite"><pre><span></span>{
+    &quot;files&quot; : {
+        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
+        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
+        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
+        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
+        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
+        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;
+    },
+
+    &quot;workflows&quot; : {
+        &quot;assembly_workflow_all&quot; : {
+            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
+            &quot;qual&quot;      : [&quot;2&quot;,&quot;30&quot;],
+        }
+    },
+
+    &quot;assembly&quot; : {
+        &quot;assembly_patterns&quot; : {
+            &quot;metaspades_pattern&quot; : &quot;{sample}.trim{qual}_metaspades.contigs.fa&quot;,
+            &quot;megahit_pattern&quot; : &quot;{sample}.trim{qual}_megahit.contigs.fa&quot;,
+            &quot;assembly_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}.contigs.fa&quot;,
+            &quot;quast_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}_quast/report.html&quot;,
+            &quot;multiqc_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}_multiqc/report.html&quot;,
+        }
+    },
+
+}
+</pre></div>
+
+
+<p>Put this file into <code>config/custom_assembly_workflow.json</code> (in the <code>workflows</code>
+directory of the repository). We want to run the assembly workflow with
+two assemblers, so we call Snakemake and the <code>assembly_workflow_all</code> target.</p>
+<div class="codehilite"><pre><span></span>$ export SINGULARITY_BINDPATH=&quot;data:/data&quot;
+
+$ snakemake -p -n \
+        --configfile=config/custom_assembly_workflow.json \
+        assembly_workflow_all
+</pre></div>
+
+
+<p>Once we have reviewed the output from Snakemake and are satisfied
+it is running the correct workflow and commands, we can actually
+run the workflow by removing the <code>-n</code> flag: </p>
+<div class="codehilite"><pre><span></span>$ export SINGULARITY_BINDPATH=&quot;data:/data&quot;
+
+$ snakemake -p \
+        --configfile=config/custom_assembly_workflow.json \
+        assembly_workflow_all
+</pre></div>
+
+
+<p><br />
+<br /></p>
                 
                   
                 
