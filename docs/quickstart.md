@@ -138,7 +138,7 @@ $ SINGULARITY_BINDPATH="data:/data" \
 
 !!! warning "Examples in the Repository"
 
-    Also see [workflows/config/example_workflowconfig.json](#)
+    Also see [workflows/config/example_workflowconfig.json](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/example_workflowconfig.json)
     in the Dahak repository, as well as the "Snakemake" page 
     for each respective workflow.
 
@@ -201,10 +201,10 @@ for an explanation of each of the above options.)
 
 !!! warning "Examples in the Repository"
     
-    The [`workflows/config/example_workflowparams.json`](#)
+    The [`workflows/config/example_workflowparams.json`](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/example_workflowparams.json)
     file in the repository contains an example, but JSON files
     do not contain any comments. For a well-commented version,
-    check the `workflows/config/default_workflowparams.settings](#)
+    check the `workflows/config/default_workflowparams.settings](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/default_workflowparams.settings)
     file.
     
 ## Where will data files live?
@@ -247,6 +247,7 @@ $ SINGULARITY_BINDPATH="work:/work" \
 Now that we've provided some examples that you can use, let's run through
 the entire process start to finish to illustrate how this works.
 
+
 ### Read Filtering
 
 We will run two variations of the read filtering workflow, and perform a quality
@@ -267,12 +268,16 @@ then move into the `workflows/` directory of the Dahak repository:
 $ cd dahak/workflows/
 ```
 
-Now create a configuration JSON file that:
+Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:
 
 * Provides URLs at which each read filtering file can be accessed
 * Provides a set of quality trimming values to use (2 and 30)
 * Sets all read filtering parameters (for simplicity, we will set each
     parameter to its default value)
+
+(See the [Read Filtering Snakemake](readfilt_snakemake.md) page for details on
+these options.)
  
 ```
 {
@@ -293,6 +298,14 @@ Now create a configuration JSON file that:
             "sample"    : ["SRR606249_subset25","SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
+    },
+
+    "biocontainers" : {
+        "trimmomatic" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "version" : "0.36--5"
+        }
     },
 
     "read_filtering" : {
@@ -330,7 +343,7 @@ and `read_filtering_posttrim_workflow`.
 We add two flags to the Snakemake command: `-n` and `-p`.
 
 `-n` does a *dry-run*, meaning Snakemake will print out what tasks it is
-going to run, but will not acutally run them.
+going to run, but will not actually run them.
 
 `-p` tells Snakemake to print the shell commands that it will run for each
 workflow step. This is useful for understanding what Snakemake is doing
@@ -378,7 +391,7 @@ $ snakemake -p \
 ### Assembly
 
 We will run two assembler workflows using the two assemblers
-implemented in Dahak, SPAdes and Megahit.
+implemented in Dahak: SPAdes and Megahit.
 
 Before you begin, make sure you have everything listed on the
 [Installing](installing.md) page available on your command line.
@@ -391,13 +404,16 @@ $ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 $ cd dahak/workflows/
 ```
 
-Now create a configuration JSON file that:
+Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:
 
 * Provides URLs at which each read filtering file can be accessed
-* Provides a set of 
+* Provides a set of quality trimming values to use (2 and 30)
 * Sets all read filtering parameters (for simplicity, we will set each
     parameter to its default value)
 
+(See the [Assembly Snakemake](assembly_snakemake.md) page for details on
+these options.)
 
 ```
 {
@@ -414,6 +430,19 @@ Now create a configuration JSON file that:
         "assembly_workflow_all" : {
             "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
             "qual"      : ["2","30"],
+        }
+    },
+
+    "biocontainers" : {
+        "metaspades" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/spades",
+            "version" : "3.11.1--py27_zlib1.2.8_0"
+        },
+        "megahit" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/megahit",
+            "version" : "1.1.2--py35_0"
         }
     },
 
@@ -458,4 +487,103 @@ $ snakemake -p \
 <br />
 
 
+### Comparison
+
+In this section we will run a comparison workflow to compute signatures for 
+both filtered reads and assemblies, and compare the computed signatures to 
+a reference database.
+
+Before you begin, make sure you have everything listed on the
+[Installing](installing.md) page available on your command line.
+
+Start by cloning the repository and moving to the `workflows/` directory:
+
+```
+$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+$ cd dahak/workflows/
+```
+
+Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:
+
+* Provides URLs at which each read filtering file can be accessed
+* Provides a set of quality trimming values to use (2 and 30)
+* Sets all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)
+
+(See the [Comparison Snakemake](comparison_snakemake.md) page for details on
+these options.)
+
+```
+{
+    "files" : {
+        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486"
+    },
+
+    "workflows" : {
+        "comparison_workflow_reads_assembly" : {
+            "kvalue"    : ["21","31","51"],
+        }
+    },
+
+    "biocontainers" : {
+        "sourmash_compare" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        }
+    },
+
+    "comparison" : {
+        "compute_read_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compute_assembly_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix" : "_scaled10k.k21_31_51.sig",
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_read_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10"],
+            "assembler" : ["megahit","metaspades"],
+            "kvalues"   : [21, 31, 51],
+            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+        }
+    }
+}
+```
+
+Note that there are two additional keys within the `comparison` configuration 
+sub-dictionary, `compare_read_signatures` and `compare_assembly_signatures`,
+but these sections are only used when comparing *just* reads (when passing the 
+`comparison_workflow_reads` target to Snakemake) or when comparing *just*
+assemblies (when passing the `comparison_workflow_assembly` target to Snakemake).
+
+The JSON above can be put into the file `config/custom_comparison_workflow.json` 
+(in the `workflows` directory of the repository), and the workflow can be run by
+passing the config file to Snakemake. It is important you run with the `-n` flag
+to do a dry-run first!
+
+```
+$ export SINGULARITY_BINDPATH="data:/data"
+
+$ snakemake -p -n \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+
+$ snakemake -p \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+```
 
