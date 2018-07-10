@@ -4,14 +4,17 @@ config_default = {
 
     "workflows" : {
 
-        "read_filtering_workflow" : {
+        "read_filtering_pretrim_workflow" : {
             #
             # These parameters determine which samples
             # the read filtering workflow will be run on.
             # 
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
+        },
+
+        "read_filtering_posttrim_workflow" : {
             "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "qual"   : ["2","30"],
+            "qual"   : ["2","30"]
         },
 
         "taxonomic_classification_workflow" : {

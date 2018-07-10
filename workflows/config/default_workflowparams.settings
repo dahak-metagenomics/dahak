@@ -223,7 +223,7 @@ config_default = {
 
     "read_filtering" : {
         # 
-        # The workflow actually builds the rules to download 
+        # The read filtering workflow actually builds the rules to download 
         # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
             #
