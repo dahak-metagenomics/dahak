@@ -383,6 +383,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#comparison" title="Comparison" class="md-nav__link">
+    Comparison
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -741,6 +748,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#comparison" title="Comparison" class="md-nav__link">
+    Comparison
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -876,7 +890,7 @@ passed to Snakemake via the <code>--configfile</code> flag:</p>
 
 <div class="admonition warning">
 <p class="admonition-title">Examples in the Repository</p>
-<p>Also see <a href="#">workflows/config/example_workflowconfig.json</a>
+<p>Also see <a href="https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/example_workflowconfig.json">workflows/config/example_workflowconfig.json</a>
 in the Dahak repository, as well as the "Snakemake" page 
 for each respective workflow.</p>
 </div>
@@ -931,10 +945,10 @@ passed to Snakemake via the <code>--configfile</code> flag:</p>
 for an explanation of each of the above options.)</p>
 <div class="admonition warning">
 <p class="admonition-title">Examples in the Repository</p>
-<p>The <a href="#"><code>workflows/config/example_workflowparams.json</code></a>
+<p>The <a href="https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/example_workflowparams.json"><code>workflows/config/example_workflowparams.json</code></a>
 file in the repository contains an example, but JSON files
 do not contain any comments. For a well-commented version,
-check the `workflows/config/default_workflowparams.settings](#)
+check the `workflows/config/default_workflowparams.settings](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/default_workflowparams.settings)
 file.</p>
 </div>
 <h2 id="where-will-data-files-live">Where will data files live?<a class="headerlink" href="#where-will-data-files-live" title="Permanent link">&para;</a></h2>
@@ -985,13 +999,16 @@ assessment of our reads both before and after quality trimming.</p>
 </pre></div>
 
 
-<p>Now create a configuration JSON file that:</p>
+<p>Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:</p>
 <ul>
 <li>Provides URLs at which each read filtering file can be accessed</li>
 <li>Provides a set of quality trimming values to use (2 and 30)</li>
 <li>Sets all read filtering parameters (for simplicity, we will set each
     parameter to its default value)</li>
 </ul>
+<p>(See the <a href="../readfilt_snakemake/">Read Filtering Snakemake</a> page for details on
+these options.)</p>
 <div class="codehilite"><pre><span></span>{
     &quot;files&quot; : {
         &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
@@ -1010,6 +1027,14 @@ assessment of our reads both before and after quality trimming.</p>
             &quot;sample&quot;    : [&quot;SRR606249_subset25&quot;,&quot;SRR606249_subset10&quot;],
             &quot;qual&quot;   : [&quot;2&quot;,&quot;30&quot;]
         },
+    },
+
+    &quot;biocontainers&quot; : {
+        &quot;trimmomatic&quot; : {
+            &quot;use_local&quot; : false,
+            &quot;quayurl&quot; : &quot;quay.io/biocontainers/trimmomatic&quot;,
+            &quot;version&quot; : &quot;0.36--5&quot;
+        }
     },
 
     &quot;read_filtering&quot; : {
@@ -1046,7 +1071,7 @@ Snakemake and pass it two build targets: <code>read_filtering_pretrim_workflow</
 and <code>read_filtering_posttrim_workflow</code>.</p>
 <p>We add two flags to the Snakemake command: <code>-n</code> and <code>-p</code>.</p>
 <p><code>-n</code> does a <em>dry-run</em>, meaning Snakemake will print out what tasks it is
-going to run, but will not acutally run them.</p>
+going to run, but will not actually run them.</p>
 <p><code>-p</code> tells Snakemake to print the shell commands that it will run for each
 workflow step. This is useful for understanding what Snakemake is doing
 and what commands and options are being run.</p>
@@ -1088,7 +1113,7 @@ $ snakemake -p \
 <br /></p>
 <h3 id="assembly">Assembly<a class="headerlink" href="#assembly" title="Permanent link">&para;</a></h3>
 <p>We will run two assembler workflows using the two assemblers
-implemented in Dahak, SPAdes and Megahit.</p>
+implemented in Dahak: SPAdes and Megahit.</p>
 <p>Before you begin, make sure you have everything listed on the
 <a href="../installing/">Installing</a> page available on your command line.</p>
 <p>If you have not already, clone a copy of the repository and move
@@ -1098,13 +1123,16 @@ $ cd dahak/workflows/
 </pre></div>
 
 
-<p>Now create a configuration JSON file that:</p>
+<p>Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:</p>
 <ul>
 <li>Provides URLs at which each read filtering file can be accessed</li>
-<li>Provides a set of </li>
+<li>Provides a set of quality trimming values to use (2 and 30)</li>
 <li>Sets all read filtering parameters (for simplicity, we will set each
     parameter to its default value)</li>
 </ul>
+<p>(See the <a href="../assembly_snakemake/">Assembly Snakemake</a> page for details on
+these options.)</p>
 <div class="codehilite"><pre><span></span>{
     &quot;files&quot; : {
         &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
@@ -1119,6 +1147,19 @@ $ cd dahak/workflows/
         &quot;assembly_workflow_all&quot; : {
             &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
             &quot;qual&quot;      : [&quot;2&quot;,&quot;30&quot;],
+        }
+    },
+
+    &quot;biocontainers&quot; : {
+        &quot;metaspades&quot; : {
+            &quot;use_local&quot; : false,
+            &quot;quayurl&quot; : &quot;quay.io/biocontainers/spades&quot;,
+            &quot;version&quot; : &quot;3.11.1--py27_zlib1.2.8_0&quot;
+        },
+        &quot;megahit&quot; : {
+            &quot;use_local&quot; : false,
+            &quot;quayurl&quot; : &quot;quay.io/biocontainers/megahit&quot;,
+            &quot;version&quot; : &quot;1.1.2--py35_0&quot;
         }
     },
 
@@ -1160,6 +1201,97 @@ $ snakemake -p \
 
 <p><br />
 <br /></p>
+<h3 id="comparison">Comparison<a class="headerlink" href="#comparison" title="Permanent link">&para;</a></h3>
+<p>In this section we will run a comparison workflow to compute signatures for 
+both filtered reads and assemblies, and compare the computed signatures to 
+a reference database.</p>
+<p>Before you begin, make sure you have everything listed on the
+<a href="../installing/">Installing</a> page available on your command line.</p>
+<p>Start by cloning the repository and moving to the <code>workflows/</code> directory:</p>
+<div class="codehilite"><pre><span></span>$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+$ cd dahak/workflows/
+</pre></div>
+
+
+<p>Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:</p>
+<ul>
+<li>Provides URLs at which each read filtering file can be accessed</li>
+<li>Provides a set of quality trimming values to use (2 and 30)</li>
+<li>Sets all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)</li>
+</ul>
+<p>(See the <a href="../comparison_snakemake/">Comparison Snakemake</a> page for details on
+these options.)</p>
+<div class="codehilite"><pre><span></span>{
+    &quot;files&quot; : {
+        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
+        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
+        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
+        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
+        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
+        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;
+    },
+
+    &quot;workflows&quot; : {
+        &quot;comparison_workflow_reads_assembly&quot; : {
+            &quot;kvalue&quot;    : [&quot;21&quot;,&quot;31&quot;,&quot;51&quot;],
+        }
+    },
+
+    &quot;biocontainers&quot; : {
+        &quot;sourmash_compare&quot; : {
+            &quot;use_local&quot; : false,
+            &quot;quayurl&quot; : &quot;quay.io/biocontainers/sourmash&quot;,
+            &quot;version&quot; : &quot;2.0.0a3--py36_0&quot;
+        }
+    },
+
+    &quot;comparison&quot; : {
+        &quot;compute_read_signatures&quot; : {
+            &quot;scale&quot;         : 10000,
+            &quot;kvalues&quot;       : [21,31,51],
+            &quot;qual&quot;          : [&quot;2&quot;,&quot;30&quot;],
+            &quot;sig_suffix&quot;    : &quot;_scaled10k.k21_31_51.sig&quot;, 
+            &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
+        },
+        &quot;compute_assembly_signatures&quot; : {
+            &quot;scale&quot;         : 10000,
+            &quot;kvalues&quot;       : [21,31,51],
+            &quot;qual&quot;          : [&quot;2&quot;,&quot;30&quot;],
+            &quot;sig_suffix&quot; : &quot;_scaled10k.k21_31_51.sig&quot;,
+            &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
+        },
+        &quot;compare_read_assembly_signatures&quot; : {
+            &quot;samples&quot;   : [&quot;SRR606249_subset10&quot;],
+            &quot;assembler&quot; : [&quot;megahit&quot;,&quot;metaspades&quot;],
+            &quot;kvalues&quot;   : [21, 31, 51],
+            &quot;csv_out&quot;   : &quot;SRR606249_trim2and30_ra_comparison.k{kvalue}.csv&quot;
+        }
+    }
+}
+</pre></div>
+
+
+<p>Note that there are two additional keys within the <code>comparison</code> configuration 
+sub-dictionary, <code>compare_read_signatures</code> and <code>compare_assembly_signatures</code>,
+but these sections are only used when comparing <em>just</em> reads (when passing the 
+<code>comparison_workflow_reads</code> target to Snakemake) or when comparing <em>just</em>
+assemblies (when passing the <code>comparison_workflow_assembly</code> target to Snakemake).</p>
+<p>The JSON above can be put into the file <code>config/custom_comparison_workflow.json</code> 
+(in the <code>workflows</code> directory of the repository), and the workflow can be run by
+passing the config file to Snakemake. It is important you run with the <code>-n</code> flag
+to do a dry-run first!</p>
+<div class="codehilite"><pre><span></span>$ export SINGULARITY_BINDPATH=&quot;data:/data&quot;
+
+$ snakemake -p -n \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+
+$ snakemake -p \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+</pre></div>
                 
                   
                 
