@@ -4,7 +4,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/installing/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +20,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/running_workflows/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -28,7 +28,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/config/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -36,7 +36,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/quickstart/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -45,19 +45,19 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/readfilt_overview/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/readfilt_walkthru/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/readfilt_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -67,19 +67,19 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/assembly_overview/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/assembly_walkthru/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/assembly_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -89,19 +89,19 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/comparison_overview/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/comparison_walkthru/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/comparison_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -111,19 +111,19 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/taxclass_overview/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/taxclass_walkthru/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/taxclass_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -132,7 +132,7 @@
     
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/contrib/</loc>
-     <lastmod>2018-07-09</lastmod>
+     <lastmod>2018-07-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
