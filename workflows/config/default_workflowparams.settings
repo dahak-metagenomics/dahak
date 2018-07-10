@@ -176,11 +176,11 @@ config_default = {
         "kaiju" : {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr.fmi",
-            "tar"  : "kaiju_index_nr.tgz",
+            "fmi"  : "kaiju_db_nr_euk.fmi",
+            "tar"  : "kaiju_index_nr_euk_2018-02-23.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
-            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "out"  : "{sample}.kaiju_output.trim{qual}.out"
+            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
         },
 
         "kaiju_report" : {
