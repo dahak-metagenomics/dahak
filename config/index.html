@@ -97,7 +97,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
     
-      <a href="#workflow-configuration" tabindex="1" class="md-skip">
+      <a href="#snakemake-configuration" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -309,8 +309,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#settings-vs-json-files" title=".settings vs .json files" class="md-nav__link">
-    .settings vs .json files
+  <a href="#how-do-i-specify-my-data-files" title="How do I specify my data files?" class="md-nav__link">
+    How do I specify my data files?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-specify-my-workflow-configuration" title="How do I specify my workflow configuration?" class="md-nav__link">
+    How do I specify my workflow configuration?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-specify-my-workflow-parameters" title="How do I specify my workflow parameters?" class="md-nav__link">
+    How do I specify my workflow parameters?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings-defaults-vs-json-overriding-defaults" title=".settings (Defaults) vs .json (Overriding Defaults)" class="md-nav__link">
+    .settings (Defaults) vs .json (Overriding Defaults)
   </a>
   
 </li>
@@ -387,20 +408,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../readfilt_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../readfilt_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../readfilt_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -459,20 +468,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../assembly_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../assembly_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../assembly_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -531,20 +528,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../comparison_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../comparison_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../comparison_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -603,20 +588,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../taxclass_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../taxclass_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../taxclass_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -666,8 +639,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#settings-vs-json-files" title=".settings vs .json files" class="md-nav__link">
-    .settings vs .json files
+  <a href="#how-do-i-specify-my-data-files" title="How do I specify my data files?" class="md-nav__link">
+    How do I specify my data files?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-specify-my-workflow-configuration" title="How do I specify my workflow configuration?" class="md-nav__link">
+    How do I specify my workflow configuration?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-specify-my-workflow-parameters" title="How do I specify my workflow parameters?" class="md-nav__link">
+    How do I specify my workflow parameters?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings-defaults-vs-json-overriding-defaults" title=".settings (Defaults) vs .json (Overriding Defaults)" class="md-nav__link">
+    .settings (Defaults) vs .json (Overriding Defaults)
   </a>
   
 </li>
@@ -689,9 +683,15 @@
               
                 
                 
-                <h1 id="workflow-configuration">Workflow Configuration<a class="headerlink" href="#workflow-configuration" title="Permanent link">&para;</a></h1>
+                <h1 id="snakemake-configuration">Snakemake Configuration<a class="headerlink" href="#snakemake-configuration" title="Permanent link">&para;</a></h1>
 <p>The <code>workflows/config/</code> directory contains files used to set 
 key-value pairs in the configuration dictionary used by Snakemake.</p>
+<p>To use a custom configuration file (JSON or YAML format), use the
+<code>--configfile</code> flag:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --configfile my_workflow_params.json ...
+</pre></div>
+
+
 <h2 id="data-files-workflow-config-and-parameters">Data Files, Workflow Config, and Parameters<a class="headerlink" href="#data-files-workflow-config-and-parameters" title="Permanent link">&para;</a></h2>
 <p>The <code>dahak/workflows/config/</code> directory contains configuration files for
 Dahak workflows. There are three types of configuration details that the user
@@ -701,23 +701,64 @@ may wish to customize:</p>
 <p><strong>Data files</strong> (a list of names and URLs for read files; these read files do not
   all necessarily need to be used in the workflow)</p>
 <ul>
-<li>See <code>dahak/workflows/config/example_datafiles.json</code> for an example</li>
+<li>See <a href="https://github.com/dahak-metagenomics/dahak/blob/master/workflows/config/example_datafiles.json"><code>dahak/workflows/config/example_datafiles.json</code></a>
+  for an example</li>
 </ul>
 </li>
 <li>
 <p><strong>Workflow configuration</strong> (specifying which read files to run each workflow on)</p>
 <ul>
-<li>See <code>dahak/workflows/config/example_workflowconfig.json</code> for an example</li>
+<li>See <a href="https://github.com/dahak-metagenomics/dahak/blob/master/workflows/config/example_workflowconfig.json"><code>dahak/workflows/config/example_workflowconfig.json</code></a>
+  for an example</li>
 </ul>
 </li>
 <li>
 <p><strong>Workflow parameters</strong> (parameters specifying how the workflow will run)</p>
 <ul>
-<li>See <code>dahak/workflows/config/example_workflowparams.json</code> for an example</li>
+<li>See <a href="https://github.com/dahak-metagenomics/dahak/blob/master/workflows/config/example_workflowparams.json"><code>dahak/workflows/config/example_workflowparams.json</code></a>
+  for an example</li>
 </ul>
 </li>
 </ul>
-<h2 id="settings-vs-json-files">.settings vs .json files<a class="headerlink" href="#settings-vs-json-files" title="Permanent link">&para;</a></h2>
+<h2 id="how-do-i-specify-my-data-files">How do I specify my data files?<a class="headerlink" href="#how-do-i-specify-my-data-files" title="Permanent link">&para;</a></h2>
+<p>To set the names and URLs of read files, set the <code>files</code> key in the Snakemake
+configuration dictionary to a list of key-value pairs, where the key is the 
+name of the read file and the value is the URL of the file (do not include 
+<code>http://</code> or <code>https://</code> in the URL).</p>
+<p>For example, the following JSON block will provide a list of reads and their
+corresponding URLs:</p>
+<div class="codehilite"><pre><span></span>{
+    &quot;files&quot; : {
+        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
+        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
+        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
+        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
+        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
+        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;,
+        &quot;SRR606249_subset50_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;,
+        &quot;SRR606249_subset50_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;,
+    }
+}
+</pre></div>
+
+
+<p>This can be placed in a JSON file like <code>dahak/workflows/config/custom_datafiles.json</code> 
+and passed to Snakemake using the <code>--config</code> flag like:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --config=config/custom_datafiles.json \
+        [FLAGS] &lt;target&gt;
+</pre></div>
+
+
+<p><strong>NOTE:</strong> Dahak assumes that read files are not present on the local machine and
+uses a rule to download the reads from the given URL if they are not present.
+If your read files <em>are</em> present locally, they must be put into the temporary
+directory (set by <code>data_dir</code> key in the Snakemake configuration dictionary, 
+<code>data/</code> by default) so that Snakemake will find them. If Snakemake finds the 
+read files, the download command will not be run. You can use an empty string
+for the URLs in this case.</p>
+<h2 id="how-do-i-specify-my-workflow-configuration">How do I specify my workflow configuration?<a class="headerlink" href="#how-do-i-specify-my-workflow-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="how-do-i-specify-my-workflow-parameters">How do I specify my workflow parameters?<a class="headerlink" href="#how-do-i-specify-my-workflow-parameters" title="Permanent link">&para;</a></h2>
+<h2 id="settings-defaults-vs-json-overriding-defaults">.settings (Defaults) vs .json (Overriding Defaults)<a class="headerlink" href="#settings-defaults-vs-json-overriding-defaults" title="Permanent link">&para;</a></h2>
 <p>The <code>*.settings</code> files are Python scripts that set the default
 Snakemake configuration dictionary. Each <code>*.settings</code> file is
 prefixed by <code>default_</code> because it is setting default values.</p>

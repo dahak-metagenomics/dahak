@@ -38,7 +38,7 @@
     
     
       
-        <title>Snakemake Rules - Dahak Metagenomics</title>
+        <title>Snakemake - Dahak Metagenomics</title>
       
     
     
@@ -97,7 +97,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
     
-      <a href="#read-filtering-snakemake-rules" tabindex="1" class="md-skip">
+      <a href="#read-filtering-workflow-snakemake" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -123,7 +123,7 @@
                 Dahak Metagenomics
               </span>
               <span class="md-header-nav__topic">
-                Snakemake Rules
+                Snakemake
               </span>
             
           
@@ -352,22 +352,73 @@
       
     
     
-    <a href="./" title="Snakemake Rules" class="md-nav__link md-nav__link--active">
-      Snakemake Rules
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Snakemake
+      </label>
+    
+    <a href="./" title="Snakemake" class="md-nav__link md-nav__link--active">
+      Snakemake
     </a>
     
-  </li>
-
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#build-rules" title="Build Rules" class="md-nav__link">
+    Build Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snakemake-configuration-dictionary" title="Snakemake Configuration Dictionary" class="md-nav__link">
+    Snakemake Configuration Dictionary
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../readfilt_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
-    </a>
+          <li class="md-nav__item">
+  <a href="#data-files-configuration" title="Data Files Configuration" class="md-nav__link">
+    Data Files Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-configuration" title="Workflow Configuration" class="md-nav__link">
+    Workflow Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-parameters" title="Workflow Parameters" class="md-nav__link">
+    Workflow Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -425,20 +476,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../assembly_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../assembly_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../assembly_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -497,20 +536,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../comparison_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../comparison_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../comparison_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -569,20 +596,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../taxclass_snakemake/" title="Snakemake Rules" class="md-nav__link">
-      Snakemake Rules
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../taxclass_config/" title="Snakemake Configuration" class="md-nav__link">
-      Snakemake Configuration
+    <a href="../taxclass_snakemake/" title="Snakemake" class="md-nav__link">
+      Snakemake
     </a>
   </li>
 
@@ -621,6 +636,56 @@
     
   
   
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#build-rules" title="Build Rules" class="md-nav__link">
+    Build Rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snakemake-configuration-dictionary" title="Snakemake Configuration Dictionary" class="md-nav__link">
+    Snakemake Configuration Dictionary
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-files-configuration" title="Data Files Configuration" class="md-nav__link">
+    Data Files Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-configuration" title="Workflow Configuration" class="md-nav__link">
+    Workflow Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-parameters" title="Workflow Parameters" class="md-nav__link">
+    Workflow Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -632,58 +697,20 @@
               
                 
                 
-                <h1 id="read-filtering-snakemake-rules">Read Filtering: Snakemake Rules<a class="headerlink" href="#read-filtering-snakemake-rules" title="Permanent link">&para;</a></h1>
+                <h1 id="read-filtering-workflow-snakemake">Read Filtering Workflow: Snakemake<a class="headerlink" href="#read-filtering-workflow-snakemake" title="Permanent link">&para;</a></h1>
 <p>As mentioned on the <a href="../running_workflows/">Running Workflows</a> page,
-Snakemake can be called with two different types of targets:
-build rules (which trigger all rules associated with a workflow)
-and target files (which trigger any rules required to produce the
-requested file).</p>
+the Snakemake workflows define <strong>build rules</strong> that trigger all of
+the rules composing a given workflow.</p>
 <p>The <a href="../running_workflows/">Running Workflows</a> page also shows
 how to call Snakemake and ask for a particular target:</p>
 <div class="codehilite"><pre><span></span>$ snakemake [FLAGS] &lt;target&gt;
 </pre></div>
 
 
-<p>You can replace <code>&lt;target&gt;</code> with any of the build rules below.
-Note that you should also provide a Snakemake configuration file
-that specifies which samples, quality values, k values, etc. to use
-when running the workflow.</p>
-<p>(Also see <a href="../readfilt_config/">Read Filtering: Snakemake Configuration</a>.)</p>
-<p>List of available build rules in the read filtering workflow:</p>
-<div class="codehilite"><pre><span></span>download_reads
-
-    Fetch user-requested files from OSF containing reads that will be used in
-    the read filtering process.
-
-    Note that this defines wildcard-based download rules, rather than
-    downloading all files all at once, to keep things flexible and fast.
-
-download_read_adapters
-
-    Download FASTA read adapaters (TruSeq2-PE sequencer by default).
-
-pre_trimming_quality_assessment
-
-    Perform a pre-trimming quality check of the reads from the sequencer.
-
-post_trimming_quality_assessment
-
-    Perform a post-trimming quality check 
-    of the reads from the sequencer.
-
-interleave_reads
-
-    Interleave paired-end reads using khmer.
-    The trim quality comes from the filename.
-
-quality_trimming
-
-    Trim reads from the sequencer by dropping low-quality reads.
-</pre></div>
-
-
-<p>List of other target rules in the read filtering workflow
-(these should not be called directly):</p>
+<p>You can replace <code>&lt;target&gt;</code> with any of the build rules below.</p>
+<h2 id="build-rules">Build Rules<a class="headerlink" href="#build-rules" title="Permanent link">&para;</a></h2>
+<p>The build rules are the rules that the end user should be calling.
+A list of available build rules in the read filtering workflow:</p>
 <div class="codehilite"><pre><span></span>read_filtering_pretrim_workflow
 
     Build rule: trigger the read filtering workflow
@@ -691,6 +718,117 @@ quality_trimming
 read_filtering_posttrim_workflow
 
     Build rule: trigger the read filtering workflow
+</pre></div>
+
+
+<p>Pass the name of the build rule directly to Snakemake
+on the command line:</p>
+<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] read_filtering_pretrim_workflow
+
+$ snakemake [FLAGS] read_filtering_posttrim_workflow
+</pre></div>
+
+
+<h2 id="snakemake-configuration-dictionary">Snakemake Configuration Dictionary<a class="headerlink" href="#snakemake-configuration-dictionary" title="Permanent link">&para;</a></h2>
+<p>There are three types of key-value pairs that can be set in the 
+Snakemake configuration dictionary (also see the 
+<a href="../config/">Workflow Configuration</a> page).</p>
+<h3 id="data-files-configuration">Data Files Configuration<a class="headerlink" href="#data-files-configuration" title="Permanent link">&para;</a></h3>
+<p>Set the <code>files</code> key to a dictionary containing
+a list of key-value pairs, where the keys are 
+filenames and values are URLs:</p>
+<div class="codehilite"><pre><span></span>{
+    &quot;files&quot; : {
+        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
+        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
+        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
+        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
+        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
+        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;,
+        &quot;SRR606249_subset50_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;,
+        &quot;SRR606249_subset50_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;,
+    }
+}
+</pre></div>
+
+
+<p>Put these in a JSON file (e.g., <code>config/custom_datafiles.json</code> 
+in the <code>workflows</code> directory) and pass the name of the config file
+to Snakemake using the <code>--configfile</code> flag:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_datafiles.json [FLAGS] &lt;target&gt;
+</pre></div>
+
+
+<h3 id="workflow-configuration">Workflow Configuration<a class="headerlink" href="#workflow-configuration" title="Permanent link">&para;</a></h3>
+<p>Set the <code>workflows</code> key of the Snakemake configuration dictionary to a
+dictionary containing details about the workflow you want to run.  The workflow
+configuration values are values that will end up in the final output file's
+filename.</p>
+<p>Here is the structure of the configuration dictionary
+for the read filtering workflow:</p>
+<div class="codehilite"><pre><span></span>{
+    &quot;workflows&quot; : {
+
+        &quot;read_filtering_pretrim_workflow&quot; : {
+            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;]
+        },
+
+        &quot;read_filtering_posttrim_workflow&quot; : {
+            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
+            &quot;qual&quot;   : [&quot;2&quot;,&quot;30&quot;]
+        }
+    }
+}
+</pre></div>
+
+
+<p>Put these in a JSON file (e.g., <code>config/custom_workflowconfig.json</code> 
+in the <code>workflows</code> directory) and pass the name of the config file
+to Snakemake using the <code>--configfile</code> flag:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] &lt;target&gt;
+</pre></div>
+
+
+<h3 id="workflow-parameters">Workflow Parameters<a class="headerlink" href="#workflow-parameters" title="Permanent link">&para;</a></h3>
+<p>Set the <code>read_filtering</code> key of the Snakemake configuration dictionary
+to a dictionary containing various child dictionaries and key-value pairs:</p>
+<div class="codehilite"><pre><span></span>{
+    &quot;read_filtering&quot; : {
+        &quot;read_patterns&quot; : {
+            &quot;pre_trimming_pattern&quot;  : &quot;{sample}_{direction}_reads.fq.gz&quot;,
+            &quot;post_trimming_pattern&quot; : &quot;{sample}_{direction}.trim{qual}.fq.gz&quot;,
+        },
+
+        &quot;direction_labels&quot; : {
+            &quot;forward&quot; : &quot;1&quot;,
+            &quot;reverse&quot; : &quot;2&quot;
+        },
+
+        &quot;quality_assessment&quot; : {
+            &quot;fastqc_suffix&quot;: &quot;fastqc&quot;,
+        },
+
+        &quot;quality_trimming&quot; : {
+            &quot;trim_suffix&quot; : &quot;se&quot;
+        },
+
+        &quot;interleaving&quot; : {
+            &quot;interleave_suffix&quot; : &quot;pe&quot;
+        },
+
+        &quot;adapter_file&quot; : {
+            &quot;name&quot; : &quot;TruSeq2-PE.fa&quot;,
+            &quot;url&quot;  : &quot;http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa&quot;
+        }
+    }
+}
+</pre></div>
+
+
+<p>Put these in a JSON file (e.g., <code>config/custom_workflowparams.json</code> 
+in the <code>workflows</code> directory) and pass the name of the config file
+to Snakemake using the <code>--configfile</code> flag:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] &lt;target&gt;
 </pre></div>
                 
                   
@@ -727,13 +865,13 @@ read_filtering_posttrim_workflow
           </a>
         
         
-          <a href="../readfilt_config/" title="Snakemake Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../assembly_overview/" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Snakemake Configuration
+                Overview
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

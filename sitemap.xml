@@ -61,12 +61,6 @@
      <changefreq>daily</changefreq>
     </url>
         
-    <url>
-     <loc>https://dahak-metagenomics.github.io/dahak/readfilt_config/</loc>
-     <lastmod>2018-07-09</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
     
 
     
@@ -85,12 +79,6 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/assembly_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>https://dahak-metagenomics.github.io/dahak/assembly_config/</loc>
      <lastmod>2018-07-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
@@ -117,12 +105,6 @@
      <changefreq>daily</changefreq>
     </url>
         
-    <url>
-     <loc>https://dahak-metagenomics.github.io/dahak/comparison_config/</loc>
-     <lastmod>2018-07-09</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
     
 
     
@@ -141,12 +123,6 @@
         
     <url>
      <loc>https://dahak-metagenomics.github.io/dahak/taxclass_snakemake/</loc>
-     <lastmod>2018-07-09</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>https://dahak-metagenomics.github.io/dahak/taxclass_config/</loc>
      <lastmod>2018-07-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
