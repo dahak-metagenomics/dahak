@@ -765,7 +765,7 @@ target file or rule name:</p>
 <p>Targets for each workflow are listed on the respective 
 "Snakemake Rules" page for that workflow (see left side navigation menu).</p>
 <p>There are two types of targets defined:</p>
-<p><strong>Target Files:</strong> The user can ask Snakemake to generate a paritcular file, and
+<p><strong>Target Files:</strong> The user can ask Snakemake to generate a particular file, and
 Snakemake will dynamically determine the rules that are required to generate the
 requested file. Snakemake uses a dependency graph to determine what rules to run
 to generate the file.</p>
@@ -775,7 +775,7 @@ assembling filenames and passing target filenames to Snakemake.)</p>
 <h3 id="what-targets-should-i-use">What targets should I use?<a class="headerlink" href="#what-targets-should-i-use" title="Permanent link">&para;</a></h3>
 <p>Users should use the build rules to trigger workflows.</p>
 <p>The build rules require workflow configuration details to be
-set using snakemake's configuration dictionary. See </p>
+set using Snakemake's configuration dictionary. See </p>
 <p>Each workflow has a set of "build rules" that will trigger
 rules for a given workflow or portion of a workflow. Available
 build rules for each workflow are listed on the respective 
@@ -869,7 +869,7 @@ look like this:</p>
 <div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;data:/data&quot; snakemake \
     --configfile my_workflow_params.json \
     --use-singularity \
-    &lt;snakemake-target&gt;
+    &lt;target&gt;
 </pre></div>
                 
                   
@@ -928,7 +928,7 @@ look like this:</p>
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2017, The Regents of the University of California.<br /> Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br /> Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />
+            Copyright &copy; 2017-2018, The Regents of the University of California.<br /> Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br /> Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />
           </div>
         
         powered by

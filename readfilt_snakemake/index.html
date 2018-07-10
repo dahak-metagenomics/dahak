@@ -783,6 +783,9 @@ quality assessment):</p>
 </pre></div>
 
 
+<p>The <code>sample</code> list specifies the prefixes of the sample reads to 
+run the read filtering workflow on. The <code>qual</code> list specifies the 
+values to use for quality trimming (for the post-trimming workflow).</p>
 <p>Put these in a JSON file (e.g., <code>config/custom_workflowconfig.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
@@ -826,9 +829,27 @@ to a dictionary containing various child dictionaries and key-value pairs:</p>
 </pre></div>
 
 
-<p>Put these in a JSON file (e.g., <code>config/custom_workflowparams.json</code> 
-in the <code>workflows</code> directory) and pass the name of the config file
-to Snakemake using the <code>--configfile</code> flag:</p>
+<p>The <code>pre_trimming_pattern</code> must match the filename pattern of the reads 
+that are provided in the <code>files</code> key. The <code>{sample}</code> and <code>{direction}</code>
+notation is for Snakemake to match wildcards. For example, the pattern</p>
+<div class="codehilite"><pre><span></span>{sample}_{direction}_reads.fq.gz
+</pre></div>
+
+
+<p>match the filename</p>
+<div class="codehilite"><pre><span></span>SRR606249_subset10_1_reads.fq.gz
+</pre></div>
+
+
+<p>such that the wildcard values are <code>sample=SRR606249_subset10</code>
+and <code>direction=1</code>.</p>
+<p>The <code>direction_labels</code> key is used to indicate the suffix used for
+forward and reverse reads; this is typically <code>1</code> and <code>2</code> but can be
+customized by the user if needed.</p>
+<p>To use custom values for these parameters, put the configuration dictionary
+above (or any subset of it) into a JSON file (e.g.,
+<code>config/custom_workflowparams.json</code> in the <code>workflows</code> directory) and pass the
+name of the config file to Snakemake using the <code>--configfile</code> flag:</p>
 <div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] &lt;target&gt;
 </pre></div>
                 
@@ -888,7 +909,7 @@ to Snakemake using the <code>--configfile</code> flag:</p>
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2017, The Regents of the University of California.<br /> Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br /> Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />
+            Copyright &copy; 2017-2018, The Regents of the University of California.<br /> Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br /> Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />
           </div>
         
         powered by
