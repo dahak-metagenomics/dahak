@@ -1,21 +1,20 @@
 # Read Filtering Walkthrough
 
+!!! warning "Important Note"
+
+    The following walkthrough is **independent of the Snakemake workflows.**
+    All commands given below are bash commands. This walkthrough also utilizes
+    Docker, while the Snakemake workflows utilize SIngularity.
+
 The following walkthrough covers the steps in the read filtering and quality
-assessment workflow. 
+assessment workflow.  This walkthrough covers the use of Docker to interactively
+run the workflow on a fresh Ubuntu 16.04 (Xenial) image, and requires sudo
+commands to be run.
 
-(All of the commands given below are bash commands.)
-
-This workflow covers the use of Docker to interactively run the workflow on a
-fresh Ubuntu 16.04 (Xenial) image, and requires sudo commands to be run.
-
-The Snakefiles contained in this repository utilize Singularity containers
-instead of Docker containers, but run analogous commands to those given in this
-walkthrough.
-
-This walkthrough presumes that the steps covered on the [Installing](installing.md)
-page have been run, and that a version of Python, Conda, and Snakemake are available.
-See the [Installing](installing.md) page for instructions on installing
-required software.
+This walkthrough presumes that the steps covered on the
+[Installing](installing.md) page have been run, and that a version of Python,
+Conda, Snakemake, and Docker are available.  See the [Installing](installing.md)
+page for instructions on installing required software.
 
 ### Walkthrough Steps
 

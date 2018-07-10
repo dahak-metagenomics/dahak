@@ -18,8 +18,6 @@ Note that you should also provide a Snakemake configuration file
 that specifies which samples, quality values, k values, etc. to use
 when running the workflow.
 
-(Also see [Assembly: Snakemake Configuration](assembly_config.md).)
-
 List of available build rules in the assembly workflow:
 
 ```

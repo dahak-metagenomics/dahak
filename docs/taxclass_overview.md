@@ -10,6 +10,5 @@ More information:
 
 * [Taxonomic Classification Walkthrough](taxclass_walkthru.md)
 * [Taxonomic Classification Snakemake Rules](taxclass_snakemake.md)
-* [Taxonomic Classification Snakemake Configuration](taxclass_config.md)
 * [`workflows/taxclass/`](/workflows/taxclass) directory in the repository
 

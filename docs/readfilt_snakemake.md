@@ -4,8 +4,8 @@ As mentioned on the [Running Workflows](running_workflows.md) page,
 the Snakemake workflows define **build rules** that trigger all of
 the rules composing a given workflow.
 
-The [Running Workflows](running_workflows.md) page also shows
-how to call Snakemake and ask for a particular target:
+As a reminder, the [Running Workflows](running_workflows.md) page 
+showed how to call Snakemake and ask for a particular target:
 
 ```
 $ snakemake [FLAGS] <target>
@@ -37,6 +37,8 @@ $ snakemake [FLAGS] read_filtering_pretrim_workflow
 
 $ snakemake [FLAGS] read_filtering_posttrim_workflow
 ```
+
+See the [Quick Start](quickstart.md) for details on the process of running this workflow.
 
 
 ## Snakemake Configuration Dictionary

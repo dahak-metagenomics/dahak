@@ -27,6 +27,5 @@ More information:
 
 * [Assembly Walkthrough](assembly_walkthru.md)
 * [Assembly Snakemake Rules](assembly_snakemake.md)
-* [Assembly Snakemake Configuration](assembly_config.md)
 * [`workflows/assembly/`](/workflows/assembly) directory in the repository
 

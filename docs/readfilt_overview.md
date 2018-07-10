@@ -12,7 +12,6 @@ process for the sequencer's reads.
 More information:
 
 * [Read Filtering Walkthrough](readfilt_walkthru.md)
-* [Read Filtering Snakemake Rules](readfilt_snakemake.md)
-* [Read Filtering Snakemake Configuration](readfilt_config.md)
+* [Read Filtering Snakemake](readfilt_snakemake.md)
 * [`workflows/readfilt/`](/workflows/readfilt) directory in the repository
 

@@ -1,15 +1,18 @@
 # Quick Start
 
+Note for the *very* impatient: skip straight to [The Really Quick Copy And Paste
+Quick Start](#the-really-quick-copy-and-paste-quickstart) section.
+
 ## Getting Set Up to Run Workflows
 
 **NOTE:** This guide assumes familiarity with Dahak workflows and how they work.
-For a more clear explanation of what's going on and how things work, see the 
+For a more clear explanation of what's going on and how things work, 
 start with the [Running Workflows](running_workflows.md) page.
 
 Start by cloning a copy of the repository:
 
 ```
-$ git clone https://github.com/dahak-metagenomics/dahak
+$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 ```
 
 then move into the `workflows/` directory in the Dahak repository:
@@ -41,7 +44,7 @@ Singularity containers. This also requires the `SINGULARITY_BINDPATH` variable
 to be set, to bind-mount a local directory into the container. 
 
 The user should use build targets. Each workflow's build targets and details
-are listed on the respective workflow's Snakkemake Rules" page.
+are listed on the respective workflow's Snakemake Rules" page.
 
 All together, commands to run Dahak workflows will look like this:
 
@@ -68,23 +71,29 @@ Specify the locations of your data files by assigning a key-value map
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
         "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
         "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
-        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-        "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
-        "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a"
     }
 }
 ```
 
+This JSON can be put into a JSON file like `config/custom_readfilt.json` and
+passed to Snakemake via the `--configfile` flag:
+
+```
+$ SINGULARITY_BINDPATH="data:/data" \
+        snakemake --configfile=config/custom_datafiles.json \
+        [FLAGS] <target>
+```
+
 If your read files are present locally, they must be in the same
 directory as the Snakemake working directory, which is specified by
-the `data_dir` key.
+the `data_dir` key (`data/` by default).
 
-!!! warning "Example"
+!!! warning "Examples in the Repository"
 
-    Also see [workflows/config/example_datafiles.json](#)
-    in the Dahak repository.
+    Also see [`workflows/config/example_datafiles.json`](#)
+    in the Dahak repository, as well as the "Snakemake" page 
+    for each respective workflow.
 
 
 ### How do I specify my workflow configuration?
@@ -98,86 +107,121 @@ See the "Snakemake Rules" page for a list of available build rules.
 See the "Snakemake Configuration" page for a list of key-value pairs the
 build rule extracts from the Snakemake configuration dictionary.
 
-For example, to evaluate the quality of reads from a sequencer before
-quality trimming, we can configure the `read_filtering_pretrim_workflow`
-Snakemake rule is used, and the workflow configuration JSON looks like this:
-
-```
-{
-    "workflows" : {
-        "read_filtering_pretrim_workflow" : {
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
-        }
-    }
-}
-```
-
-To evaluate the quality of reads from a sequencer after quality trimming, the
-`read_filtering_posttrim_workflow` Snakemake rule is used, and the workflow
-configuration JSON looks like this:
+For example, to evaluate the quality of reads from a sequencer after quality
+trimming, the `read_filtering_posttrim_workflow` Snakemake rule is used, and the
+workflow configuration JSON looks like this:
 
 ```
 {
     "workflows" : {
         "read_filtering_posttrim_workflow" : {
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249","SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
     }
 }
 ```
 
+This file can be put into a JSON file like `config/custom_workflowconfig.json` and
+passed to Snakemake via the `--configfile` flag:
 
+```
+$ SINGULARITY_BINDPATH="data:/data" \
+        snakemake --configfile=config/custom_readfilt.json \
+        [FLAGS] read_filtering_posttrim_workflow
+```
 
 The `sample` list specifies the prefixes of the sample reads to 
-run the read filtering workflow on.
+run the read filtering workflow on. The `qual` list specifies the 
+values to use for quality trimming.
 
-
-
-!!! warning "Example"
+!!! warning "Examples in the Repository"
 
     Also see [workflows/config/example_workflowconfig.json](#)
-    in the Dahak repository.
+    in the Dahak repository, as well as the "Snakemake" page 
+    for each respective workflow.
 
 
 ## How do I specify my workflow parameters?
 
+The workflow parameters section of the Snakemake configuration file
+is where the details of each step of the workflow can be controlled.
 
+The **workflow configuration** section of the Snakemake configuration dictionary
+contains a subset of parameters that will end up in the final file name of the
+output file generated by that workflow.  
 
+The **workflow parameters** section of the Snakemake configuration dictionary
+contains all other parameters for all intermediate steps, and is therefore
+longer and contains more options than the workflow configuration section.
 
-!!! warning "Example"
+The workflow parameters are organized by workflow, with one additional
+parameters section for setting the version and URL of the biocontainers 
+used in each workflow.
 
-    Also see [workflows/config/example_datafiles.json](#)
-    in the Dahak repository.
+For example, the read filtering workflow parameters section 
+is under the top-level `read_filtering` key:
 
+```
+{
+    "read_filtering" : {
+        "read_patterns" : {
+            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
+            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
+        },
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+        "quality_assessment" : {
+            "fastqc_suffix": "fastqc",
+        },
+        "quality_trimming" : {
+            "trim_suffix" : "se"
+        },
+        "interleaving" : {
+            "interleave_suffix" : "pe"
+        },
+        "adapter_file" : {
+            "name" : "TruSeq2-PE.fa",
+            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+        }
+    }
+}
+```
 
+This file can be put into a JSON file like `config/custom_readfilt.json` and
+passed to Snakemake via the `--configfile` flag:
 
+```
+$ SINGULARITY_BINDPATH="data:/data" \
+        snakemake --configfile=config/custom_readfilt.json \
+        [FLAGS] read_filtering_posttrim_workflow
+```
 
+(See the [Read Filtering Snakemake](readfilt_snakemake.md) page
+for an explanation of each of the above options.)
 
-
-
-
-## How do I specify workflow parameters?
-
-See the [Running Workflows](running_workflows.md) and 
-[Snakemake Configuration](config.md) pages for details.
-
-
-## What targets do I use?
-
-See [Running Workflows](running_workflows.md)
-
+!!! warning "Examples in the Repository"
+    
+    The [`workflows/config/example_workflowparams.json`](#)
+    file in the repository contains an example, but JSON files
+    do not contain any comments. For a well-commented version,
+    check the `workflows/config/default_workflowparams.settings](#)
+    file.
+    
 ## Where will data files live?
 
 To set the scratch/working directory for the Snakemake workflows, 
 in which all intermediate and final data files will be placed, 
 set the `data_dir` key in the Snakemake configuration dictionary. 
-If this option is not set, it will be `data` by default.
+If this option is not set, it will be `data` by default.  No 
+trailing slash is needed when setting this option.
 
-**IMPORTANT:** If you use a custom directory, you must also 
-adjust the `SINGULARITY_BINDPATH` variable accordingly.
+!!! warning "Important Note About `data_dir`"
 
-**NOTE:** No trailing slash is needed.
+    If you use a custom directory, you must also 
+    adjust the `SINGULARITY_BINDPATH` variable accordingly.
 
 For example, to put all intermediate files into the `work/` directory
 instead of the `data/` directory, you can use the following JSON
@@ -189,328 +233,140 @@ file:
 }
 ```
 
-This can be used by passing the `--configfile` flag to Snakemake
-and updating the Singularity environment variable:
+This file can be put into a JSON file like `config/custom_datadir.json` and
+passed to Snakemake via the `--configfile` flag:
 
 ```
 $ SINGULARITY_BINDPATH="work:/work" \
-        snakemake --configfile=config/custom_scratch.settings \
+        snakemake --configfile=config/custom_datadir.settings \
         [FLAGS] <target>
 ```
 
+## The Really Quick Copy-And-Paste Quick Start
 
-## How do I specify which samples to run the workflow on?
+Now that we've provided some examples that you can use, let's run through
+the entire process start to finish to illustrate how this works.
 
-Each workflow has a set of build rules that will trigger all other rules
-required to run a workflow. These build rules require the user to specify
-which read files to begin with. We cover several examples below.
+### Read Filtering
 
-<br />
-<br />
+We will run two variations of the read filtering workflow, and perform a quality
+assessment of our reads both before and after quality trimming.
 
-## Quick Start: Read Filtering
+Before you begin, make sure you have everything listed on the
+[Installing](installing.md) page available on your command line.
 
-To run the read filtering workflow, there are several workflow configuration
-options and workflow parameter values that the user should set.
-
-The user must start by specifying the location of their read files as covered in
-the "How do I specify my data files?" section above.
-
-Workflow configuration options the user must specify:
-
-* List of samples to run the read filtering workflow on
-* List of quality values to use when performing read filtering
-
-Workflow parameters the user should specify:
-
-* Pre-trimming and post-trimming filename patterns
-
-The read filtering workflow requires that the user specify
-the following:
-
-* List of read files and corresponding URLs;
-* List of quality values to use when performing read filtering;
-* Pre-trimming and post-trimming filename patterns;
-* Adapter file name and URL
-
-These can be specified in a configuration file in JSON format
-as follows:
-
-**`config/read_filtering_config.settings`:**
+Start by cloning a copy of the repository:
 
 ```
+$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+```
+
+then move into the `workflows/` directory of the Dahak repository:
+
+```
+$ cd dahak/workflows/
+```
+
+Now create a configuration JSON file that:
+
+* Provides URLs at which each read filtering file can be accessed
+* Provides a set of quality trimming values to use (2 and 30)
+* Sets all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)
+ 
+```
 {
-    #
-    # Specify where to get the read files
-    # 
     "files" : {
-        #
-        # URLs for full and subsampled reads
-        # these must match the pre_trimming pattern given below
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
         "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
         "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
         "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
         "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-        "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
-        "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486"
     },
 
+    "workflows" : {
+        "read_filtering_pretrim_workflow" : {
+            "sample"    : ["SRR606249_subset25","SRR606249_subset10"],
+        },
+        "read_filtering_posttrim_workflow" : {
+            "sample"    : ["SRR606249_subset25","SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+    },
 
-    #
-    # Specify how to do read filtering
-    # 
     "read_filtering" : {
-        # 
-        # The workflow actually builds the rules to download 
-        # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
-            #
-            # filename pattern for pre-trimmed reads
-            # Note: the files section (top) listing URLS for read files
-            # MUST match the pre_trimmming_pattern.
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
-            #
-            # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
         },
-        #
-        # Set the read adapter file
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+        "quality_assessment" : {
+            "fastqc_suffix": "fastqc",
+        },
+        "quality_trimming" : {
+            "trim_suffix" : "se"
+        },
+        "interleaving" : {
+            "interleave_suffix" : "pe"
+        },
         "adapter_file" : {
-            # 
-            # name and URL for the sequencer adapter file
             "name" : "TruSeq2-PE.fa",
             "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
-        }
-    },
-
-
-    #
-    # Specify what reads to filter
-    # 
-    "workflows" : {
-
-        "read_filtering_workflow" : {
-            #
-            # These parameters determine which samples
-            # the read filtering workflow will be run on.
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "quality"   : ["2","30"],
         }
     }
 }
 ```
 
-To run the read filtering workflow, call snakemake and pass the
-`read_filtering_workflow` build rule:
+Put this file into `config/custom_readfilt_workflow.json` (in the `workflows`
+directory of the repository). We want to run two workflows: one pre-trimming
+quality assessment, and one post-trimming quality assessment.
+
+We add two flags to the Snakemake command: `-n` and `-p`.
+
+`-n` does a *dry-run*, meaning Snakemake will print out what tasks it is
+going to run, but will not acutally run them.
+
+`-p` tells Snakemake to print the shell commands that it will run for each
+workflow step. This is useful for understanding what Snakemake is doing
+and what commands and options are being run.
 
 ```
-$ SINGULARITY_BINDPATH="data:/data" \
-    snakemake \
-    --use-singularity \
-    --configfile=config/read_filtering_config.settings \
-    read_filtering_workflow
-``` 
+$ export SINGULARITY_BINDPATH="data:/data"
 
-When this command is run, it uses the filename pattern for the 
-post-trimming step to construct filenames resulting from the
-read filtering step, and asks Snakemake to run the rules that
-produce those files.
+$ snakemake -p -n \
+        --configfile=config/custom_readfilt_workflow.json \
+        read_filtering_pretrim_workflow
 
-More information about the read filtering workflow:
-
-* [Read Filtering Walkthrough](readfilt_walkthru.md)
-* [Read Filtering Snakemake Rules](readfilt_snakemake.md)
-* [Read Filtering Parameters and Configuration](readfilt_config.md)
-
-
-<br />
-<br />
-
-
-## Quick Start: Taxonomic Classification
-
-The taxonomic classification workflow builds on the read filtering
-workflow, so the user should specify all of the information
-listed in the "Quick Start: Read Filtering" section (above). 
-In addition, the user should specify the following:
-
-* Percent threshold to use for taxa filtering
-* Taxonomic rank to use for kaiju2krona
-* Kaiju database name and URL
-
-These can be specified in a configuration file in JSON format
-as follows:
-
-**`config/taxonomic_classification_config.settings`:**
-
-```
-{
-    #
-    # Specify where to get the read files
-    # 
-    "files" : {
-        #
-        # URLs for full and subsampled reads
-        # these must match the pre_trimming pattern given below
-        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
-        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
-        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
-        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-        "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
-        "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77",
-    },
-
-
-    #
-    # Specify how to do taxonomic classification
-    # 
-    "taxonomic_classification" : {
-
-        "filter_taxa" : {
-            #
-            # percent threshold for taxa filtering
-            "pct_threshold" : 1
-        },
-
-        "kaiju2krona" : {
-            #
-            # specify the taxonomic rank for kaiju2krona to use
-            "taxonomic_rank" : "genus"
-        },
-
-        "kaiju" : {
-            "dmp1" : "nodes.dmp",
-            "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk.tgz",
-            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "url"  : "http://kaiju.binf.ku.dk/database",
-            "out"  : "{sample}.kaiju_output.trim{qual}.out"
-        },
-
-        "reads" : {
-            # set filename pattern for reads
-            "fq_fwd" : "{sample}_1.trim{qual}.fq.gz",
-            "fq_rev" : "{sample}_2.trim{qual}.fq.gz"
-        },
-
-        "sourmash" : { 
-            #
-            # URL base for SBT tree
-            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
-            # 
-            # name of SBT tar file
-            "sbttar"  : "microbe-{database}-sbt-k{ksize}-2017.05.09.tar.gz",
-            #
-            # name of SBT file when unpacked
-            "sbtunpack" : "{database}-k{ksize}.sbt.json"
-        },
-
-        "visualize_krona" : {
-            #
-            # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
-        }
-    },
-
-
-    ###########################################
-    # Everything below this line is the same
-    # as the read filtering example above.
-    ###########################################
-
-
-    #
-    # Specify how to do read filtering
-    # 
-    "read_filtering" : {
-        # 
-        # The workflow actually builds the rules to download 
-        # the read_files by using the pre_trimming_pattern.
-        "read_patterns" : {
-            #
-            # filename pattern for pre-trimmed reads
-            # Note: the files section (top) listing URLS for read files
-            # MUST match the pre_trimmming_pattern.
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
-            #
-            # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
-        },
-        #
-        # Set the read adapter file
-        "adapter_file" : {
-            # 
-            # name and URL for the sequencer adapter file
-            "name" : "TruSeq2-PE.fa",
-            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
-        }
-    },
-
-
-    #
-    # Specify what reads to filter
-    # 
-    "workflows" : {
-
-        "read_filtering_workflow" : {
-            #
-            # These parameters determine which samples
-            # the read filtering workflow will be run on.
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
-            "direction" : ["1","2"],
-            "quality"   : ["2","30"],
-        }
-    }
-}
+$ snakemake -p -n \
+        --configfile=config/custom_readfilt_workflow.json \
+        read_filtering_posttrim_workflow
 ```
 
-To run the read filtering workflow, call snakemake and pass the
-`taxonomic_classification_workflow` build rule:
+Once we have reviewed the output from Snakemake and are satisfied
+it is running the correct workflow and commands, we can actually
+run the workflow by removing the `-n` flag: 
 
 ```
-$ SINGULARITY_BINDPATH="data:/data" \
-    snakemake \
-    --use-singularity \
-    --configfile=config/taxonomic_classification_config.settings \
-    taxonomic_classification_workflow
-``` 
+$ export SINGULARITY_BINDPATH="data:/data" 
 
-More information about the taxonomic classification workflow:
+$ snakemake -p \
+        --configfile=config/custom_readfilt_workflow.json \
+        read_filtering_pretrim_workflow
 
-* [Taxonomic Classification Walkthrough](taxclass_walkthru.md)
-* [Taxonomic Classification Snakemake Rules](taxclass_snakemake.md)
-* [Taxonomic Classification Parameters and Configuration](taxclass_config.md)
+$ snakemake -p \
+        --configfile=config/custom_readfilt_workflow.json \
+        read_filtering_posttrim_workflow
+```
 
+We can also run both workflows at once by specifying two targets:
 
-<br />
-<br />
-
-
-## Quick Start: Assembly
-
-More information about the assembly workflow:
-
-* [Assembly Walkthrough](assembly_walkthru.md)
-* [Assembly Snakemake Rules](assembly_snakemake.md)
-* [Assembly Parameters and Configuration](assembly_config.md)
-
-
-<br />
-<br />
-
-
-## Quick Start: Comparison
-
-More information about the workflow:
-
-* [Comparison Walkthrough](comparison_walkthru.md)
-* [Comparison Snakemake Rules](comparison_snakemake.md)
-* [Comparison Parameters and Configuration](comparison_config.md)
-
+```
+$ snakemake -p \
+        --configfile=config/custom_readfilt_workflow.json \
+        read_filtering_pretrim_workflow read_filtering_posttrim_workflow
+```
 

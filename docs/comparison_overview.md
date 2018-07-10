@@ -16,6 +16,5 @@ More information:
 
 * [Comparison Walkthrough](comparison_walkthru.md)
 * [Comparison Snakemake Rules](comparison_snakemake.md)
-* [Comparison Snakemake Configuration](comparison_config.md)
 * [`workflows/comparison/`](/workflows/comparison) directory in the repository
 
