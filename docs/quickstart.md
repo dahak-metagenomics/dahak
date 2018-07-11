@@ -231,10 +231,10 @@ file:
 ```
 
 This file can be put into a JSON file like `config/custom_datadir.json` and
-passed to Snakemake via the `--configfile` flag:
+passed to Snakemake via the `--configfile` flag on the command line:
 
 ```
-$ SINGULARITY_BINDPATH="work:/work" \
+SINGULARITY_BINDPATH="work:/work" \
         snakemake --configfile=config/custom_datadir.settings \
         [FLAGS] <target>
 ```
@@ -258,14 +258,14 @@ Before you begin, make sure you have everything listed on the
 
 Start by cloning a copy of the repository:
 
-```
-$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+```bash
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 ```
 
 then move into the `workflows/` directory of the Dahak repository:
 
-```
-$ cd dahak/workflows/
+```bash
+cd dahak/workflows/
 ```
 
 Now create a JSON file that defines a Snakemake configuration dictionary.
@@ -279,7 +279,7 @@ This file should:
 (See the [Read Filtering Snakemake](readfilt_snakemake.md) page for details on
 these options.)
  
-```
+```json
 {
     "files" : {
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
@@ -349,14 +349,14 @@ going to run, but will not actually run them.
 workflow step. This is useful for understanding what Snakemake is doing
 and what commands and options are being run.
 
-```
-$ export SINGULARITY_BINDPATH="data:/data"
+```bash
+export SINGULARITY_BINDPATH="data:/data"
 
-$ snakemake -p -n \
+snakemake -p -n \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_pretrim_workflow
 
-$ snakemake -p -n \
+snakemake -p -n \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_posttrim_workflow
 ```
@@ -365,22 +365,22 @@ Once we have reviewed the output from Snakemake and are satisfied
 it is running the correct workflow and commands, we can actually
 run the workflow by removing the `-n` flag: 
 
-```
-$ export SINGULARITY_BINDPATH="data:/data" 
+```bash
+export SINGULARITY_BINDPATH="data:/data" 
 
-$ snakemake -p \
+snakemake -p \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_pretrim_workflow
 
-$ snakemake -p \
+snakemake -p \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_posttrim_workflow
 ```
 
 We can also run both workflows at once by specifying two targets:
 
-```
-$ snakemake -p \
+```bash
+snakemake -p \
         --configfile=config/custom_readfilt_workflow.json \
         read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
@@ -399,9 +399,10 @@ Before you begin, make sure you have everything listed on the
 If you have not already, clone a copy of the repository and move
 to the `workflows/` directory:
 
-```
-$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
-$ cd dahak/workflows/
+```bash
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+
+cd dahak/workflows/
 ```
 
 Now create a JSON file that defines a Snakemake configuration dictionary.
@@ -415,7 +416,7 @@ This file should:
 (See the [Assembly Snakemake](assembly_snakemake.md) page for details on
 these options.)
 
-```
+```json
 {
     "files" : {
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
@@ -463,10 +464,10 @@ Put this file into `config/custom_assembly_workflow.json` (in the `workflows`
 directory of the repository). We want to run the assembly workflow with
 two assemblers, so we call Snakemake and the `assembly_workflow_all` target.
 
-```
-$ export SINGULARITY_BINDPATH="data:/data"
+```bash
+export SINGULARITY_BINDPATH="data:/data"
 
-$ snakemake -p -n \
+snakemake -p -n \
         --configfile=config/custom_assembly_workflow.json \
         assembly_workflow_all
 ```
@@ -475,10 +476,10 @@ Once we have reviewed the output from Snakemake and are satisfied
 it is running the correct workflow and commands, we can actually
 run the workflow by removing the `-n` flag: 
 
-```
-$ export SINGULARITY_BINDPATH="data:/data"
+```bash
+export SINGULARITY_BINDPATH="data:/data"
 
-$ snakemake -p \
+snakemake -p \
         --configfile=config/custom_assembly_workflow.json \
         assembly_workflow_all
 ```
@@ -499,8 +500,8 @@ Before you begin, make sure you have everything listed on the
 Start by cloning the repository and moving to the `workflows/` directory:
 
 ```
-$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
-$ cd dahak/workflows/
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+cd dahak/workflows/
 ```
 
 Now create a JSON file that defines a Snakemake configuration dictionary.
@@ -514,7 +515,7 @@ This file should:
 (See the [Comparison Snakemake](comparison_snakemake.md) page for details on
 these options.)
 
-```
+```json
 {
     "files" : {
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
@@ -575,14 +576,14 @@ The JSON above can be put into the file `config/custom_comparison_workflow.json`
 passing the config file to Snakemake. It is important you run with the `-n` flag
 to do a dry-run first!
 
-```
-$ export SINGULARITY_BINDPATH="data:/data"
+```bash
+export SINGULARITY_BINDPATH="data:/data"
 
-$ snakemake -p -n \
+snakemake -p -n \
         --configfile=config/custom_comparison_workflow.json \
         comparison_workflow_reads_assembly
 
-$ snakemake -p \
+snakemake -p \
         --configfile=config/custom_comparison_workflow.json \
         comparison_workflow_reads_assembly
 ```
