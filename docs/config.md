@@ -6,8 +6,8 @@ key-value pairs in the configuration dictionary used by Snakemake.
 To use a custom configuration file (JSON or YAML format), use the
 `--configfile` flag:
 
-```
-$ snakemake --configfile my_workflow_params.json ...
+```bash
+snakemake --configfile my_workflow_params.json ...
 ```
 
 
@@ -59,8 +59,8 @@ corresponding URLs:
 This can be placed in a JSON file like `dahak/workflows/config/custom_datafiles.json` 
 and passed to Snakemake using the `--config` flag like:
 
-```
-$ snakemake --config=config/custom_datafiles.json \
+```bash
+snakemake --config=config/custom_datafiles.json \
         [FLAGS] <target>
 ```
 
@@ -98,7 +98,7 @@ For example, by default the version of each container image for each
 program obtained from the biocontainers project is specified in the
 top-level `biocontainers` key in `default_parameters.settings`:
 
-```
+```python
 config_default = {
 
     ...
@@ -123,11 +123,13 @@ config_default = {
         ...
 ```
 
+(Note the `*.settings` files and the above code are Python, not JSON.)
+
 If the user wishes to bump the version of trimmomatic to (e.g.) 0.38,
 but not change the version of khmer or sourmash, the user can specify
 a JSON file with the following configuration block:
 
-```
+```json
 {
     "biocontainers" : {
         "trimmomatic" : {
@@ -142,8 +144,8 @@ a JSON file with the following configuration block:
 This can be placed in a JSON file like `dahak/workflows/config/custom_workflowparams.json` 
 and passed to Snakemake using the `--config` flag like:
 
-```
-$ snakemake --config=config/custom_workflowparams.json \
+```bash
+snakemake --config=config/custom_workflowparams.json \
         [FLAGS] <target>
 ```
 

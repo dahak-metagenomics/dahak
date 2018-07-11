@@ -7,8 +7,8 @@ the rules composing a given workflow.
 As a reminder, the [Running Workflows](running_workflows.md) page 
 showed how to call Snakemake and ask for a particular target:
 
-```
-$ snakemake [FLAGS] <target>
+```bash
+snakemake [FLAGS] <target>
 ```
 
 You can replace `<target>` with any of the build rules below.
@@ -33,8 +33,8 @@ read_filtering_posttrim_workflow
 Pass the name of the build rule directly to Snakemake
 on the command line:
 
-```
-$ snakemake [FLAGS] read_filtering_pretrim_workflow read_filtering_posttrim_workflow
+```bash
+snakemake [FLAGS] read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
 
 See the [Quick Start](quickstart.md) for details on the process of running this workflow.
@@ -71,8 +71,8 @@ Put these in a JSON file (e.g., `config/custom_datafiles.json`
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_datafiles.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_datafiles.json [FLAGS] <target>
 ```
 
 ### Workflow Configuration
@@ -86,7 +86,7 @@ Here is the structure of the configuration dictionary
 for read filtering workflows (pre-trimming and post-trimming
 quality assessment):
 
-```
+```json
 {
     "workflows" : {
 
@@ -110,8 +110,8 @@ Put these in a JSON file (e.g., `config/custom_workflowconfig.json`
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_workflowconfig.json [FLAGS] <target>
 ```
 
 ### Workflow Parameters
@@ -157,13 +157,13 @@ that are provided in the `files` key. The `{sample}` and `{direction}`
 notation is for Snakemake to match wildcards. For example, the pattern
 
 ```
-{sample}_{direction}_reads.fq.gz
+    {sample}_{direction}_reads.fq.gz
 ```
 
-match the filename
+will match the filename
 
 ```
-SRR606249_subset10_1_reads.fq.gz
+    SRR606249_subset10_1_reads.fq.gz
 ```
 
 such that the wildcard values are `sample=SRR606249_subset10`
@@ -178,8 +178,8 @@ above (or any subset of it) into a JSON file (e.g.,
 `config/custom_workflowparams.json` in the `workflows` directory) and pass the
 name of the config file to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
 ```
 
 

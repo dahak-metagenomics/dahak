@@ -27,8 +27,8 @@ configuration profiles.
 Generally, Snakemake is called by passing command line flags and the name of a
 target file or rule name:
 
-```
-$ snakemake [FLAGS] <target>
+```bash
+snakemake [FLAGS] <target>
 ```
 
 ### What targets are available?
@@ -81,7 +81,7 @@ above and on the [Workflow Configuration](config.md) page.
 For example, to override the default version of trimmomatic (0.36) and use 0.38
 instead, the following JSON would override the version to `0.38--5`:
 
-```
+```json
 {
     "biocontainers" : {
         "trimmomatic" : {
@@ -96,8 +96,8 @@ instead, the following JSON would override the version to `0.38--5`:
 This can be placed in a JSON file like `config/custom_trimmomatic.json` (in
 the `workflows/` directory) and passed to Snakemake using the `--config` flag like:
 
-```
-$ snakemake --config=config/custom_trimmomatic.json \
+```bash
+snakemake --config=config/custom_trimmomatic.json \
         [FLAGS] <target>
 ```
 
@@ -110,7 +110,7 @@ which specify a Singularity image to pull and use to run the given commands.
 These directives are ignored by default, Snakemake must be run with the
 `--use-singularity` flag to run each command through a singularity container:
 
-```
+```bash
 snakemake --use-singularity <target>
 ```
 
@@ -120,8 +120,8 @@ inside the container to provide a shared-access folder on the host filesystem.
 To specify a directory for Singularity to bind-mount, use the
 `SINGULARITY_BINDPATH` environment variable:
 
-```
-$ SINGULARITY_BINDPATH="my_data:/data" snakemake --use-singularity <target>
+```bash
+SINGULARITY_BINDPATH="my_data:/data" snakemake --use-singularity <target>
 ```
 
 This bind-mounts the directory `my_data/` into the Singularity container at `/data/`.
@@ -147,7 +147,7 @@ instead of the `data/` directory, the following very short JSON file
 could be used for the Snakemake configuration dictionary (this would 
 use default values for everything except `data_dir`):
 
-```
+```json
 {
     "data_dir" : "work"
 }
@@ -157,8 +157,8 @@ This JSON file can be used as the Snakemake configuration dictionary
 by passing the JSON file name to the `--configfile` flag to Snakemake
 and updating the Singularity environment variable:
 
-```
-$ SINGULARITY_BINDPATH="work:/work" \
+```bash
+SINGULARITY_BINDPATH="work:/work" \
         snakemake --configfile=config/custom_scratch.settings \
         [FLAGS] <target>
 ```
@@ -174,8 +174,8 @@ See the [Snakemake Configuration](config.md) page.
 All together, the command to run a Dahak workflow will 
 look like this:
 
-```
-$ SINGULARITY_BINDPATH="data:/data" snakemake \
+```bash
+SINGULARITY_BINDPATH="data:/data" snakemake \
     --configfile my_workflow_params.json \
     --use-singularity \
     <target>

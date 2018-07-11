@@ -11,14 +11,14 @@ start with the [Running Workflows](running_workflows.md) page.
 
 Start by cloning a copy of the repository:
 
-```
-$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+```bash
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 ```
 
 then move into the `workflows/` directory in the Dahak repository:
 
-```
-$ cd dahak/workflows/
+```bash
+cd dahak/workflows/
 ```
 
 The quick start assumes that all commands are run from the `workflows/` directory
@@ -28,7 +28,7 @@ As covered on the [Running Workflows](running_workflows.md) page, workflows are
 run by using Snakemake from the command line. The basic syntax is:
 
 ```bash
-$ snakemake [FLAGS] <target>
+snakemake [FLAGS] <target>
 ```
 
 (See the [executing
@@ -49,7 +49,7 @@ are listed on the respective workflow's Snakemake Rules" page.
 All together, commands to run Dahak workflows will look like this:
 
 ```bash
-$ SINGULARITY_BINDPATH="data:/data" \
+SINGULARITY_BINDPATH="data:/data" \
         snakemake --use-singularity \
         [FLAGS] <target>
 ```
@@ -65,7 +65,7 @@ configuration files. We cover the basics below.
 Specify the locations of your data files by assigning a key-value map
 (keys are filenames, values are URLs) to the `files` key:
 
-```
+```json
 {
     "files" : {
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
@@ -77,10 +77,10 @@ Specify the locations of your data files by assigning a key-value map
 ```
 
 This JSON can be put into a JSON file like `config/custom_readfilt.json` and
-passed to Snakemake via the `--configfile` flag:
+passed to Snakemake via the `--configfile` flag on the command line:
 
-```
-$ SINGULARITY_BINDPATH="data:/data" \
+```bash
+SINGULARITY_BINDPATH="data:/data" \
         snakemake --configfile=config/custom_datafiles.json \
         [FLAGS] <target>
 ```
@@ -112,7 +112,7 @@ For example, to evaluate the quality of reads from a sequencer after quality
 trimming, the `read_filtering_posttrim_workflow` Snakemake rule is used, and the
 workflow configuration JSON looks like this:
 
-```
+```json
 {
     "workflows" : {
         "read_filtering_posttrim_workflow" : {
@@ -130,8 +130,8 @@ values to use for quality trimming.
 This file can be put into a JSON file like `config/custom_workflowconfig.json` and
 passed to Snakemake via the `--configfile` flag:
 
-```
-$ SINGULARITY_BINDPATH="data:/data" \
+```bash
+SINGULARITY_BINDPATH="data:/data" \
         snakemake --configfile=config/custom_readfilt.json \
         [FLAGS] read_filtering_posttrim_workflow
 ```
@@ -190,8 +190,8 @@ is under the top-level `read_filtering` key:
 This file can be put into a JSON file like `config/custom_readfilt.json` and
 passed to Snakemake via the `--configfile` flag:
 
-```
-$ SINGULARITY_BINDPATH="data:/data" \
+```bash
+SINGULARITY_BINDPATH="data:/data" \
         snakemake --configfile=config/custom_readfilt.json \
         [FLAGS] read_filtering_posttrim_workflow
 ```
@@ -224,7 +224,7 @@ For example, to put all intermediate files into the `work/` directory
 instead of the `data/` directory, you can use the following JSON
 file:
 
-```
+```json
 {
     "data_dir" : "work"
 }
@@ -233,7 +233,7 @@ file:
 This file can be put into a JSON file like `config/custom_datadir.json` and
 passed to Snakemake via the `--configfile` flag on the command line:
 
-```
+```bash
 SINGULARITY_BINDPATH="work:/work" \
         snakemake --configfile=config/custom_datadir.settings \
         [FLAGS] <target>
@@ -499,7 +499,7 @@ Before you begin, make sure you have everything listed on the
 
 Start by cloning the repository and moving to the `workflows/` directory:
 
-```
+```bash
 git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 cd dahak/workflows/
 ```

@@ -7,8 +7,8 @@ the rules composing a given workflow.
 As a reminder, the [Running Workflows](running_workflows.md) page 
 showed how to call Snakemake and ask for a particular target:
 
-```
-$ snakemake [FLAGS] <target>
+```bash
+snakemake [FLAGS] <target>
 ```
 
 You can replace `<target>` with any of the build rules below.
@@ -37,8 +37,8 @@ assembly_workflow_all
 Pass the name of the build rule directly to Snakemake
 on the command line:
 
-```
-$ snakemake [FLAGS] assembly_workflow_all
+```bash
+snakemake [FLAGS] assembly_workflow_all
 ```
 
 See below for how to configure these workflows.  See the [Quick
@@ -57,7 +57,7 @@ Set the `files` key to a dictionary containing
 a list of key-value pairs, where the keys are 
 filenames and values are URLs:
 
-```
+```json
 {
     "files" : {
         "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
@@ -76,8 +76,8 @@ Put these in a JSON file (e.g., `config/custom_datafiles.json`
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_datafiles.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_datafiles.json [FLAGS] <target>
 ```
 
 ### Workflow Configuration
@@ -90,7 +90,7 @@ filename.
 Here is the structure of the configuration dictionary
 for assembly workflows:
 
-```
+```json
 {
     "workflows" : {
         "assembly_workflow_metaspades" : {
@@ -122,8 +122,8 @@ Put these in a JSON file (e.g., `config/custom_workflowconfig.json`
 in the `workflows` directory) and pass the name of the config file
 to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_workflowconfig.json [FLAGS] <target>
 ```
 
 
@@ -132,7 +132,7 @@ $ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] <target>
 Set the `assembly` key of the Snakemake configuration dictionary
 as shown below:
 
-```
+```json
 {
     "assembly" : {
         "assembly_patterns" : {
@@ -151,7 +151,7 @@ above (or any subset of it) into a JSON file (e.g.,
 `config/custom_workflowparams.json` in the `workflows` directory) and pass the
 name of the config file to Snakemake using the `--configfile` flag:
 
-```
-$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
+```bash
+snakemake --configfile=config/custom_workflowparams.json [FLAGS] <target>
 ```
 
