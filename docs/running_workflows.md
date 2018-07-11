@@ -53,7 +53,8 @@ assembling filenames and passing target filenames to Snakemake.)
 Users should use the build rules to trigger workflows.
 
 The build rules require workflow configuration details to be
-set using Snakemake's configuration dictionary. See 
+set using Snakemake's configuration dictionary. See the
+[Snakemake Configuration](config.md) page for details.
 
 Each workflow has a set of "build rules" that will trigger
 rules for a given workflow or portion of a workflow. Available
