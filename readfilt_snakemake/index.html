@@ -703,7 +703,7 @@ the Snakemake workflows define <strong>build rules</strong> that trigger all of
 the rules composing a given workflow.</p>
 <p>As a reminder, the <a href="../running_workflows/">Running Workflows</a> page 
 showed how to call Snakemake and ask for a particular target:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -724,7 +724,7 @@ read_filtering_posttrim_workflow
 
 <p>Pass the name of the build rule directly to Snakemake
 on the command line:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] read_filtering_pretrim_workflow read_filtering_posttrim_workflow
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 </pre></div>
 
 
@@ -755,7 +755,7 @@ filenames and values are URLs:</p>
 <p>Put these in a JSON file (e.g., <code>config/custom_datafiles.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_datafiles.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_datafiles.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -767,19 +767,19 @@ filename.</p>
 <p>Here is the structure of the configuration dictionary
 for read filtering workflows (pre-trimming and post-trimming
 quality assessment):</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;workflows&quot; : {
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
 
-        &quot;read_filtering_pretrim_workflow&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;]
-        },
+        <span class="nt">&quot;read_filtering_pretrim_workflow&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
 
-        &quot;read_filtering_posttrim_workflow&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;qual&quot;   : [&quot;2&quot;,&quot;30&quot;]
-        }
-    }
-}
+        <span class="nt">&quot;read_filtering_posttrim_workflow&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -789,7 +789,7 @@ values to use for quality trimming (for the post-trimming workflow).</p>
 <p>Put these in a JSON file (e.g., <code>config/custom_workflowconfig.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowconfig.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -832,12 +832,12 @@ to a dictionary containing various child dictionaries and key-value pairs:</p>
 <p>The <code>pre_trimming_pattern</code> must match the filename pattern of the reads 
 that are provided in the <code>files</code> key. The <code>{sample}</code> and <code>{direction}</code>
 notation is for Snakemake to match wildcards. For example, the pattern</p>
-<div class="codehilite"><pre><span></span>{sample}_{direction}_reads.fq.gz
+<div class="codehilite"><pre><span></span>    {sample}_{direction}_reads.fq.gz
 </pre></div>
 
 
-<p>match the filename</p>
-<div class="codehilite"><pre><span></span>SRR606249_subset10_1_reads.fq.gz
+<p>will match the filename</p>
+<div class="codehilite"><pre><span></span>    SRR606249_subset10_1_reads.fq.gz
 </pre></div>
 
 
@@ -850,7 +850,7 @@ customized by the user if needed.</p>
 above (or any subset of it) into a JSON file (e.g.,
 <code>config/custom_workflowparams.json</code> in the <code>workflows</code> directory) and pass the
 name of the config file to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowparams.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
                 
                   

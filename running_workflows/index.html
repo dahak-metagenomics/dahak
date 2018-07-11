@@ -757,7 +757,7 @@ configuration profiles.</p>
 <h2 id="how-to-run-workflows">How To Run Workflows<a class="headerlink" href="#how-to-run-workflows" title="Permanent link">&para;</a></h2>
 <p>Generally, Snakemake is called by passing command line flags and the name of a
 target file or rule name:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -793,22 +793,22 @@ Any of these values can be overridden using a custom JSON file, as described
 above and on the <a href="../config/">Workflow Configuration</a> page. </p>
 <p>For example, to override the default version of trimmomatic (0.36) and use 0.38
 instead, the following JSON would override the version to <code>0.38--5</code>:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;biocontainers&quot; : {
-        &quot;trimmomatic&quot; : {
-            &quot;use_local&quot; : false,
-            &quot;quayurl&quot; : &quot;quay.io/biocontainers/trimmomatic&quot;,
-            &quot;version&quot; : &quot;0.38--5&quot;
-        }
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;biocontainers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;trimmomatic&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;use_local&quot;</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nt">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/trimmomatic&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.38--5&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>This can be placed in a JSON file like <code>config/custom_trimmomatic.json</code> (in
 the <code>workflows/</code> directory) and passed to Snakemake using the <code>--config</code> flag like:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --config=config/custom_trimmomatic.json \
-        [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --config<span class="o">=</span>config/custom_trimmomatic.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -826,7 +826,7 @@ These directives are ignored by default, Snakemake must be run with the
 inside the container to provide a shared-access folder on the host filesystem.</p>
 <p>To specify a directory for Singularity to bind-mount, use the
 <code>SINGULARITY_BINDPATH</code> environment variable:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;my_data:/data&quot; snakemake --use-singularity &lt;target&gt;
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;my_data:/data&quot;</span> snakemake --use-singularity &lt;target&gt;
 </pre></div>
 
 
@@ -847,18 +847,18 @@ accordingly.</p>
 instead of the <code>data/</code> directory, the following very short JSON file
 could be used for the Snakemake configuration dictionary (this would 
 use default values for everything except <code>data_dir</code>):</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;data_dir&quot; : &quot;work&quot;
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;data_dir&quot;</span> <span class="p">:</span> <span class="s2">&quot;work&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>This JSON file can be used as the Snakemake configuration dictionary
 by passing the JSON file name to the <code>--configfile</code> flag to Snakemake
 and updating the Singularity environment variable:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;work:/work&quot; \
-        snakemake --configfile=config/custom_scratch.settings \
-        [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;work:/work&quot;</span> <span class="se">\</span>
+        snakemake --configfile<span class="o">=</span>config/custom_scratch.settings <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -867,9 +867,9 @@ and updating the Singularity environment variable:</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>All together, the command to run a Dahak workflow will 
 look like this:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;data:/data&quot; snakemake \
-    --configfile my_workflow_params.json \
-    --use-singularity \
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> snakemake <span class="se">\</span>
+    --configfile my_workflow_params.json <span class="se">\</span>
+    --use-singularity <span class="se">\</span>
     &lt;target&gt;
 </pre></div>
                 

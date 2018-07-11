@@ -785,12 +785,12 @@ Quick Start</a> section.</p>
 For a more clear explanation of what's going on and how things work, 
 start with the <a href="../running_workflows/">Running Workflows</a> page.</p>
 <p>Start by cloning a copy of the repository:</p>
-<div class="codehilite"><pre><span></span>$ git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+<div class="codehilite"><pre><span></span>git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
 </pre></div>
 
 
 <p>then move into the <code>workflows/</code> directory in the Dahak repository:</p>
-<div class="codehilite"><pre><span></span>$ cd dahak/workflows/
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> dahak/workflows/
 </pre></div>
 
 
@@ -798,7 +798,7 @@ start with the <a href="../running_workflows/">Running Workflows</a> page.</p>
 unless stated otherwise.</p>
 <p>As covered on the <a href="../running_workflows/">Running Workflows</a> page, workflows are
 run by using Snakemake from the command line. The basic syntax is:</p>
-<div class="codehilite"><pre><span></span>$ snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -814,7 +814,7 @@ to be set, to bind-mount a local directory into the container. </p>
 <p>The user should use build targets. Each workflow's build targets and details
 are listed on the respective workflow's Snakemake Rules" page.</p>
 <p>All together, commands to run Dahak workflows will look like this:</p>
-<div class="codehilite"><pre><span></span>$ <span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> <span class="se">\</span>
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> <span class="se">\</span>
         snakemake --use-singularity <span class="se">\</span>
         <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
@@ -826,22 +826,22 @@ configuration files. We cover the basics below.</p>
 <h3 id="how-do-i-specify-my-data-files">How do I specify my data files?<a class="headerlink" href="#how-do-i-specify-my-data-files" title="Permanent link">&para;</a></h3>
 <p>Specify the locations of your data files by assigning a key-value map
 (keys are filenames, values are URLs) to the <code>files</code> key:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;files&quot; : {
-        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
-        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
-        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
-        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;SRR606249_1_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_2_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>This JSON can be put into a JSON file like <code>config/custom_readfilt.json</code> and
-passed to Snakemake via the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;data:/data&quot; \
-        snakemake --configfile=config/custom_datafiles.json \
-        [FLAGS] &lt;target&gt;
+passed to Snakemake via the <code>--configfile</code> flag on the command line:</p>
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> <span class="se">\</span>
+        snakemake --configfile<span class="o">=</span>config/custom_datafiles.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -866,14 +866,14 @@ build rule extracts from the Snakemake configuration dictionary.</p>
 <p>For example, to evaluate the quality of reads from a sequencer after quality
 trimming, the <code>read_filtering_posttrim_workflow</code> Snakemake rule is used, and the
 workflow configuration JSON looks like this:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;workflows&quot; : {
-        &quot;read_filtering_posttrim_workflow&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249&quot;,&quot;SRR606249_subset10&quot;],
-            &quot;qual&quot;   : [&quot;2&quot;,&quot;30&quot;]
-        },
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;read_filtering_posttrim_workflow&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -882,9 +882,9 @@ run the read filtering workflow on. The <code>qual</code> list specifies the
 values to use for quality trimming.</p>
 <p>This file can be put into a JSON file like <code>config/custom_workflowconfig.json</code> and
 passed to Snakemake via the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;data:/data&quot; \
-        snakemake --configfile=config/custom_readfilt.json \
-        [FLAGS] read_filtering_posttrim_workflow
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> <span class="se">\</span>
+        snakemake --configfile<span class="o">=</span>config/custom_readfilt.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> read_filtering_posttrim_workflow
 </pre></div>
 
 
@@ -935,9 +935,9 @@ is under the top-level <code>read_filtering</code> key:</p>
 
 <p>This file can be put into a JSON file like <code>config/custom_readfilt.json</code> and
 passed to Snakemake via the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ SINGULARITY_BINDPATH=&quot;data:/data&quot; \
-        snakemake --configfile=config/custom_readfilt.json \
-        [FLAGS] read_filtering_posttrim_workflow
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span> <span class="se">\</span>
+        snakemake --configfile<span class="o">=</span>config/custom_readfilt.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> read_filtering_posttrim_workflow
 </pre></div>
 
 
@@ -965,17 +965,17 @@ adjust the <code>SINGULARITY_BINDPATH</code> variable accordingly.</p>
 <p>For example, to put all intermediate files into the <code>work/</code> directory
 instead of the <code>data/</code> directory, you can use the following JSON
 file:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;data_dir&quot; : &quot;work&quot;
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;data_dir&quot;</span> <span class="p">:</span> <span class="s2">&quot;work&quot;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>This file can be put into a JSON file like <code>config/custom_datadir.json</code> and
 passed to Snakemake via the <code>--configfile</code> flag on the command line:</p>
-<div class="codehilite"><pre><span></span>SINGULARITY_BINDPATH=&quot;work:/work&quot; \
-        snakemake --configfile=config/custom_datadir.settings \
-        [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span><span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;work:/work&quot;</span> <span class="se">\</span>
+        snakemake --configfile<span class="o">=</span>config/custom_datadir.settings <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -1210,7 +1210,7 @@ a reference database.</p>
 <a href="../installing/">Installing</a> page available on your command line.</p>
 <p>Start by cloning the repository and moving to the <code>workflows/</code> directory:</p>
 <div class="codehilite"><pre><span></span>git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
-cd dahak/workflows/
+<span class="nb">cd</span> dahak/workflows/
 </pre></div>
 
 

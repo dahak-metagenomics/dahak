@@ -703,7 +703,7 @@ the Snakemake workflows define <strong>build rules</strong> that trigger all of
 the rules composing a given workflow.</p>
 <p>As a reminder, the <a href="../running_workflows/">Running Workflows</a> page 
 showed how to call Snakemake and ask for a particular target:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -728,8 +728,8 @@ comparison_workflow_reads_assembly
 
 <p>Pass the name of the build rule directly to Snakemake
 on the command line:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] comparison_workflow_reads \
-        comparison_workflow_assembly \
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> comparison_workflow_reads <span class="se">\</span>
+        comparison_workflow_assembly <span class="se">\</span>
         comparison_workflow_reads_assembly
 </pre></div>
 
@@ -744,25 +744,25 @@ Snakemake configuration dictionary (also see the
 <p>Set the <code>files</code> key to a dictionary containing
 a list of key-value pairs, where the keys are 
 filenames and values are URLs:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;files&quot; : {
-        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
-        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
-        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
-        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
-        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
-        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;,
-        &quot;SRR606249_subset50_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;,
-        &quot;SRR606249_subset50_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;,
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;SRR606249_1_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_2_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset25_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset25_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset50_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset50_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Put these in a JSON file (e.g., <code>config/custom_datafiles.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_datafiles.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_datafiles.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -773,79 +773,79 @@ configuration values are values that will end up in the final output file's
 filename.</p>
 <p>Here is the structure of the configuration dictionary
 for taxonomic classification workflows:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;workflows&quot; : {
-        &quot;comparison_workflow_reads&quot;: {
-            #
-            # these parameters determine which reads
-            # the comparison workflow will be run on
-            # 
-            &quot;kvalue&quot;    : [&quot;21&quot;,&quot;31&quot;,&quot;51&quot;],
-        },
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;comparison_workflow_reads&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="err">#</span>
+            <span class="err">#</span> <span class="err">these</span> <span class="err">parameters</span> <span class="err">determine</span> <span class="err">which</span> <span class="err">reads</span>
+            <span class="err">#</span> <span class="err">the</span> <span class="err">comparison</span> <span class="err">workflow</span> <span class="err">will</span> <span class="err">be</span> <span class="err">run</span> <span class="err">on</span>
+            <span class="err">#</span> 
+            <span class="nt">&quot;kvalue&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;21&quot;</span><span class="p">,</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;51&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
 
-        &quot;comparison_workflow_assembly&quot; : {
-            #
-            # these parameters determine which assembled reads
-            # the comparison workflow will be run on
-            # 
-            &quot;kvalue&quot;    : [&quot;21&quot;,&quot;31&quot;,&quot;51&quot;],
-        },
+        <span class="nt">&quot;comparison_workflow_assembly&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="err">#</span>
+            <span class="err">#</span> <span class="err">these</span> <span class="err">parameters</span> <span class="err">determine</span> <span class="err">which</span> <span class="err">assembled</span> <span class="err">reads</span>
+            <span class="err">#</span> <span class="err">the</span> <span class="err">comparison</span> <span class="err">workflow</span> <span class="err">will</span> <span class="err">be</span> <span class="err">run</span> <span class="err">on</span>
+            <span class="err">#</span> 
+            <span class="nt">&quot;kvalue&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;21&quot;</span><span class="p">,</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;51&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
 
-        &quot;comparison_workflow_reads_assembly&quot; : {
-            #
-            # these parameters determine which reads and assembled 
-            # reads the comparison workflow will be run on
-            # 
-            &quot;kvalue&quot;    : [&quot;21&quot;,&quot;31&quot;,&quot;51&quot;],
-        }
-    }
-}
+        <span class="nt">&quot;comparison_workflow_reads_assembly&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="err">#</span>
+            <span class="err">#</span> <span class="err">these</span> <span class="err">parameters</span> <span class="err">determine</span> <span class="err">which</span> <span class="err">reads</span> <span class="err">and</span> <span class="err">assembled</span> 
+            <span class="err">#</span> <span class="err">reads</span> <span class="err">the</span> <span class="err">comparison</span> <span class="err">workflow</span> <span class="err">will</span> <span class="err">be</span> <span class="err">run</span> <span class="err">on</span>
+            <span class="err">#</span> 
+            <span class="nt">&quot;kvalue&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;21&quot;</span><span class="p">,</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;51&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Put these in a JSON file (e.g., <code>config/custom_workflowconfig.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowconfig.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
 <h3 id="workflow-parameters">Workflow Parameters<a class="headerlink" href="#workflow-parameters" title="Permanent link">&para;</a></h3>
 <p>Set the <code>taxonomic_classification</code> key of the Snakemake configuration dictionary
 as shown below:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;comparison&quot; : {
-        &quot;compute_read_signatures&quot; : {
-            &quot;scale&quot;         : 10000,
-            &quot;kvalues&quot;       : [21,31,51],
-            &quot;qual&quot;          : [&quot;2&quot;,&quot;30&quot;],
-            &quot;sig_suffix&quot;    : &quot;_scaled10k.k21_31_51.sig&quot;, 
-            &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
-        },
-        &quot;compare_read_signatures&quot; : {
-            &quot;samples&quot; : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;csv_out&quot; : &quot;SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv&quot;
-        },
-        &quot;compute_assembly_signatures&quot; : {
-            &quot;scale&quot;         : 10000,
-            &quot;kvalues&quot;       : [21,31,51],
-            &quot;qual&quot;          : [&quot;2&quot;,&quot;30&quot;],
-            &quot;sig_suffix&quot; : &quot;_scaled10k.k21_31_51.sig&quot;,
-            &quot;merge_suffix&quot;  : &quot;_scaled10k.k21_31_51.fq.gz&quot;
-        },
-        &quot;compare_assembly_signatures&quot; : {
-            &quot;samples&quot;   : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;assembler&quot; : [&quot;megahit&quot;,&quot;metaspades&quot;],
-            &quot;csv_out&quot;   : &quot;SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv&quot;
-        },
-        &quot;compare_read_assembly_signatures&quot; : {
-            &quot;samples&quot;   : [&quot;SRR606249_subset10&quot;],
-            &quot;assembler&quot; : [&quot;megahit&quot;,&quot;metaspades&quot;],
-            &quot;kvalues&quot;   : [21, 31, 51],
-            &quot;csv_out&quot;   : &quot;SRR606249_trim2and30_ra_comparison.k{kvalue}.csv&quot;
-        }
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;comparison&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;compute_read_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;scale&quot;</span>         <span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+            <span class="nt">&quot;kvalues&quot;</span>       <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">51</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>          <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;sig_suffix&quot;</span>    <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.sig&quot;</span><span class="p">,</span> 
+            <span class="nt">&quot;merge_suffix&quot;</span>  <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.fq.gz&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;compare_read_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;samples&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;csv_out&quot;</span> <span class="p">:</span> <span class="s2">&quot;SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;compute_assembly_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;scale&quot;</span>         <span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+            <span class="nt">&quot;kvalues&quot;</span>       <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">51</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>          <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;sig_suffix&quot;</span> <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.sig&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;merge_suffix&quot;</span>  <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.fq.gz&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;compare_assembly_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;samples&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;assembler&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;megahit&quot;</span><span class="p">,</span><span class="s2">&quot;metaspades&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;csv_out&quot;</span>   <span class="p">:</span> <span class="s2">&quot;SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;compare_read_assembly_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;samples&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;assembler&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;megahit&quot;</span><span class="p">,</span><span class="s2">&quot;metaspades&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;kvalues&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">51</span><span class="p">],</span>
+            <span class="nt">&quot;csv_out&quot;</span>   <span class="p">:</span> <span class="s2">&quot;SRR606249_trim2and30_ra_comparison.k{kvalue}.csv&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -858,7 +858,7 @@ and should be a superset of the the k values provided to the build rule.</p>
 above (or any subset of it) into a JSON file (e.g.,
 <code>config/custom_workflowparams.json</code> in the <code>workflows</code> directory) and pass the
 name of the config file to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowparams.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
                 
                   

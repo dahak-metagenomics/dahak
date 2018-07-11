@@ -703,7 +703,7 @@ the Snakemake workflows define <strong>build rules</strong> that trigger all of
 the rules composing a given workflow.</p>
 <p>As a reminder, the <a href="../running_workflows/">Running Workflows</a> page 
 showed how to call Snakemake and ask for a particular target:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -728,7 +728,7 @@ assembly_workflow_all
 
 <p>Pass the name of the build rule directly to Snakemake
 on the command line:</p>
-<div class="codehilite"><pre><span></span>$ snakemake [FLAGS] assembly_workflow_all
+<div class="codehilite"><pre><span></span>snakemake <span class="o">[</span>FLAGS<span class="o">]</span> assembly_workflow_all
 </pre></div>
 
 
@@ -742,25 +742,25 @@ Snakemake configuration dictionary (also see the
 <p>Set the <code>files</code> key to a dictionary containing
 a list of key-value pairs, where the keys are 
 filenames and values are URLs:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;files&quot; : {
-        &quot;SRR606249_1_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;,
-        &quot;SRR606249_2_reads.fq.gz&quot; :           &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;,
-        &quot;SRR606249_subset10_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;,
-        &quot;SRR606249_subset10_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;,
-        &quot;SRR606249_subset25_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;,
-        &quot;SRR606249_subset25_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;,
-        &quot;SRR606249_subset50_1_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;,
-        &quot;SRR606249_subset50_2_reads.fq.gz&quot; :  &quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;,
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;SRR606249_1_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_2_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset10_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset25_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset25_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset50_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;SRR606249_subset50_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Put these in a JSON file (e.g., <code>config/custom_datafiles.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_datafiles.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_datafiles.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -771,25 +771,25 @@ configuration values are values that will end up in the final output file's
 filename.</p>
 <p>Here is the structure of the configuration dictionary
 for assembly workflows:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;workflows&quot; : {
-        &quot;assembly_workflow_metaspades&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;qual&quot;      : [&quot;2&quot;,&quot;30&quot;],
-        },
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;assembly_workflow_metaspades&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
 
-        &quot;assembly_workflow_megahit&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;qual&quot;      : [&quot;2&quot;,&quot;30&quot;],
-        },
+        <span class="nt">&quot;assembly_workflow_megahit&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
 
-        &quot;assembly_workflow_all&quot; : {
-            &quot;sample&quot;    : [&quot;SRR606249_subset10&quot;,&quot;SRR606249_subset25&quot;],
-            &quot;qual&quot;      : [&quot;2&quot;,&quot;30&quot;],
-        },
+        <span class="nt">&quot;assembly_workflow_all&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
 
-    }
-}
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -801,24 +801,24 @@ the quality trimming value to use.</p>
 <p>Put these in a JSON file (e.g., <code>config/custom_workflowconfig.json</code> 
 in the <code>workflows</code> directory) and pass the name of the config file
 to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowconfig.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowconfig.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
 <h3 id="workflow-parameters">Workflow Parameters<a class="headerlink" href="#workflow-parameters" title="Permanent link">&para;</a></h3>
 <p>Set the <code>assembly</code> key of the Snakemake configuration dictionary
 as shown below:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;assembly&quot; : {
-        &quot;assembly_patterns&quot; : {
-            &quot;metaspades_pattern&quot; : &quot;{sample}.trim{qual}_metaspades.contigs.fa&quot;,
-            &quot;megahit_pattern&quot; : &quot;{sample}.trim{qual}_megahit.contigs.fa&quot;,
-            &quot;assembly_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}.contigs.fa&quot;,
-            &quot;quast_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}_quast/report.html&quot;,
-            &quot;multiqc_pattern&quot; : &quot;{sample}.trim{qual}_{assembler}_multiqc/report.html&quot;,
-        }
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;assembly&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;assembly_patterns&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;metaspades_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_metaspades.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;megahit_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_megahit.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;assembly_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;quast_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}_quast/report.html&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;multiqc_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}_multiqc/report.html&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -826,7 +826,7 @@ as shown below:</p>
 above (or any subset of it) into a JSON file (e.g.,
 <code>config/custom_workflowparams.json</code> in the <code>workflows</code> directory) and pass the
 name of the config file to Snakemake using the <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile=config/custom_workflowparams.json [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --configfile<span class="o">=</span>config/custom_workflowparams.json <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
                 
                   

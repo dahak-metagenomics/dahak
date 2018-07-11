@@ -688,7 +688,7 @@
 key-value pairs in the configuration dictionary used by Snakemake.</p>
 <p>To use a custom configuration file (JSON or YAML format), use the
 <code>--configfile</code> flag:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --configfile my_workflow_params.json ...
+<div class="codehilite"><pre><span></span>snakemake --configfile my_workflow_params.json ...
 </pre></div>
 
 
@@ -744,8 +744,8 @@ corresponding URLs:</p>
 
 <p>This can be placed in a JSON file like <code>dahak/workflows/config/custom_datafiles.json</code> 
 and passed to Snakemake using the <code>--config</code> flag like:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --config=config/custom_datafiles.json \
-        [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --config<span class="o">=</span>config/custom_datafiles.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
@@ -772,50 +772,51 @@ configuration key-value pair.</p>
 <p>For example, by default the version of each container image for each
 program obtained from the biocontainers project is specified in the
 top-level <code>biocontainers</code> key in <code>default_parameters.settings</code>:</p>
-<div class="codehilite"><pre><span></span>config_default = {
+<div class="codehilite"><pre><span></span><span class="n">config_default</span> <span class="o">=</span> <span class="p">{</span>
 
-    ...
+    <span class="o">...</span>
 
-    &quot;biocontainers&quot; : {
-        &quot;sourmash&quot; : {
-            &quot;use_local&quot; : False,
-            &quot;quayurl&quot; : &quot;quay.io/biocontainers/sourmash&quot;,
-            &quot;version&quot; : &quot;2.0.0a3--py36_0&quot;
-        },
-        &quot;trimmomatic&quot; : {
-            &quot;use_local&quot; : False,
-            &quot;quayurl&quot; : &quot;quay.io/biocontainers/trimmomatic&quot;,
-            &quot;version&quot; : &quot;0.36--5&quot;
-        },
-        &quot;khmer&quot; : {
-            &quot;use_local&quot; : False,
-            &quot;quayurl&quot; : &quot;quay.io/biocontainers/khmer&quot;,
-            &quot;version&quot; : &quot;2.1.2--py35_0&quot;
-        },
+    <span class="s2">&quot;biocontainers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;sourmash&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;use_local&quot;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="s2">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/sourmash&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;2.0.0a3--py36_0&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;trimmomatic&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;use_local&quot;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="s2">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/trimmomatic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.36--5&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;khmer&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;use_local&quot;</span> <span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="s2">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/khmer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;2.1.2--py35_0&quot;</span>
+        <span class="p">},</span>
 
-        ...
+        <span class="o">...</span>
 </pre></div>
 
 
+<p>(Note the <code>*.settings</code> files and the above code are Python, not JSON.)</p>
 <p>If the user wishes to bump the version of trimmomatic to (e.g.) 0.38,
 but not change the version of khmer or sourmash, the user can specify
 a JSON file with the following configuration block:</p>
-<div class="codehilite"><pre><span></span>{
-    &quot;biocontainers&quot; : {
-        &quot;trimmomatic&quot; : {
-            &quot;use_local&quot; : false,
-            &quot;quayurl&quot; : &quot;quay.io/biocontainers/trimmomatic&quot;,
-            &quot;version&quot; : &quot;0.38--5&quot;
-        }
-    }
-}
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;biocontainers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;trimmomatic&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;use_local&quot;</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nt">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/trimmomatic&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.38--5&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>This can be placed in a JSON file like <code>dahak/workflows/config/custom_workflowparams.json</code> 
 and passed to Snakemake using the <code>--config</code> flag like:</p>
-<div class="codehilite"><pre><span></span>$ snakemake --config=config/custom_workflowparams.json \
-        [FLAGS] &lt;target&gt;
+<div class="codehilite"><pre><span></span>snakemake --config<span class="o">=</span>config/custom_workflowparams.json <span class="se">\</span>
+        <span class="o">[</span>FLAGS<span class="o">]</span> &lt;target&gt;
 </pre></div>
 
 
