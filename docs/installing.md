@@ -169,8 +169,36 @@ pip install --upgrade pip
 
 ## Installing Conda
 
-Now we set the version of conda we wish to install. We will install
-Miniconda 4.3.30 with Python 3:
+### Installing Conda with Python
+
+Once Python is installed, install the latest Miniconda from continuum.io:
+
+```
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+Now check to ensure conda is installed and is the correct version:
+
+```
+which conda
+conda --version
+python --version
+```
+
+Add the required conda channels:
+
+```
+conda update
+conda config --add channels r
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda config --add channels bioconda
+```
+
+### Installing Conda with Pyenv
+
+Once pyenv is installed, use it to install Miniconda 4.3.30 with Python 3:
 
 ```
 CONDA="miniconda3-4.3.30"
@@ -204,6 +232,15 @@ conda config --add channels r
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
+```
+
+### Create a Conda Environment
+
+Once conda is installed, you can create a conda environment called
+`dahak` as detailed in the [conda documentation](https://conda.io/docs/user-guide/tasks/manage-environments.html):
+
+```
+conda create --name dahak
 ```
 
 <br />
