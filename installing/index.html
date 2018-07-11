@@ -336,6 +336,33 @@
     Installing Conda
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-conda-with-python" title="Installing Conda with Python" class="md-nav__link">
+    Installing Conda with Python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-conda-with-pyenv" title="Installing Conda with Pyenv" class="md-nav__link">
+    Installing Conda with Pyenv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-conda-environment" title="Create a Conda Environment" class="md-nav__link">
+    Create a Conda Environment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -723,6 +750,33 @@
     Installing Conda
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-conda-with-python" title="Installing Conda with Python" class="md-nav__link">
+    Installing Conda with Python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-conda-with-pyenv" title="Installing Conda with Pyenv" class="md-nav__link">
+    Installing Conda with Pyenv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-conda-environment" title="Create a Conda Environment" class="md-nav__link">
+    Create a Conda Environment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -886,8 +940,31 @@ with <code>python</code>:</p>
 <p><br />
 <br /></p>
 <h2 id="installing-conda">Installing Conda<a class="headerlink" href="#installing-conda" title="Permanent link">&para;</a></h2>
-<p>Now we set the version of conda we wish to install. We will install
-Miniconda 4.3.30 with Python 3:</p>
+<h3 id="installing-conda-with-python">Installing Conda with Python<a class="headerlink" href="#installing-conda-with-python" title="Permanent link">&para;</a></h3>
+<p>Once Python is installed, install the latest Miniconda from continuum.io:</p>
+<div class="codehilite"><pre><span></span>wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+</pre></div>
+
+
+<p>Now check to ensure conda is installed and is the correct version:</p>
+<div class="codehilite"><pre><span></span>which conda
+conda --version
+python --version
+</pre></div>
+
+
+<p>Add the required conda channels:</p>
+<div class="codehilite"><pre><span></span>conda update
+conda config --add channels r
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda config --add channels bioconda
+</pre></div>
+
+
+<h3 id="installing-conda-with-pyenv">Installing Conda with Pyenv<a class="headerlink" href="#installing-conda-with-pyenv" title="Permanent link">&para;</a></h3>
+<p>Once pyenv is installed, use it to install Miniconda 4.3.30 with Python 3:</p>
 <div class="codehilite"><pre><span></span>CONDA=&quot;miniconda3-4.3.30&quot;
 pyenv install $CONDA
 pyenv global $CONDA
@@ -916,6 +993,13 @@ conda config --add channels r
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
+</pre></div>
+
+
+<h3 id="create-a-conda-environment">Create a Conda Environment<a class="headerlink" href="#create-a-conda-environment" title="Permanent link">&para;</a></h3>
+<p>Once conda is installed, you can create a conda environment using
+an <code>environment.yml</code> file:</p>
+<div class="codehilite"><pre><span></span>conda env create -f dahak-conda-environment.yml
 </pre></div>
 
 
