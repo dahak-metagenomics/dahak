@@ -757,7 +757,76 @@ directory (set by <code>data_dir</code> key in the Snakemake configuration dicti
 read files, the download command will not be run. You can use an empty string
 for the URLs in this case.</p>
 <h2 id="how-do-i-specify-my-workflow-configuration">How do I specify my workflow configuration?<a class="headerlink" href="#how-do-i-specify-my-workflow-configuration" title="Permanent link">&para;</a></h2>
+<p>The workflow configuration file specifies details about
+<em>which</em> workflow should be run. This is typically just
+the name of the samples to run the workflow on, and a 
+quality value or a k value.</p>
+<p>Set the <code>workflows</code> key of the Snakemake configuration dictionary to a
+dictionary containing details about the workflow you want to run.  The workflow
+configuration values are values that will end up in the final output file's
+filename.</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name_of_workflow&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;workflow_option&quot;</span> <span class="p">:</span> <span class="s2">&quot;workflow_option_value&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>For example, here is what the workflow configuration looks like
+for the assembly workflow:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;assembly_workflow_metaspades&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+
+        <span class="nt">&quot;assembly_workflow_megahit&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+
+        <span class="nt">&quot;assembly_workflow_all&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;sample&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">,</span><span class="s2">&quot;SRR606249_subset25&quot;</span><span class="p">],</span>
+            <span class="nt">&quot;qual&quot;</span>      <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Each workflow component has a "Snakemake" page that covers
+workflow configuration options and details for the respective workflow.  Use the
+navigation menu on the left and select the workflow component of interest, then
+pick the "Snakemake" page.</p>
 <h2 id="how-do-i-specify-my-workflow-parameters">How do I specify my workflow parameters?<a class="headerlink" href="#how-do-i-specify-my-workflow-parameters" title="Permanent link">&para;</a></h2>
+<p>Workflow parameters specify parameters that are used when executing
+individual workflow steps. These parameters are not incorporated in
+the final filename and are usually more extensive.</p>
+<p>These are set using a key that is the name of the workflow component.
+For example, the assembly workflow parameters section of the workflow
+parameters file looks like this:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;assembly&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;assembly_patterns&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;metaspades_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_metaspades.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;megahit_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_megahit.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;assembly_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}.contigs.fa&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;quast_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}_quast/report.html&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;multiqc_pattern&quot;</span> <span class="p">:</span> <span class="s2">&quot;{sample}.trim{qual}_{assembler}_multiqc/report.html&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Each workflow component has a "Snakemake" page that covers workflow parameters
+and details for the respective workflow.  Use the navigation menu on the left
+and select the workflow component of interest, then pick the "Snakemake" page.</p>
 <h2 id="settings-defaults-vs-json-overriding-defaults">.settings (Defaults) vs .json (Overriding Defaults)<a class="headerlink" href="#settings-defaults-vs-json-overriding-defaults" title="Permanent link">&para;</a></h2>
 <p>The <code>*.settings</code> files are Python scripts that set the default
 Snakemake configuration dictionary. Each <code>*.settings</code> file is
