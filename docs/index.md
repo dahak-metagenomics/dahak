@@ -45,8 +45,8 @@ The following software is required to run Dahak workflows:
 
 * (Required) Singularity >= 2.4 (does not require sudo access) or Docker
   (requires sudo access)
-* (Optional) Sun Grid Compute Engine
-* (Optional) Ubuntu 16.04 (Xenial)
+* (Recommended) Ubuntu 16.04 (Xenial)
+* (Recommended) Sun Grid Compute Engine
 
 See the [Installing](installing.md) page for detailed instructions
 on installing each of the required components listed above,

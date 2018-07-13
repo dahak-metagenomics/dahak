@@ -1,7 +1,12 @@
 # Quick Start
 
-Note for the *very* impatient: skip straight to [The Really Quick Copy And Paste
+For the *very* impatient, skip straight to [The Really Quick Copy And Paste
 Quick Start](#the-really-quick-copy-and-paste-quick-start) section.
+
+!!! warning "Examples in the Repository"
+
+    All code blocks below can be copied and pasted onto the command line,
+    except for the JSON files.
 
 ## Getting Set Up to Run Workflows
 
@@ -36,7 +41,7 @@ Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html#all-option
 page of the Snakemake documentation for a full list of options that can be used
 with Snakemake.)
 
-The most important flag to pass is the `--config` flag, which allows users to
+The most important flag to pass is the `--configfile` flag, which allows users to
 specify a Snakemake configuration dictionary to customize their Dahak workflows.
 
 The user should also pass the `--use-singularity` flag to tell Snakemake to use
@@ -53,6 +58,13 @@ SINGULARITY_BINDPATH="data:/data" \
         snakemake --use-singularity \
         [FLAGS] <target>
 ```
+
+For more information about Snakemake flags, see the [executing
+Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html#all-options)
+page of the Snakemake documentation.
+
+For more information about the targets, see the [Running
+Workflows](running_workflows.md) page.
 
 
 ## Configuring Snakemake
@@ -142,6 +154,9 @@ SINGULARITY_BINDPATH="data:/data" \
     in the Dahak repository, as well as the "Snakemake" page 
     for each respective workflow.
 
+    See [Configuring Snakemake](config.md) for more details about Snakemake
+    configuration files.
+
 
 ## How do I specify my workflow parameters?
 
@@ -206,6 +221,9 @@ for an explanation of each of the above options.)
     do not contain any comments. For a well-commented version,
     check the `workflows/config/default_workflowparams.settings](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/default_workflowparams.settings)
     file.
+
+    See [Configuring Snakemake](config.md) for more details about Snakemake
+    configuration files.
     
 ## Where will data files live?
 
@@ -271,9 +289,10 @@ cd dahak/workflows/
 Now create a JSON file that defines a Snakemake configuration dictionary.
 This file should:
 
-* Provides URLs at which each read filtering file can be accessed
-* Provides a set of quality trimming values to use (2 and 30)
-* Sets all read filtering parameters (for simplicity, we will set each
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Specify which biocontainers to use with singularity
+* Set all read filtering parameters (for simplicity, we will set each
     parameter to its default value)
 
 (See the [Read Filtering Snakemake](readfilt_snakemake.md) page for details on
@@ -408,9 +427,10 @@ cd dahak/workflows/
 Now create a JSON file that defines a Snakemake configuration dictionary.
 This file should:
 
-* Provides URLs at which each read filtering file can be accessed
-* Provides a set of quality trimming values to use (2 and 30)
-* Sets all read filtering parameters (for simplicity, we will set each
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Specify which biocontainers to use with singularity
+* Set all read filtering parameters (for simplicity, we will set each
     parameter to its default value)
 
 (See the [Assembly Snakemake](assembly_snakemake.md) page for details on
@@ -507,10 +527,12 @@ cd dahak/workflows/
 Now create a JSON file that defines a Snakemake configuration dictionary.
 This file should:
 
-* Provides URLs at which each read filtering file can be accessed
-* Provides a set of quality trimming values to use (2 and 30)
-* Sets all read filtering parameters (for simplicity, we will set each
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Set all read filtering parameters (for simplicity, we will set each
     parameter to its default value)
+* Provide scale and k values for computing genome signatures
+* Specify the k values at which to do the comparison
 
 (See the [Comparison Snakemake](comparison_snakemake.md) page for details on
 these options.)
@@ -588,3 +610,6 @@ snakemake -p \
         comparison_workflow_reads_assembly
 ```
 
+
+<br />
+<br />

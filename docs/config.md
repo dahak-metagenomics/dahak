@@ -75,8 +75,84 @@ for the URLs in this case.
 
 ## How do I specify my workflow configuration?
 
+The workflow configuration file specifies details about
+*which* workflow should be run. This is typically just
+the name of the samples to run the workflow on, and a 
+quality value or a k value.
+
+Set the `workflows` key of the Snakemake configuration dictionary to a
+dictionary containing details about the workflow you want to run.  The workflow
+configuration values are values that will end up in the final output file's
+filename.
+
+```json
+{
+    "workflows" : {
+        "name_of_workflow" : {
+            "workflow_option" : "workflow_option_value"
+        }
+    }
+}
+```
+
+For example, here is what the workflow configuration looks like
+for the assembly workflow:
+
+```json
+{
+    "workflows" : {
+        "assembly_workflow_metaspades" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"],
+        },
+
+        "assembly_workflow_megahit" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"],
+        },
+
+        "assembly_workflow_all" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"],
+        },
+
+    }
+}
+```
+
+Each workflow component has a "Snakemake" page that covers
+workflow configuration options and details for the respective workflow.  Use the
+navigation menu on the left and select the workflow component of interest, then
+pick the "Snakemake" page.
 
 ## How do I specify my workflow parameters?
+
+Workflow parameters specify parameters that are used when executing
+individual workflow steps. These parameters are not incorporated in
+the final filename and are usually more extensive.
+
+These are set using a key that is the name of the workflow component.
+For example, the assembly workflow parameters section of the workflow
+parameters file looks like this:
+
+
+```json
+{
+    "assembly" : {
+        "assembly_patterns" : {
+            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
+        }
+    }
+}
+```
+
+Each workflow component has a "Snakemake" page that covers workflow parameters
+and details for the respective workflow.  Use the navigation menu on the left
+and select the workflow component of interest, then pick the "Snakemake" page.
 
 
 ## .settings (Defaults) vs .json (Overriding Defaults)
