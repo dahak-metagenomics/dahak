@@ -390,13 +390,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#taxonomic-classification-with-sourmash" title="Taxonomic Classification with Sourmash" class="md-nav__link">
-    Taxonomic Classification with Sourmash
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -762,13 +755,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#taxonomic-classification-with-sourmash" title="Taxonomic Classification with Sourmash" class="md-nav__link">
-    Taxonomic Classification with Sourmash
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -839,6 +825,11 @@ are listed on the respective workflow's Snakemake Rules" page.</p>
 </pre></div>
 
 
+<p>For more information about Snakemake flags, see the <a href="https://snakemake.readthedocs.io/en/stable/executable.html#all-options">executing
+Snakemake</a>
+page of the Snakemake documentation.</p>
+<p>For more information about the targets, see the <a href="../running_workflows/">Running
+Workflows</a> page.</p>
 <h2 id="configuring-snakemake">Configuring Snakemake<a class="headerlink" href="#configuring-snakemake" title="Permanent link">&para;</a></h2>
 <p>See <a href="../config/">Configuring Snakemake</a> for more details about Snakemake
 configuration files. We cover the basics below.</p>
@@ -912,6 +903,8 @@ passed to Snakemake via the <code>--configfile</code> flag:</p>
 <p>Also see <a href="https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/example_workflowconfig.json">workflows/config/example_workflowconfig.json</a>
 in the Dahak repository, as well as the "Snakemake" page 
 for each respective workflow.</p>
+<p>See <a href="../config/">Configuring Snakemake</a> for more details about Snakemake
+configuration files.</p>
 </div>
 <h2 id="how-do-i-specify-my-workflow-parameters">How do I specify my workflow parameters?<a class="headerlink" href="#how-do-i-specify-my-workflow-parameters" title="Permanent link">&para;</a></h2>
 <p>The workflow parameters section of the Snakemake configuration file
@@ -969,6 +962,8 @@ file in the repository contains an example, but JSON files
 do not contain any comments. For a well-commented version,
 check the `workflows/config/default_workflowparams.settings](https://github.com/dahak-metagenomics/dahak/blob/snakemake/comparison/workflows/config/default_workflowparams.settings)
 file.</p>
+<p>See <a href="../config/">Configuring Snakemake</a> for more details about Snakemake
+configuration files.</p>
 </div>
 <h2 id="where-will-data-files-live">Where will data files live?<a class="headerlink" href="#where-will-data-files-live" title="Permanent link">&para;</a></h2>
 <p>To set the scratch/working directory for the Snakemake workflows, 
@@ -1244,129 +1239,6 @@ This file should:</p>
     parameter to its default value)</li>
 <li>Provide scale and k values for computing genome signatures</li>
 <li>Specify the k values at which to do the comparison</li>
-</ul>
-<p>(See the <a href="../comparison_snakemake/">Comparison Snakemake</a> page for details on
-these options.)</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;files&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;SRR606249_1_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;SRR606249_2_reads.fq.gz&quot;</span> <span class="p">:</span>           <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;SRR606249_subset10_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;SRR606249_subset10_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;SRR606249_subset25_1_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;SRR606249_subset25_2_reads.fq.gz&quot;</span> <span class="p">:</span>  <span class="s2">&quot;files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486&quot;</span>
-    <span class="p">},</span>
-
-    <span class="nt">&quot;workflows&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;comparison_workflow_reads_assembly&quot;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;kvalue&quot;</span>    <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;21&quot;</span><span class="p">,</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;51&quot;</span><span class="p">],</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-
-    <span class="nt">&quot;biocontainers&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;sourmash_compare&quot;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;use_local&quot;</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="nt">&quot;quayurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;quay.io/biocontainers/sourmash&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;version&quot;</span> <span class="p">:</span> <span class="s2">&quot;2.0.0a3--py36_0&quot;</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-
-    <span class="nt">&quot;comparison&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;compute_read_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;scale&quot;</span>         <span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
-            <span class="nt">&quot;kvalues&quot;</span>       <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">51</span><span class="p">],</span>
-            <span class="nt">&quot;qual&quot;</span>          <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
-            <span class="nt">&quot;sig_suffix&quot;</span>    <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.sig&quot;</span><span class="p">,</span> 
-            <span class="nt">&quot;merge_suffix&quot;</span>  <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.fq.gz&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;compute_assembly_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;scale&quot;</span>         <span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
-            <span class="nt">&quot;kvalues&quot;</span>       <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">51</span><span class="p">],</span>
-            <span class="nt">&quot;qual&quot;</span>          <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;30&quot;</span><span class="p">],</span>
-            <span class="nt">&quot;sig_suffix&quot;</span> <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.sig&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;merge_suffix&quot;</span>  <span class="p">:</span> <span class="s2">&quot;_scaled10k.k21_31_51.fq.gz&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;compare_read_assembly_signatures&quot;</span> <span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;samples&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SRR606249_subset10&quot;</span><span class="p">],</span>
-            <span class="nt">&quot;assembler&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;megahit&quot;</span><span class="p">,</span><span class="s2">&quot;metaspades&quot;</span><span class="p">],</span>
-            <span class="nt">&quot;kvalues&quot;</span>   <span class="p">:</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">51</span><span class="p">],</span>
-            <span class="nt">&quot;csv_out&quot;</span>   <span class="p">:</span> <span class="s2">&quot;SRR606249_trim2and30_ra_comparison.k{kvalue}.csv&quot;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>Note that there are two additional keys within the <code>comparison</code> configuration 
-sub-dictionary, <code>compare_read_signatures</code> and <code>compare_assembly_signatures</code>,
-but these sections are only used when comparing <em>just</em> reads (when passing the 
-<code>comparison_workflow_reads</code> target to Snakemake) or when comparing <em>just</em>
-assemblies (when passing the <code>comparison_workflow_assembly</code> target to Snakemake).</p>
-<p>The JSON above can be put into the file <code>config/custom_comparison_workflow.json</code> 
-(in the <code>workflows</code> directory of the repository), and the workflow can be run by
-passing the config file to Snakemake. It is important you run with the <code>-n</code> flag
-to do a dry-run first!</p>
-<div class="codehilite"><pre><span></span><span class="nb">export</span> <span class="nv">SINGULARITY_BINDPATH</span><span class="o">=</span><span class="s2">&quot;data:/data&quot;</span>
-
-snakemake -p -n <span class="se">\</span>
-        --configfile<span class="o">=</span>config/custom_comparison_workflow.json <span class="se">\</span>
-        comparison_workflow_reads_assembly
-
-snakemake -p <span class="se">\</span>
-        --configfile<span class="o">=</span>config/custom_comparison_workflow.json <span class="se">\</span>
-        comparison_workflow_reads_assembly
-</pre></div>
-
-
-<p><br />
-<br /></p>
-<h3 id="taxonomic-classification-with-sourmash">Taxonomic Classification with Sourmash<a class="headerlink" href="#taxonomic-classification-with-sourmash" title="Permanent link">&para;</a></h3>
-<p>There are a number of taxonomic classification workflows
-implemented in Dahak. In this section we cover the use
-of the sourmash tool for taxonomic classification.</p>
-<p>Before you begin, make sure you have everything listed on the
-<a href="../installing/">Installing</a> page available on your command line.</p>
-<p>Start by cloning the repository and moving to the <code>workflows/</code> directory:</p>
-<div class="codehilite"><pre><span></span>git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
-<span class="nb">cd</span> dahak/workflows/
-</pre></div>
-
-
-<p>Now create a JSON file that defines a Snakemake configuration dictionary.
-This file should:</p>
-<ul>
-<li>Provide URLs at which each read filtering file can be accessed</li>
-<li>Provide a set of quality trimming values to use (2 and 30)</li>
-<li>Set all read filtering parameters (for simplicity, we will set each
-    parameter to its default value)</li>
-<li>Set filenames for sourmash, kaiju, and krona reports</li>
-<li>Set whcich databases to use for sourmash</li>
-</ul>
-<div class="codehilite"><pre><span></span>    run taxonomic_classification_signatures_workflow
-    run taxonomic_classification_gather_workflow
-    run taxonomic_classification_kaijureport_workflow
-    run taxonomic_classification_kaijureport_filtered_workflow
-    run taxonomic_classification_kaijureport_filteredclass_workflow
-</pre></div>
-
-
-<p>both filtered reads and assemblies, and compare the computed signatures to 
-a reference database.</p>
-<p>Before you begin, make sure you have everything listed on the
-<a href="../installing/">Installing</a> page available on your command line.</p>
-<p>Start by cloning the repository and moving to the <code>workflows/</code> directory:</p>
-<div class="codehilite"><pre><span></span>git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
-<span class="nb">cd</span> dahak/workflows/
-</pre></div>
-
-
-<p>Now create a JSON file that defines a Snakemake configuration dictionary.
-This file should:</p>
-<ul>
-<li>Provide URLs at which each read filtering file can be accessed</li>
-<li>Provide a set of quality trimming values to use (2 and 30)</li>
-<li>Set all read filtering parameters (for simplicity, we will set each
-    parameter to its default value)</li>
 </ul>
 <p>(See the <a href="../comparison_snakemake/">Comparison Snakemake</a> page for details on
 these options.)</p>
