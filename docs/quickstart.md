@@ -271,7 +271,35 @@ SINGULARITY_BINDPATH="work:/work" \
 
 ## The Really Quick Copy-And-Paste Quick Start
 
-Now that we've provided some examples that you can use, let's run through
+!!! warning "IMPORTANT:"
+
+    Did you install everything you need? Do you know what you need? 
+    If not, visit the [Installing](installing.md) page.
+
+    Do you know how to specify your read files and their URLs?
+    If not, visit the [Workflow Configuration](config.md) page
+    and skip to the "How do I specify my data files?" section.
+
+    Do you know how to configure which of your reads your workflow 
+    will use when it is run?
+    If not, visit the [Configuration](config.md) page
+    and skip to the "How do I specify my workflow configuration?" section.
+
+    Do you know how to adjust workflow parameters?
+    If not, visit the [Configuration](config.md) page
+    and visit the "How do I specify my workflow parameters?" section.
+
+    Are you unsure of what targets to use? Visit the
+    [Running Workflows](running_workflows.md) page and
+    skip to the "What targets are available?" section.
+
+    Are you unsure of what information the workflow components
+    need? Use the navigation menu on the left side and visit 
+    the "Snakemake" page for the workflow component you are 
+    interested in running.
+
+
+Now that we've provided some examples that you can use (above), let's run through
 the entire process start to finish to illustrate how this works.
 
 
