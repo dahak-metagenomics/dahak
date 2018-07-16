@@ -271,34 +271,6 @@ SINGULARITY_BINDPATH="work:/work" \
 
 ## The Really Quick Copy-And-Paste Quick Start
 
-!!! warning "IMPORTANT:"
-
-    Did you install everything you need? Do you know what you need? 
-    If not, visit the [Installing](installing.md) page.
-
-    Do you know how to specify your read files and their URLs?
-    If not, visit the [Workflow Configuration](config.md) page
-    and skip to the "How do I specify my data files?" section.
-
-    Do you know how to configure which of your reads your workflow 
-    will use when it is run?
-    If not, visit the [Configuration](config.md) page
-    and skip to the "How do I specify my workflow configuration?" section.
-
-    Do you know how to adjust workflow parameters?
-    If not, visit the [Configuration](config.md) page
-    and visit the "How do I specify my workflow parameters?" section.
-
-    Are you unsure of what targets to use? Visit the
-    [Running Workflows](running_workflows.md) page and
-    skip to the "What targets are available?" section.
-
-    Are you unsure of what information the workflow components
-    need? Use the navigation menu on the left side and visit 
-    the "Snakemake" page for the workflow component you are 
-    interested in running.
-
-
 Now that we've provided some examples that you can use (above), let's run through
 the entire process start to finish to illustrate how this works.
 
@@ -328,9 +300,10 @@ This file should:
 
 * Provide URLs at which each read filtering file can be accessed
 * Provide a set of quality trimming values to use (2 and 30)
-* Specify which biocontainers to use with singularity
-* Set all read filtering parameters (for simplicity, we will set each
-    parameter to its default value)
+* Specify which read files should be used for the workflow
+* Specify a container image from the biocontainers project to use with
+  Singluarity
+* Set all read filtering parameters
 
 (See the [Read Filtering Snakemake](readfilt_snakemake.md) page for details on
 these options.)
@@ -650,3 +623,279 @@ snakemake -p \
 
 <br />
 <br />
+
+### Taxonomic Classification with Sourmash
+
+There are a number of taxonomic classification workflows
+implemented in Dahak. In this section we cover the use
+of the sourmash tool for taxonomic classification.
+
+Before you begin, make sure you have everything listed on the
+[Installing](installing.md) page available on your command line.
+
+Start by cloning the repository and moving to the `workflows/` directory:
+
+```bash
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+cd dahak/workflows/
+```
+
+There are two taxonomic classification build rules that use sourmash:
+`taxonomic_classification_signatures_workflow` and
+`taxonomic_classification_gather_workflow`.
+
+#### Signatures Workflow
+
+The signatures workflow uses sourmash to compute k-mer signatures from read
+files. This is essentially the same as the compute signatures step in the
+comparison workflow.
+
+Create a JSON file for the taxonomic classification signatures workflow 
+that defines a Snakemake configuration dictionary. This file should:
+
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Specify which read files should be used for the workflow
+* Specify a container image from the biocontainers project to use with
+  Singluarity
+* Specify a sourmash database of signatures computed from a large number of
+  reference genomes
+
+(See the [Taxonomic Classification Snakemake](taxclass_snakemake.md) page for
+details on these options.)
+
+```
+{
+    "files" : {
+        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
+    },
+
+    "biocontainers" : {
+        "sourmash" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        }
+    },
+
+    "taxonomic_classification_signatures_workflow" : {
+        "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+        "qual" : ["2","30"]
+    },
+
+    "taxonomic_classification" : {
+
+        "sourmash" : { 
+            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            "databases" : ["genbank","refseq"],
+        }
+    }
+}
+```
+
+Put this file into `config/custom_taxclass_signatures_workflow.json` (in the
+`workflows` directory of the repository). 
+
+
+#### Gather Workflow
+
+The gather workflow uses sourmash to (gather?) signatures 
+computed from read files and compare them to signatures stored
+in a genome database.
+
+Create a JSON file for the taxonomic classification gather workflow 
+that defines a Snakemake configuration dictionary. This file should:
+
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Set all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)
+* Set filenames for sourmash, kaiju, and krona reports
+* Set which databases to use for sourmash
+
+
+
+
+
+
+
+
+    run taxonomic_classification_signatures_workflow
+    run taxonomic_classification_gather_workflow
+    run taxonomic_classification_kaijureport_workflow
+    run taxonomic_classification_kaijureport_filtered_workflow
+    run taxonomic_classification_kaijureport_filteredclass_workflow
+
+
+```
+{
+    "files" : {
+        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
+        "SRR606249_subset50_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1082d6c613b026430e5cf",
+        "SRR606249_subset50_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10ac6594d900262123e77",
+    },
+
+    "workflows" : {
+
+        "taxonomic_classification_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_signatures_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_gather_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"],
+            "kvalues" : ["21","31","51"]
+        },
+
+        "taxonomic_classification_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+    }
+}
+
+
+
+
+
+
+both filtered reads and assemblies, and compare the computed signatures to 
+a reference database.
+
+Before you begin, make sure you have everything listed on the
+[Installing](installing.md) page available on your command line.
+
+Start by cloning the repository and moving to the `workflows/` directory:
+
+```bash
+git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+cd dahak/workflows/
+```
+
+Now create a JSON file that defines a Snakemake configuration dictionary.
+This file should:
+
+* Provide URLs at which each read filtering file can be accessed
+* Provide a set of quality trimming values to use (2 and 30)
+* Set all read filtering parameters (for simplicity, we will set each
+    parameter to its default value)
+
+(See the [Comparison Snakemake](comparison_snakemake.md) page for details on
+these options.)
+
+```json
+{
+    "files" : {
+        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
+        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
+        "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
+        "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
+        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
+        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486"
+    },
+
+    "workflows" : {
+        "comparison_workflow_reads_assembly" : {
+            "kvalue"    : ["21","31","51"],
+        }
+    },
+
+    "biocontainers" : {
+        "sourmash_compare" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        }
+    },
+
+    "comparison" : {
+        "compute_read_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compute_assembly_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix" : "_scaled10k.k21_31_51.sig",
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_read_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10"],
+            "assembler" : ["megahit","metaspades"],
+            "kvalues"   : [21, 31, 51],
+            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+        }
+    }
+}
+```
+
+Note that there are two additional keys within the `comparison` configuration 
+sub-dictionary, `compare_read_signatures` and `compare_assembly_signatures`,
+but these sections are only used when comparing *just* reads (when passing the 
+`comparison_workflow_reads` target to Snakemake) or when comparing *just*
+assemblies (when passing the `comparison_workflow_assembly` target to Snakemake).
+
+The JSON above can be put into the file `config/custom_comparison_workflow.json` 
+(in the `workflows` directory of the repository), and the workflow can be run by
+passing the config file to Snakemake. It is important you run with the `-n` flag
+to do a dry-run first!
+
+```bash
+export SINGULARITY_BINDPATH="data:/data"
+
+snakemake -p -n \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+
+snakemake -p \
+        --configfile=config/custom_comparison_workflow.json \
+        comparison_workflow_reads_assembly
+```
+
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+
+
