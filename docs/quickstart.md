@@ -90,6 +90,9 @@ cat > readfilt.json <<EOF
 EOF
 ```
 
+This creates a workflow configuration file `readfilt.json` that will
+download the example data files and configure one or more workflows.
+
 We will run two workflows: one pre-trimming
 quality assessment, and one post-trimming quality assessment, so we call
 Snakemake and pass it two build targets: `read_filtering_pretrim_workflow`
@@ -99,7 +102,7 @@ and `read_filtering_posttrim_workflow`.
 export SINGULARITY_BINDPATH="data:/data"
 
 snakemake --use-singularity \
-        --configfile=config/readfilt.json \
+        --configfile=readfilt.json \
         read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
 
