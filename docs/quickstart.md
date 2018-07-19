@@ -51,41 +51,8 @@ cat > readfilt.json <<EOF
         },
         "read_filtering_posttrim_workflow" : {
             "sample"    : ["SRR606249_subset10"],
-            "qual"   : ["2","30"]
         },
     },
-
-    "biocontainers" : {
-        "trimmomatic" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/trimmomatic",
-            "version" : "0.36--5"
-        }
-    },
-
-    "read_filtering" : {
-        "read_patterns" : {
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
-            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
-        },
-        "direction_labels" : {
-            "forward" : "1",
-            "reverse" : "2"
-        },
-        "quality_assessment" : {
-            "fastqc_suffix": "fastqc",
-        },
-        "quality_trimming" : {
-            "trim_suffix" : "se"
-        },
-        "interleaving" : {
-            "interleave_suffix" : "pe"
-        },
-        "adapter_file" : {
-            "name" : "TruSeq2-PE.fa",
-            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
-        }
-    }
 }
 EOF
 ```
