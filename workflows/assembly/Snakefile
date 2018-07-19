@@ -137,7 +137,7 @@ rule assembly_megahit:
         'rm -rf {data_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
         'megahit -t {threads} '
-        '--memory 0.20 '
+        '--memory 0.80 '
         '-1 /{input.fwd} '
         '-2 /{input.rev} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
