@@ -124,17 +124,13 @@ Create a JSON file that defines a Snakemake configuration dictionary:
 cat > assembly.json <<EOF
 {
     "files" : {
-        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
-        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
         "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
         "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486"
     },
 
     "workflows" : {
         "assembly_workflow_all" : {
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         }
     },
