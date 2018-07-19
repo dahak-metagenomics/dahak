@@ -106,9 +106,10 @@ snakemake --use-singularity \
         read_filtering_pretrim_workflow read_filtering_posttrim_workflow
 ```
 
-This command will run 
-
-The output will be in ...
+This command outputs FastQC reports for the untrimmed reads as well as
+the reads trimmed at both quality cutoffs, and also outputs the trimmed
+PE reads and the orphaned reads. All files are placed in the `data/`
+subdirectory.
 
 <br />
 <br />
@@ -161,6 +162,9 @@ cat > assembly.json <<EOF
 }
 EOF
 ```
+
+As before, this creates an assembly configuration file that sets up
+a data set up for assembly.
 
 To run the assembly workflow with
 both assemblers, we call Snakemake with the `assembly_workflow_all` target.
