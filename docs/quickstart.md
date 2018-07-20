@@ -97,35 +97,11 @@ cat > assembly.json <<EOF
     },
 
     "workflows" : {
-        "assembly_workflow_all" : {
+        "assembly_workflow_megahit" : {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         }
     },
-
-    "biocontainers" : {
-        "metaspades" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/spades",
-            "version" : "3.11.1--py27_zlib1.2.8_0"
-        },
-        "megahit" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/megahit",
-            "version" : "1.1.2--py35_0"
-        }
-    },
-
-    "assembly" : {
-        "assembly_patterns" : {
-            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
-            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
-            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
-            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
-        }
-    },
-
 }
 EOF
 ```
