@@ -148,41 +148,10 @@ cat > comparison.json <<EOF
     },
 
     "workflows" : {
-        "comparison_workflow_reads_assembly" : {
+        "comparison_workflow_reads" : {
             "kvalue"    : ["21","31","51"],
         }
     },
-
-    "biocontainers" : {
-        "sourmash_compare" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/sourmash",
-            "version" : "2.0.0a3--py36_0"
-        }
-    },
-
-    "comparison" : {
-        "compute_read_signatures" : {
-            "scale"         : 10000,
-            "kvalues"       : [21,31,51],
-            "qual"          : ["2","30"],
-            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
-            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
-        },
-        "compute_assembly_signatures" : {
-            "scale"         : 10000,
-            "kvalues"       : [21,31,51],
-            "qual"          : ["2","30"],
-            "sig_suffix" : "_scaled10k.k21_31_51.sig",
-            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
-        },
-        "compare_read_assembly_signatures" : {
-            "samples"   : ["SRR606249_subset10"],
-            "assembler" : ["megahit","metaspades"],
-            "kvalues"   : [21, 31, 51],
-            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
-        }
-    }
 }
 EOF
 ```
@@ -192,9 +161,9 @@ Now, run the `comparison_workflow_reads_assembly`.
 ```bash
 export SINGULARITY_BINDPATH="data:/data"
 
-snakemake -p \
-        --configfile=compar.json \
-        comparison_workflow_reads_assembly
+snakemake --use-singlarity \
+        --configfile=comparison.json \
+        comparison_workflow_reads
 ```
 
 
