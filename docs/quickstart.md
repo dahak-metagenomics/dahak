@@ -117,7 +117,7 @@ export SINGULARITY_BINDPATH="data:/data"
 
 snakemake --use-singularity \
         --configfile=assembly.json \
-        assembly_workflow_all
+        assembly_workflow_megahit
 ```
 
 <br />
