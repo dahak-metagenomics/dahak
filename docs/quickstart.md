@@ -156,12 +156,12 @@ cat > comparison.json <<EOF
 EOF
 ```
 
-Now, run the `comparison_workflow_reads_assembly`.
+Now, run the `comparison_workflow_reads`.
 
 ```bash
 export SINGULARITY_BINDPATH="data:/data"
 
-snakemake --use-singlarity \
+snakemake --use-singularity \
         --configfile=comparison.json \
         comparison_workflow_reads
 ```
@@ -196,38 +196,24 @@ details on this workflow.)
 cat > classify.json <<EOF
 {
     "files" : {
-        "SRR606249_1_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0f9156c613b026430dbc7",
-        "SRR606249_2_reads.fq.gz" :           "files.osf.io/v1/resources/dm938/providers/osfstorage/59f0fc7fb83f69026076be47",
         "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
         "SRR606249_subset10_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a",
-        "SRR606249_subset25_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f1039a594d900263120c38",
-        "SRR606249_subset25_2_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f104ed594d90026411f486",
-    },
-
-    "biocontainers" : {
-        "sourmash" : {
-            "use_local" : false,
-            "quayurl" : "quay.io/biocontainers/sourmash",
-            "version" : "2.0.0a3--py36_0"
-        }
     },
 
     "taxonomic_classification_signatures_workflow" : {
-        "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+        "sample"  : ["SRR606249_subset10"],
         "qual" : ["2","30"]
     },
-
-    "taxonomic_classification" : {
-
-        "sourmash" : { 
-            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
-            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
-            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
-            "databases" : ["genbank","refseq"],
-        }
-    }
 }
 EOF
+```
+
+```
+export SINGULARITY_BINDPATH="data:/data"
+
+snakemake --use-singularity \
+        --configfile=classify.json \
+        taxonomic_classification_signatures_workflow
 ```
 
 #### Gather Workflow
