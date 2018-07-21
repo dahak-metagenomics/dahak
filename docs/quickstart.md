@@ -193,7 +193,7 @@ comparison workflow.
 details on this workflow.)
 
 ```
-cat > classify.json <<EOF
+cat > compute.json <<EOF
 {
     "files" : {
         "SRR606249_subset10_1_reads.fq.gz" :  "files.osf.io/v1/resources/dm938/providers/osfstorage/59f10134b83f69026377611b",
@@ -212,7 +212,7 @@ EOF
 export SINGULARITY_BINDPATH="data:/data"
 
 snakemake --use-singularity \
-        --configfile=classify.json \
+        --configfile=compute.json \
         taxonomic_classification_signatures_workflow
 ```
 
