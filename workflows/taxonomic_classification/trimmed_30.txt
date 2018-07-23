@@ -1,8 +1,0 @@
-SRR606249_1.trim30.fq.gz            https://osf.io/qtzyk/download
-SRR606249_2.trim30.fq.gz            https://osf.io/dumz6/download
-SRR606249_subset50_1.trim30.fq.gz   https://osf.io/v5jhs/download
-SRR606249_subset50_2.trim30.fq.gz   https://osf.io/q4cfa/download
-SRR606249_subset25_1.trim30.fq.gz   https://osf.io/jcp5n/download
-SRR606249_subset25_2.trim30.fq.gz   https://osf.io/qevh9/download
-SRR606249_subset10_1.trim30.fq.gz   https://osf.io/rtvuz/download
-SRR606249_subset10_2.trim30.fq.gz   https://osf.io/zq4f9/download

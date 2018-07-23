@@ -1,0 +1,177 @@
+{
+    "data_dir" : "data",
+    "assembly_dir" : "assembly",
+
+    "biocontainers" : {
+        "sourmash" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        },
+        "sourmash_compare" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/sourmash",
+            "version" : "2.0.0a3--py36_0"
+        },
+        "trimmomatic" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "version" : "0.36--5"
+        },
+        "fastqc" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/fastqc",
+            "version" : "0.11.7--pl5.22.0_2"
+        },
+        "khmer" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/khmer",
+            "version" : "2.1.2--py35_0"
+        },
+        "kaiju" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/kaiju",
+            "version" : "1.6.1--pl5.22.0_0"
+        },
+        "krona" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/krona",
+            "version" : "2.7--pl5.22.0_1"
+        },
+        "metaspades" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/spades",
+            "version" : "3.11.1--py27_zlib1.2.8_0"
+        },
+        "megahit" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/megahit",
+            "version" : "1.1.2--py35_0"
+        },
+        "quast" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/quast",
+            "version" : "4.5--boost1.61_1"
+        },
+        "multiqc" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/biocontainers/multiqc",
+            "version" : "1.4--py35_0"
+        },
+        "osf" : {
+            "use_local" : false,
+            "quayurl" : "quay.io/centerforopenscience/osf",
+            "version" : "master"
+        }
+    },
+
+    "comparison" : {
+        "compute_read_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_read_signatures" : {
+            "samples" : ["SRR606249_subset10","SRR606249_subset25"],
+            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+        },
+        "compute_assembly_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix" : "_scaled10k.k21_31_51.sig",
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
+            "assembler" : ["megahit","metaspades"],
+            "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
+        },
+        "compare_read_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10"],
+            "assembler" : ["megahit","metaspades"],
+            "kvalues"   : [21, 31, 51],
+            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+        }
+    },
+
+
+    "assembly" : {
+        "assembly_patterns" : {
+            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
+        }
+    },
+
+
+    "taxonomic_classification" : {
+
+        "filter_taxa" : {
+            "pct_threshold" : 1
+        },
+
+        "kaiju" : {
+            "dmp1" : "nodes.dmp",
+            "dmp2" : "names.dmp",
+            "fmi"  : "kaiju_db_nr.fmi",
+            "tar"  : "kaiju_index_nr.tgz",
+            "url"  : "http://kaiju.binf.ku.dk/database",
+            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "out"  : "{sample}.kaiju_output.trim{qual}.out"
+        },
+
+        "kaiju_report" : {
+            "taxonomic_rank" : "genus",
+            "pct_threshold"  : 1
+        },
+
+        "sourmash" : { 
+            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            "databases" : ["genbank","refseq"],
+            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+        },
+
+        "visualize_krona" : {
+            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
+        }
+    },
+
+
+    "read_filtering" : {
+        "read_patterns" : {
+            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
+            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
+        },
+
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+
+        "quality_assessment" : {
+            "fastqc_suffix": "fastqc",
+        },
+
+        "quality_trimming" : {
+            "trim_suffix" : "se"
+        },
+
+        "interleaving" : {
+            "interleave_suffix" : "pe"
+        },
+
+        "adapter_file" : {
+            "name" : "TruSeq2-PE.fa",
+            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+        }
+    }
+}
