@@ -6,8 +6,8 @@ Let's run through the entire process start to finish.
 
 Two useful snakemake flags that you can add are:
 
-* `--dryrun`: do a dry run of the workflow but do not actually run any commands
-* `--printshellcmds`: print the shell commands that are being executed
+* `--dryrun` or `-n`: do a dry run of the workflow but do not actually run any commands
+* `--printshellcmds` or `-p`: print the shell commands that are being executed
     (or would be executed if combined with `--dryrun`)
 
 ## Read Filtering
