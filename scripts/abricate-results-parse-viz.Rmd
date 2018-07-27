@@ -1,0 +1,266 @@
+---
+title: "ABRicate: reduce coverage intervals"
+author: "Stephen Turner^[<sdt5z@virginia.edu>]"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    code_folding: show
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+```
+
+# ABRicate data
+
+Read in the data and take a look. 
+
+```{r}
+library(tidyverse)
+ab <- read_tsv("abricate-results.tsv")
+ab
+```
+
+- Clean the names
+- Remove excess stuff from the filename
+- Separate coverage into range and length by the `/`
+- Separate the new range into start and end by the `-`
+- Make those three new variables integers.
+
+```{r}
+ab2 <- ab %>% 
+  janitor::clean_names() %>% 
+  select(file=number_file, gene, accession, coverage) %>% 
+  mutate(file=file %>% str_remove("/data/SRR606249_") %>% str_remove_all("1\\.|\\.fq\\.gz|_output.*")) %>% 
+  separate(coverage, into=c("range", "length"), sep="/") %>% 
+  separate(range, into=c("start", "end"), sep="-", remove=FALSE) %>% 
+  mutate_at(vars(start, end, length), as.integer)
+ab2
+```
+
+Function to parse filename:
+
+```{r}
+parsefilename <- . %>% 
+  mutate(dataset=str_extract(file, "subset\\d+") %>% if_else(is.na(.), "full", .)) %>% 
+  mutate(trim=str_extract(file, "trim\\d+")) %>% 
+  mutate(assembler=str_extract(file, "spades|megahit")) %>% 
+  select(file, dataset, trim, assembler, everything())
+```
+
+See what it looks like to make sure it works:
+
+```{r}
+ab2 %>% distinct(file) %>% parsefilename
+```
+
+On all the data:
+
+```{r}
+ab2 %>% parsefilename
+```
+
+
+# Calculating coverage
+
+## Toy problem
+
+Now, the problem of coverage. Let's look at a simple toy example of two genes _a_ (length 20) and _b_ (length 15) with coverages along particular intervals. 
+
+```{r}
+toy <- tibble::tribble(
+  ~start, ~end, ~length, ~gene,
+  1, 5, 20, "a",
+  11, 15, 20, "a",
+  1, 4, 15, "b",
+  2, 6, 15, "b",
+  9, 10, 15, "b"
+)
+toy
+```
+
+Clearly _a_ has coverage 10 and b has coverage 8. 
+
+My first thought to tackle this problem is to group by gene and sum the differences between start and end.
+
+```{r}
+toy %>% 
+  group_by(gene) %>% 
+  summarize(coverage=sum(end-start+1))
+```
+
+But this clearly illustrates the problem - it works fine in _a_ but the intervals in _b_ need to be reduced because the first two intervals overlap. 
+
+Use the [plyranges package](https://bioconductor.org/packages/release/bioc/html/plyranges.html) to treat these as ranges so you can reduce them.
+
+```{r}
+library(plyranges)
+```
+
+First, see what this looks like as ranges.
+
+```{r}
+toy %>% 
+  as_iranges()
+```
+
+Now, reduce those ranges, separately by each gene/length.
+
+```{r}
+toy %>% 
+  as_iranges() %>% 
+  group_by(gene, length) %>% 
+  reduce_ranges()
+```
+
+Turn it back into a regular data frame.
+
+```{r}
+toyreduced <- toy %>% 
+  as_iranges() %>% 
+  group_by(gene, length) %>% 
+  reduce_ranges() %>% 
+  DataFrame() %>% 
+  as.data.frame() %>% 
+  as_tibble() %>% 
+  set_names(~str_remove(., "X\\.")) %>% 
+  arrange(gene, start, end)
+```
+
+Compare this:
+
+```{r}
+toyreduced
+```
+
+To our original:
+
+```{r}
+toy
+```
+
+Now we can easily get coverage. While we're at it, go ahead and add columns detailing the total number of ranges, and what those are, as a sanity check.
+
+```{r}
+toyreduced %>% 
+  mutate(ranges=paste(start, end, sep="-")) %>% 
+  group_by(gene, length) %>% 
+  summarize(ranges=paste(ranges, collapse=";"),
+            nranges=dplyr::n(), 
+            coverage=sum(width)) %>% 
+  mutate(pct_coverage=coverage/length)
+```
+
+## On the ABRicate data
+
+Let's do this on our data.
+
+```{r}
+abreduced <- ab2 %>% 
+  as_iranges() %>% 
+  group_by(file, gene, accession, length) %>% 
+  reduce_ranges() %>%
+  DataFrame() %>%
+  as.data.frame() %>% 
+  as_tibble() %>% 
+  set_names(~str_remove(., "X\\.")) %>% 
+  distinct() %>% 
+  mutate(ranges=paste(start, end, sep="-")) %>% 
+  group_by(file, gene, length) %>% 
+  summarize(ranges=paste(ranges, collapse=";"),
+            nranges=dplyr::n(), 
+            coverage=sum(width)) %>% 
+  ungroup() %>% 
+  mutate(pct_coverage=coverage/length) %>% 
+  arrange(file, gene, desc(nranges), ranges)
+```
+
+Parse the filename using the function above.
+
+```{r}
+abreduced <- abreduced %>% parsefilename()
+abreduced
+```
+
+Now: 
+
+1. Group by dataset, gene, and trim, and add a column showing which assembler(s) detected this entry.
+1. Group by dataset, gene, and assembler, and add a column showing which trim length was detected this entry.
+1. Add a final column that concatenates these two. This will be used for coloring.
+
+```{r}
+abreduced <- abreduced %>% 
+  group_by(dataset, gene, trim) %>% 
+  mutate(assemblers_detected=paste(assembler, collapse="+")) %>% 
+  ungroup() %>% 
+  group_by(dataset, gene, assembler) %>% 
+  mutate(trim_detected=paste(trim, collapse="+")) %>%
+  ungroup() %>% 
+  mutate(detected=paste(assemblers_detected, trim_detected, sep=";"))
+```
+
+Print the table nicely:
+
+```{r}
+knitr::kable(abreduced)
+```
+
+Write it to file if you wish.
+
+```{r, eval=TRUE}
+write_csv(abreduced, path="abricate-results-parse-reduced-coverage.csv")
+```
+
+
+## Visualize
+
+Percent coverage by sample, faceted by gene.
+
+```{r}
+p <- ggplot(abreduced, aes(file, pct_coverage)) + 
+  geom_col() + 
+  facet_wrap(~gene) +
+  theme_classic() + 
+  theme(axis.text.x=element_text(angle=90)) + #theme(axis.text.x=element_blank()) + 
+  geom_hline(yintercept=.9, col="red2", lty=3)
+```
+
+```{r, fig.height=10, fig.width=9}
+p
+```
+
+Color code by assembler detected:
+
+```{r, fig.height=10, fig.width=9}
+p + aes(fill=assemblers_detected)
+```
+
+
+Color code by trim length detected:
+
+```{r, fig.height=10, fig.width=9}
+p + aes(fill=trim_detected)
+```
+
+Color code by assembler+trim length detected combination:
+
+```{r, fig.height=10, fig.width=9}
+p + aes(fill=detected)
+```
+
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
+
+Percent coverage by gene, faceted by sample (sorry, sample names too long to show up nicely... but how about colors to make up for it.).
+
+```{r, fig.height=10, fig.width=9}
+ggplot(abreduced, aes(gene, pct_coverage)) + 
+  geom_col(aes(fill=gene)) + 
+  facet_wrap(~file) +
+  theme_classic() + 
+  theme(axis.text.x=element_text(angle=90))
+```
+
