@@ -21,6 +21,7 @@ pages:
   - 'Running Workflows' : 'running_workflows.md'
   - 'Workflow Configuration' : 'config.md'
   - 'Quick Start' : 'quickstart.md'
+  - 'Troubleshooting' : 'troubleshooting.md'
 
   - 'Read Filtering':
     - 'Overview' : 'readfilt_overview.md'
