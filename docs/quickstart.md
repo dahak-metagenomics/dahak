@@ -2,6 +2,13 @@
 
 Let's run through the entire process start to finish.
 
+## Useful Snakemake Flags
+
+Two useful snakemake flags that you can add are:
+
+* `--dryrun`: do a dry run of the workflow but do not actually run any commands
+* `--printshellcmds`: print the shell commands that are being executed
+    (or would be executed if combined with `--dryrun`)
 
 ## Read Filtering
 
@@ -37,6 +44,7 @@ This file should:
 these options.)
  
 Copy and paste the following:
+
 ```
 cat > readfilt.json <<EOF
 {
