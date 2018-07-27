@@ -57,6 +57,8 @@ assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_met
 
 spades_image = container_image_name(biocontainers, 'metaspades')
 
+spades_memory = assembly['memory']['metaspades']
+
 rule assembly_metaspades:
     """
     Perform read assembly of trimmed reads using metaspades.
@@ -77,7 +79,7 @@ rule assembly_metaspades:
         assembly_metaspades_benchfile
     shell:
         'metaspades.py -t {threads} '
-        '-m 240 '
+        '-m {spades_memory} '
         '-1 /{input.fwd} '
         '-2 /{input.rev} '
         '-o /{data_dir} '
@@ -110,6 +112,8 @@ assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahi
 
 megahit_image = container_image_name(biocontainers, 'megahit')
 
+megahit_memory = assembly['memory]'['megahit']
+
 def assembly_megahit_outprefix_sub(wildcards):
     return assembly_megahit_outprefix.format(**wildcards)
 
@@ -137,7 +141,7 @@ rule assembly_megahit:
         'rm -rf {data_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
         'megahit -t {threads} '
-        '--memory 0.20 '
+        '--memory {megahit_memory} '
         '-1 /{input.fwd} '
         '-2 /{input.rev} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '

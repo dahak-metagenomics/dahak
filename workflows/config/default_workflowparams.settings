@@ -137,6 +137,10 @@ config_default = {
 
 
     "assembly" : {
+        "memory" : {
+            "metaspades" : 240,
+            "megahit" : 0.80
+        },
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
