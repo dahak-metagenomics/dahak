@@ -21,7 +21,7 @@ the [Installing](installing.md) documentation.
 Start by cloning a copy of the repository:
 
 ```bash
-git clone -b snakemake/comparison https://github.com/dahak-metagenomics/dahak
+git snakemake/comparison https://github.com/dahak-metagenomics/dahak
 ```
 
 then move into the `workflows/` directory of the Dahak repository:
