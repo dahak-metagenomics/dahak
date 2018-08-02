@@ -21,8 +21,6 @@ Metaquast gives assembly statistics that can help evaluate the assembly
 (how long, number of fragments, number of contigs, number of scaffolds, 
 etc.).
 
-Typically 30-40% of the reads can be fingerprinted by the assembler.
-
 More information:
 
 * [Assembly Walkthrough](assembly_walkthru.md)
