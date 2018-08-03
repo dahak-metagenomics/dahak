@@ -1,5 +1,8 @@
+
 # Ignore documentation
 site/
+=======
+
 
 # Ignore snakemake files
 .snakemake
