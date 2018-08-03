@@ -16,5 +16,5 @@ More information:
 
 * [Comparison Walkthrough](comparison_walkthru.md)
 * [Comparison Snakemake Rules](comparison_snakemake.md)
-* [`workflows/comparison/`](/workflows/comparison) directory in the repository
+* [`workflows/comparison/`](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/comparison) directory in the repository
 

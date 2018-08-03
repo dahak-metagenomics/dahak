@@ -13,5 +13,5 @@ More information:
 
 * [Read Filtering Walkthrough](readfilt_walkthru.md)
 * [Read Filtering Snakemake](readfilt_snakemake.md)
-* [`workflows/readfilt/`](/workflows/readfilt) directory in the repository
+* [`workflows/readfiltering/`](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/read_filtering) directory in the repository
 

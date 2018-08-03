@@ -25,5 +25,5 @@ More information:
 
 * [Assembly Walkthrough](assembly_walkthru.md)
 * [Assembly Snakemake Rules](assembly_snakemake.md)
-* [`workflows/assembly/`](/workflows/assembly) directory in the repository
+* [`workflows/assembly/`](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/assembly) directory in the repository
 

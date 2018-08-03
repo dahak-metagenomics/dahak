@@ -10,5 +10,5 @@ More information:
 
 * [Taxonomic Classification Walkthrough](taxclass_walkthru.md)
 * [Taxonomic Classification Snakemake Rules](taxclass_snakemake.md)
-* [`workflows/taxclass/`](/workflows/taxclass) directory in the repository
+* [`workflows/taxclass/`](https://github.com/dahak-metagenomics/dahak/tree/master/workflows/comparison) directory in the repository
 
