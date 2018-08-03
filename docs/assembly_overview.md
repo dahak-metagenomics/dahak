@@ -1,6 +1,6 @@
 # Assembly Workflow
 
-(ASSEMBLY DIAGRAM)
+![Assembly](img/Workflow7_Assem.png)
 
 **The assembly workflow uses assembly-based approaches to give higher-confidence
 gene identity assignment than raw read assignment alone.**
