@@ -118,10 +118,9 @@
         "kaiju" : {
             "dmp1" : "nodes.dmp",
             "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr.fmi",
-            "tar"  : "kaiju_index_nr.tgz",
-            "url"  : "http://kaiju.binf.ku.dk/database",
-            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "fmi"  : "kaiju_db.fmi",
+            "tar"  : "kaiju_index_pg.tgz",
+            "url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "out"  : "{sample}.kaiju_output.trim{qual}.out"
         },
 
