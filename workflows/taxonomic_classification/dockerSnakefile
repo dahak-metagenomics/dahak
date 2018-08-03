@@ -1,0 +1,536 @@
+from utils import container_image_is_external, container_image_name
+
+
+############################################
+# Taxonomic Classification: default config
+
+include: "taxonomic_classification.settings"
+
+data_dir = config['data_dir']
+
+try:
+    biocontainers = config['biocontainers']
+except:
+    biocontainers = {}
+
+try:
+    taxclass = config['taxonomic_classification']
+except:
+    taxclass = {}
+
+############################################
+# Taxonomic Classification: biocontainers
+
+from os.path import join
+
+# assemble container image names for containers.
+# these are usually quay.io urls, but in special cases
+# they can be the name of a local docker image.
+quayurls = []
+for app in biocontainers.keys():
+    if container_image_is_external(biocontainers,app):
+        name = container_image_name(biocontainers,app)
+        quayurls.append(name)
+
+pulled_containers_touchfile_docker = ".pulled_containers_docker"
+pulled_containers_touchfile_singularity = ".pulled_containers_singularity"
+
+rule pull_biocontainers:
+    """
+    Pull the required versions of containers from quay.io.
+    """
+    output:
+        touch(join(data_dir,pulled_containers_touchfile_docker))
+    run:
+        for quayurl in quayurls:
+            shell('''
+                docker pull {quayurl}
+            ''')
+
+
+############################################
+# Taxonomic Classification: sourmash SBT
+
+from os.path import join
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+
+try:
+    sourmash_sbt_tar = taxclass['sourmash']['sbttar']
+except:
+    sourmash_sbt_tar = ""
+
+try:
+    download_sourmash_sbt_input = HTTP.remote(taxclass['sourmash']['sbturl'] + "/" + sourmash_sbt_tar)
+except:
+    download_sourmash_sbt_input = ""
+
+try:
+    download_sourmash_sbt_output = join(data_dir,sourmash_sbt_tar)
+except:
+    download_sourmash_sbt_output = ""
+
+
+rule download_sourmash_sbts:
+    """
+    Download the sourmash SBTs from spacegraphcats.
+    """
+    input: 
+        download_sourmash_sbt_input
+    output: 
+        download_sourmash_sbt_output
+    shell:
+        '''
+        wget -O {output} {input[1]}
+        '''
+
+unpack_sourmash_sbt_input = join(data_dir,taxclass['sourmash']['sbttar'])
+unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
+
+def unpack_sourmash_sbt_tar(wildcards):
+    return unpack_sourmash_sbt_input.format(**wildcards)
+
+rule unpack_sourmash_sbts:
+    """
+    Unpack the sourmash SBTs from spacegraphcats.
+    """
+    input:
+        unpack_sourmash_sbt_input
+    output:
+        unpack_sourmash_sbt_output
+    params:
+        tar_wc = unpack_sourmash_sbt_tar
+    shell:
+        'tar xzf {params.tar_wc} && rm -f {params.tar_wc}'
+
+
+############################################
+# Taxonomic Classification: calc signatures
+
+sig_inputs  = [join(data_dir, taxclass['reads']['fq_fwd']), 
+               join(data_dir, taxclass['reads']['fq_rev'])]
+sig_output   = join(data_dir, taxclass['calculate_signatures']['sig_name'])
+merge_output = join(data_dir, taxclass['calculate_signatures']['merge_name'])
+
+sourmash_image = container_image_name(biocontainers, 'sourmash')
+
+def calculate_signatures_fq_fwd(wildcards):
+    return taxclass['reads']['fq_fwd'].format(**wildcards)
+
+def calculate_signatures_fq_rev(wildcards):
+    return taxclass['reads']['fq_rev'].format(**wildcards)
+
+def calculate_signatures_sig_name(wildcards):
+    kvalues_fname = calculate_signatures_kvalues_fname(wildcards)
+    return taxclass['calculate_signatures']['sig_name'].format(**wildcards, kvalues_fname=kvalues_fname)
+
+def calculate_signatures_merge_name(wildcards):
+    kvalues_fname = calculate_signatures_kvalues_fname(wildcards)
+    return taxclass['calculate_signatures']['merge_name'].format(**widcards, kvalues_fname=kvalues_fname)
+
+def calculate_signatures_kvalues_fname(wildcards):
+    return '_'.join(taxclass['calculate_signatures']['kvalues'])
+
+def calculate_signatures_kvalues_cmd(wildcards):
+    return ','.join(taxclass['calculate_signatures']['kvalues'])
+
+def calculate_signatures_scale(wildcards):
+    return taxclass['calculate_signatures']['scale']
+
+#rule calculate_signatures_singularity:
+#    """
+#    Calculate signatures from trimmed data using sourmash.
+#    """
+#    input:
+#        sig_inputs
+#    output:
+#        sig_output, merge_output
+#    singularity:
+#        sourmash_image
+#    params:
+#        merge_name = calculate_signatures_merge_name,
+#        scale = calculate_signatures_scale,
+#        fq_fwd = calculate_signatures_fq_fwd,
+#        fq_rev = calculate_signatures_fq_rev,
+#        sig_name = calculate_signatures_sig_name,
+#        kvalues_fname = calculate_signatures_kvalues_fname,
+#        kvalues_cmd = calculate_signatures_kvalues_cmd
+#    shell:
+#        'sourmash compute '
+#        '--merge /data/{params.merge_name} '
+#        '--track-abundance '
+#        '--scaled {params.scale} '
+#        '-k {params.kvalues_cmd} '
+#        '/data/{params.fq_fwd} '
+#        '/data/{params.fq_rev} '
+#        '-o /data/{params.sig_name}'
+
+
+############################################
+# Taxonomic Classification: get trimmed data
+
+import re
+from os.path import join
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+data_dir = config['data_dir']
+taxclass = config['taxonomic_classification']
+
+# trimmed data file name and OSF url
+# come from trimmed_data.settings.
+# incorporate OSF CLI here -
+# user should just need project id.
+
+trimmed_data_files=[]
+trimmed_data_urls=[]
+for filename in taxclass['trimmed_reads'].keys():
+    trimmed_data_files.append( join(data_dir, filename) )
+    trimmed_data_urls.append(taxclass['trimmed_reads'][filename])
+
+rule download_trimmed_data:
+    """
+    Download the trimmed data from OSF.
+    The parameters dictionary contains a map
+    of .fq.gz filenames to corresponding OSF URLs.
+
+    See trimmed_data.md
+    """
+    output:
+        trimmed_data_files,
+        touch(join(data_dir,'.trimmed'))
+    run:
+        for (osf_file,osf_url) in zip(trimmed_data_files,trimmed_data_urls):
+            if(not os.path.isfile(osf_file)):
+                shell('''
+                    wget -O {osf_file} {osf_url}
+                ''')
+
+
+############################################
+# Taxonomic Classification: kaiju
+
+from os.path import join
+
+# output file paths
+kaiju_dmp1   = join(data_dir, taxclass['kaiju']['dmp1'])
+kaiju_dmp2   = join(data_dir, taxclass['kaiju']['dmp2'])
+kaiju_fmi    = join(data_dir, taxclass['kaiju']['fmi'])
+
+kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
+
+kaiju_tar    = taxclass['kaiju']['tar']
+kaiju_url    = taxclass['kaiju']['url']
+
+unpack_kaiju_input = HTTP.remote(kaiju_url)
+unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+
+rule unpack_kaiju:
+    """
+    Download and unpack the kaiju database.
+    This is a large file and will take approx. 15-30 minutes.
+    
+    See kaiju.md
+    """
+    input:
+        unpack_kaiju_input
+    output:
+        unpack_kaiju_output
+    shell:
+        '''
+        curl -LO "{kaiju_url}/{kaiju_tar}"
+        tar xzf {kaiju_target}
+        rm -f {kaiju_target}
+        '''
+
+fq_fwd = join(data_dir, taxclass['reads']['fq_fwd'])
+fq_rev = join(data_dir, taxclass['reads']['fq_rev'])
+
+run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+run_kaiju_input_files += [fq_fwd, fq_rev]
+run_kaiju_output_files = join(data_dir, taxclass['kaiju']['out'])
+
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def run_kaiju_fq_fwd(wildcards):
+    # Get forward fq files
+    fq_fwd_wc = fq_fwd.format(**wildcards)
+    return fq_fwd_wc
+
+def run_kaiju_fq_rev(wildcards):
+    # Get reverse fq files
+    fq_rev_wc = fq_rev.format(**wildcards)
+    return fq_rev_wc
+
+def run_kaiju_output(wildcards):
+    # Get output
+    run_kaiju_output_files_wc = run_kaiju_output_files.format(**wildcards)
+    return run_kaiju_output_files_wc
+
+
+rule run_kaiju:
+    """
+    Run kaiju after downloading and unpacking the kaiju database. 
+    This runs the docker command directly.
+    """
+    input:
+        run_kaiju_input_files
+    output:
+        run_kaiju_output_files
+    run:
+        fq_fwd_wc = fq_fwd.format(**wildcards)
+        fq_rev_wc = fq_rev.format(**wildcards)
+        run_kaiju_output_wc = run_kaiju_output_files.format(**wildcards)
+        shell('''
+            docker run \
+                    -v {PWD}/{data_dir}:/data \
+                    {quayurl} \
+                    kaiju \
+                    -x \
+                    -v \
+                    -t /data/{kaiju_dmp} \
+                    -f /data/{kaiju_fmi} \
+                    -i /data/{fq_fwd_wc} \
+                    -j /data/{fq_rev_wc} \
+                    -o /data/{run_kaiju_output_wc} \
+                    -z 4
+        ''')
+
+
+############################################
+# Taxonomic Classification: kaiju to krona
+
+kaiju_dmp1   = taxclass['kaiju']['dmp1']
+kaiju_dmp2   = taxclass['kaiju']['dmp2']
+kaiju_fmi    = taxclass['kaiju']['fmi']
+tax_rank     = taxclass['kaiju2krona']['taxonomic_rank']
+
+# name of kaiju output determines name of kaiju2krona input
+run_kaiju_output_file = taxclass['kaiju']['out']
+
+kaiju2krona_input_files = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+
+# One approach is to let the user set this.
+# But here, we just take care of it for them.
+kaiju2krona_output_file = re.sub('\.out','\.kaiju_out_krona',run_kaiju_output_file)
+
+kaiju_image = container_image_name(biocontainers, 'kaiju')
+
+def kaiju2krona_input_name(wildcards):
+    # Return the kaiju2krona input file names
+    kaiju2krona_input_name_wc = run_kaiju_output_file.format(**wildcards)
+    return kaiju2krona_input_name_wc
+
+def kaiju2krona_output_name(wildcards):
+    # Return the kaij2krona input file names
+    kaiju2krona_output_name_wc = kaiju2krona_output_file.format(**wildcards)
+    return kaiju2krona_output_name_wc
+
+
+rule kaiju2krona:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    This runs docker directly.
+    """
+    input:
+        kaiju2krona_input_files
+    output:
+        kaiju2krona_output_file
+    run:
+        kaiju2krona_in_name_wc = run_kaiju_output.format(**wildcards)
+        kaiju2krona_output_name_wc = kaiju2krona_output.format(**wildcards)
+        # NOTE:
+        # this -u stat can be added to attempt to keep kaiju2krona 
+        # from creating output files owned by root (?!?!)
+        #           -u `stat -c "%u:%g" {PWD}` \
+        shell('''
+            docker run \
+                    -v {PWD}/{data_dir}:/data \
+                    {kaiju_image} \
+                    kaiju2krona \
+                    -v \
+                    -t /data/{kaiju_dmp1} \
+                    -n /data/{kaiju_dmp2} \
+                    -i /data/{kaiju2krona_in_name_wc} \
+                    -o /data/{kaiju2krona_output_name_wc}
+        ''')
+
+
+
+kaiju2kronasummary_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+
+kaiju2kronasummary_output = re.sub('\.out','\.kaiju_out_krona.summary',run_kaiju_output_file)
+
+tax_rank = taxclass['kaiju2krona']['taxonomic_rank']
+
+def kaiju2kronasummary_input_name(wildcards):
+    pass
+
+def kaiju2kronasummary_output_name(wildcards):
+    pass
+
+rule kaiju2kronasummary:
+    """
+    Convert kaiju results to krona results,
+    and generate a report.
+    This runs docker directly.
+    """
+    input:
+        kaiju2kronasummary_input
+    output:
+        kaiju2kronasummary_output
+    run:
+        kaiju2kronasummary_in_wc = run_kaiju_output.format(**wildcards)
+        kaiju2kronasummary_output_wc = kaiju2kronasummary_output.format(**wildcards)
+        shell('''
+            docker run \
+                    -u `stat -c "%u:%g" {PWD}` \
+                    -v {PWD}/{data_dir}:/data \
+                    {kaiju_image} \
+                    kaijuReport \
+                    -v \
+                    -t /data/{kaiju_dmp1} \
+                    -n /data/{kaiju_dmp2} \
+                    -i /data/{kaiju2kronasummary_in_wc} \
+                    -r {tax_rank} \
+                    -o /data/{kaiju2kronasummary_output_wc}
+        ''')
+
+
+############################################
+# Taxonomic Classification: visualize with krona
+
+import re
+from os.path import join
+
+visualize_krona_input_name  = taxclass['visualize_krona']['input_summary']
+if(visualize_krona_input_name[-8:] is not '.summary'):
+    visualize_krona_input_name += '.summary'
+visualize_krona_output_name = re.sub(visualize_krona_input_name, '.summary','.html')
+
+visualize_krona_input_file  = join(data_dir, visualize_krona_input_name)
+visualize_krona_output_file = join(data_dir, visualize_krona_output_name)
+
+krona_image = container_image_name(biocontainers, 'krona')
+
+def visualize_krona_input_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
+    return visualize_krona_input_wc
+
+def visualize_krona_output_function(wildcard):
+    # Get the input file name after doing wildcard substitution
+    visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
+    return visualize_krona_output_wc
+
+rule visualize_krona:
+    """
+    Visualize the results of the
+    full and filtered taxonomic
+    classifications using krona.
+
+    See krona_visualization.md
+    """
+    input:
+        visualize_krona_input_file
+    output:
+        visualize_krona_output_file
+    run:
+        visualize_krona_input_wc  = visualize_krona_input_name.format(**wildcards)
+        visualize_krona_output_wc = visualize_krona_output_name.format(**wildcards)
+        shell('''
+            docker run \
+                    -v {PWD}/{data_dir}:/data \
+                    {quayurl} \
+                    ktImportText \
+                    -o /data/{visualize_krona_output_wc} \
+                    /data/{visualize_krona_input_wc}
+        ''')
+
+
+############################################
+# Taxonomic Classification: filter taxa
+
+filter_taxa_pct = taxclass['filter_taxa']['pct_threshold']
+
+filter_taxa_total_input = [join(data_dir,d) for d in [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]]
+filter_taxa_total_suffix = '\.kaiju_out_krona.%dpercenttotal.summary'%(filter_taxa_pct)
+filter_taxa_total_output = re.sub('\.out',filter_taxa_total_suffix,taxclass['kaiju']['out'])
+
+def filter_taxa_total_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_total_output_function(wildcards):
+    return filter_taxa_total_output.format(**wildcards)
+
+rule filter_taxa_total:
+    """
+    Filter out taxa with low abundances by obtaining genera that
+    comprise at least {pct} percent of the total reads
+    (default: 1%)
+    This runs docker directly.
+    """
+    input:
+        filter_taxa_total_input
+    output:
+        filter_taxa_total_output
+    run:
+        filter_taxa_total_in_wc = run_kaiju_output.format(**wildcards)
+        filter_taxa_total_output_wc = filter_taxa_total_output.format(**wildcards)
+        shell('''
+            docker run \
+                -v {PWD}/{data_dir}:/data \
+                {kaiju_image} \
+                kaijuReport \
+                -v \
+                -t /data/{kaiju_dmp1} \
+                -n /data/{kaiju_dmp2} \
+                -i /data/{filter_taxa_total_in_wc} \
+                -r genus \
+                -m {pct} \
+                -o /data/{filter_taxa_total_output_wc}
+        ''')
+
+
+filter_taxa_class_input = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output]
+filter_taxa_class_output = '{base}.kaiju_output.trim{ntrim}.kaiju_out_krona.1percentclassified.summary'
+
+def filter_taxa_class_input_function(wildcards):
+    return run_kaiju_output_file.format(**wildcards)
+
+def filter_taxa_class_output_function(wildcards):
+    return filter_taxa_class_output.format(**wildcards)
+
+
+rule filter_taxa_class:
+    """
+    For comparison, take the genera that comprise
+    at least {pct} percent of all of the classified reads
+    (default: 1%)
+    This runs docker directly.
+    """
+    input:
+        filter_taxa_class_input
+    output:
+        filter_taxa_class_output
+    run:
+        filter_taxa_class_in_wc = run_kaiju_output.format(**wildcards)
+        filter_taxa_class_output_wc = filter_taxa_class_output_name.format(**wildcards)
+        shell('''
+                docker run \
+                        -v {PWD}:/data \
+                        {kaiju_image} \
+                        kaijuReport \
+                        -v \
+                        -t /data/{kaiju_dmp1} \
+                        -n /data/{kaiju_dmp2} \
+                        -i /data/{filter_taxa_class_in_wc} \
+                        -r genus \
+                        -m {pct} \
+                        -u \
+                        -o /data/{filter_taxa_class_output_wc}
+        ''')
+
+

@@ -1,0 +1,71 @@
+{
+    "workflows" : {
+
+        "read_filtering_pretrim_workflow" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
+        },
+
+        "read_filtering_posttrim_workflow" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"   : ["2","30"]
+        },
+
+        "taxonomic_classification_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_signatures_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_gather_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"],
+            "kvalues" : ["21","31","51"]
+        },
+
+        "taxonomic_classification_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "taxonomic_classification_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual" : ["2","30"]
+        },
+
+        "assembly_workflow_metaspades" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"]
+        },
+
+        "assembly_workflow_megahit" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"]
+        },
+
+        "assembly_workflow_all" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"      : ["2","30"]
+        },
+
+        "comparison_workflow_reads": {
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_assembly" : {
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_reads_assembly" : {
+            "kvalue"    : ["21","31","51"],
+        }
+    }
+}
