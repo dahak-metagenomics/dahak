@@ -1,0 +1,170 @@
+'''
+Author: Phillip Brooks, Charles Reid
+Affiliation: UC Davis Lab for Data Intensive Biology
+Aim: A Snakemake workflow to call variants from metagenomic data
+Date: Tue August 2nd
+
+'''
+
+##--------------------------------------------------------------------------------------##
+## Variables declaration
+## Declaring some variables
+## SAMPLES, ASSEMBLER,
+##--------------------------------------------------------------------------------------#
+
+SAMPLES = ['SRR606249']
+
+
+ASSEMBLER = ['spades','megahit']
+
+# Map filtered reads to assembled contigs using BWA
+rule prepare_for_mapping:
+    input:
+        fwd='../outputs/trim/{sample}_1.trim{qual}.fq.gz',
+        rev='../outputs/trim/{sample}_2.trim{qual}.fq.gz',
+        con='../outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa'
+    output:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.sam'
+    message:
+        '--- Mapping reads to assembled contigs'
+    singularity:
+        'docker://biocontainers/bwa:0.7.15'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.log'
+    threads: 32
+    benchmark:
+        'benchmarks/{sample}_trim{qual}_{assembler}.mapping.benchmark.txt'
+    shell:
+        '''
+        bwa mem -t {threads} {input.con} {input.fwd} {input.rev} > {output}
+        '''
+
+# Convert Sequence Alignment Map (SAM) file to Binary Alignment Map (BAM) file that can be sorted and indexed using samtools
+rule SAM_to_BAM:
+    input:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.sam'
+    output:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.bam'
+    message:
+        '--- Converting SAM to BAM'
+    singularity:
+        'docker://quay.io/biocontainers/samtools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.bamtosam.log'
+    threads: 32
+    benchmark:
+        'benchmarks/variant_calling/{sample}_trim{qual}_{assembler}.bamtosam.log'
+    shell:
+        'samtools view -hSbo {output} {input}'
+
+# Sort the BAM file by position in the genome
+rule sort_BAM:
+    input:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.bam'
+    output:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.sorted.bam'
+    message:
+        '--- Sorting BAM file'
+    singularity:
+'docker://quay.io/biocontainers/samtools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.sortbam.log'
+    threads: 32
+    benchmark:
+        'benchmarks/variant_calling/{sample}_trim{qual}_{assembler}.sortbam.log'
+    params:
+        sample="{sample}",
+        qual="{qual}",
+        assembler="{assembler}"
+    shell:
+        'samtools sort {input} -o {output}'
+
+# Create bcf which is the binary form of the variant call format (VCF) file
+rule create_bcf:
+    input:
+        con='../outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa',
+        sb='outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.sorted.bam'
+    output:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.variants.raw.bcf'
+    message:
+        '--- Creating bcf'
+    singularity:
+        'docker://quay.io/biocontainers/bcftools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.bcf.log'
+    threads: 16
+    shell:
+        'bcftools mpileup -Ob -o {output} -f {input.con} {input.sb}'
+
+# Call the metagenomic variants
+rule call_variants:
+    input:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.variants.raw.bcf'
+    output:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.vcf.gz'
+    message:
+        '-- Calling variants'
+    singularity:
+'docker://quay.io/biocontainers/bcftools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.vcf.log'
+    threads: 16
+    shell:
+        'bcftools call -vmO z -o {output} {input}'
+
+# Calculate statistics
+rule make_stats:
+    input:
+        vcf = 'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.vcf.gz',
+        contigs='../outputs/assembly/{assembler}/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.contigs.fa',
+    output:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.vcf.gz.stats'
+    message:
+        '-- Calculating statistics'
+    singularity:
+        'docker://quay.io/biocontainers/bcftools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.vcf.stats.log'
+    threads: 16
+    shell:
+        'bcftools stats -F {input.vcf} -s - {input.vcf} > {output}'
+
+# Filter variants calls
+rule filter_variants:
+    input:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.vcf.gz'
+    output:
+        'outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.filtered.vcf.gz'
+    message:
+        '-- Filtering variants'
+    singularity:
+        'docker://quay.io/biocontainers/bcftools:1.7--0'
+    log:
+        'outputs/variant_calling/{sample}_trim{qual}_{assembler}.filter.vcf.stats.log'
+    threads: 16
+    shell:
+        'bcftools filter -O z -o {output} -s LOWQUAL -i"%QUAL>10" {input}'
+
+
+rule all:
+    input:
+        expand('outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.variants.raw.bcf',
+               sample=SAMPLES,
+               qual=[2,30],
+               assembler=ASSEMBLER,
+               ),
+        expand('outputs/variant_calling/{sample}_trim{qual}_{assembler}/{sample}_trim{qual}_{assembler}.sorted.bam',
+               sample=SAMPLES,
+               qual=[2,30],
+               assembler=ASSEMBLER,
+               ),
+        expand('outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.vcf.gz.stats',
+               sample=SAMPLES,
+               qual=[2,30],
+               assembler=ASSEMBLER,
+               ),
+        expand('outputs/variant_calling/report/{sample}_trim{qual}_{assembler}.filtered.vcf.gz',
+               sample=SAMPLES,
+               qual=[2,30],
+               assembler=ASSEMBLER,
+               ),
