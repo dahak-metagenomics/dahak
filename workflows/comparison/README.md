@@ -1,10 +1,12 @@
 #### Metagenome comparison with [sourmash](http://sourmash.readthedocs.io/en/latest/)
+
 Requirements (from Ubuntu 16.04 using filtered reads)
 
 Sourmash is a tool for calculating and comparing MinHash signatures. Sourmash compare 
 calculates the jaccard similarity of MinHash signatures.  	
 
 If you don't already have them, retrieve the assembled contigs
+
 ```
 for i in $(cat assembly_names.txt) 
 do 
