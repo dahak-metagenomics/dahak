@@ -15,7 +15,7 @@ docs_dir: docs
 site_dir: site
 
 # give a title for each page
-pages:
+nav:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
   - 'Running Workflows' : 'running_workflows.md'
