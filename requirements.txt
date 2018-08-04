@@ -1,0 +1,2 @@
+mkdocs-pandoc
+markdown==2.6.7
