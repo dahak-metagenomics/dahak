@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function main() {
-    #metaspades
     megahit
 }
 
