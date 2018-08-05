@@ -264,10 +264,3 @@ pip install snakemake
 Note that this pip will correspond to the version of
 Python and Conda that are on the path.
 
-Finally, install the Open Science Framework CLI client
-using pip:
-
-```
-pip install --user osfclient
-```
-

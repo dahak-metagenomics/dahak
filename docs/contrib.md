@@ -248,9 +248,9 @@ not aligned to this Code of Conduct. Project maintainers who do not follow the
 Code of Conduct may be removed from the project team.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by emailing [Phil Brooks](ptbrooks@ucdavis.edu) or [C. Titus
-Brown](ctbrown@ucdavis.edu). To report an issue involving either of them, please
-email [Judi Brown Clarke](jbc@egr.msu.edu), Ph.D. the Diversity Director at the
+reported by emailing Phil Brooks (ptbrooks@ucdavis.edu) or  C. Titus
+Brown (ctbrown@ucdavis.edu). To report an issue involving either of them, please
+email Judi Brown Clarke (jbc@egr.msu.edu), Ph.D. the Diversity Director at the
 BEACON Center for the Study of Evolution in Action, an NSF Center for Science
 and Technology.
 
