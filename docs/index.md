@@ -1,5 +1,3 @@
-See [docs/index.md](docs/index.md) for documentation.
-
 # Dahak
 
 Dahak is a software suite that integrates state-of-the-art open source tools
@@ -47,8 +45,8 @@ The following software is required to run Dahak workflows:
 
 * (Required) Singularity >= 2.4 (does not require sudo access) or Docker
   (requires sudo access)
-* (Optional) Sun Grid Compute Engine
-* (Optional) Ubuntu 16.04 (Xenial)
+* (Recommended) Ubuntu 16.04 (Xenial)
+* (Recommended) Sun Grid Compute Engine
 
 See the [Installing](installing.md) page for detailed instructions
 on installing each of the required components listed above,
@@ -73,20 +71,17 @@ Our **target compute system** is a generic cluster running Sun Grid Engine
 in an HPC environment; all Snakemake files are written for this target
 system.
 
-### Walkthroughs
+List of workflows:
 
-Each workflow contains a walkthrough, which is a step-by-step guide
-of shell commands to run to execute each step of the workflow.
-These workflows use docker and require sudo access. While they are
-useful "by hand" guides to the workflows, they cannot be scaled,
-so they are provided primarily for instructional purposes.
-
-* [Read Filtering](readfilt_walkthru.md)
-* [Taxonomic Classification](taxclass_walkthru.md)
-* [Assembly](assembly_walkthru.md)
+* Read Filtering
+* Assembly
 * Metagenomic Comparison
+* Taxonomic Classification
 * Variant Calling
 * Functional Inference
+
+To get started with a particular workflow, select it from the 
+navigation menu on the left side of the page.
 
 
 ## Parameters and Configuration
@@ -95,7 +90,7 @@ See the [Parameters and Configuration](config.md) page for details about
 controlling how each workflow operates, and how to use parameter presets.
 
 
-# Contributing
+## Contributing
 
 Please read
 [CONTRIBUTING.md](https://github.com/dahak-metagenomics/dahak/blob/master/CONTRIBUTING.md)
@@ -123,8 +118,4 @@ This project is licensed under the BSD 3-Clause License - see the
 [LICENSE](https://github.com/dahak-metagenomics/dahak/blob/master/LICENSE) file
 for details.
 
-## Acknowledgments
-
-* [Bioconda](https://bioconda.github.io) 
-* Hat tip to anyone whose code was used
 

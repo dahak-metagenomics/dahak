@@ -1,0 +1,77 @@
+site_name: Dahak Metagenomics
+site_url: https://dahak-metagenomics.github.io/dahak
+repo_name: dahak-metagenomics/dahak
+repo_url: https://github.com/dahak-metagenomics/dahak
+edit_uri: ""
+
+# This is a boilerplate DIB Lab footer
+# This will likely change...
+copyright: 'Copyright &copy; 2017-2018, The Regents of the University of California.<br />
+Written and maintained by the <a href="http://ivory.idyll.org/lab/">Lab for Data Intensive Biology</a> at UC Davis.<br />
+Released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.<br /><br />'
+
+# change directory names here
+docs_dir: docs
+site_dir: site
+
+# give a title for each page
+pages:
+  - 'Index' : 'index.md'
+  - 'Installing' : 'installing.md'
+  - 'Running Workflows' : 'running_workflows.md'
+  - 'Workflow Configuration' : 'config.md'
+  - 'Quick Start' : 'quickstart.md'
+  - 'Troubleshooting' : 'troubleshooting.md'
+
+  - 'Read Filtering':
+    - 'Overview' : 'readfilt_overview.md'
+    - 'Walkthrough' : 'readfilt_walkthru.md'
+    - 'Snakemake' : 'readfilt_snakemake.md'
+
+  - 'Assembly':
+    - 'Overview' : 'assembly_overview.md'
+    - 'Walkthrough' : 'assembly_walkthru.md'
+    - 'Snakemake' : 'assembly_snakemake.md'
+
+  - 'Comparison':
+    - 'Overview' : 'comparison_overview.md'
+    - 'Walkthrough' : 'comparison_walkthru.md'
+    - 'Snakemake' : 'comparison_snakemake.md'
+
+  - 'Taxonomic Classification':
+    - 'Overview' : 'taxclass_overview.md'
+    - 'Walkthrough' : 'taxclass_walkthru.md'
+    - 'Snakemake' : 'taxclass_snakemake.md'
+
+  - 'Contributing' : 'contrib.md'
+
+theme:
+
+  # use local theme
+  name: null
+  custom_dir: 'mkdocs-material-dib/material'
+
+  # pretty colors! see https://squidfunk.github.io/mkdocs-material/getting-started/#primary-colors
+  palette:
+    primary: 'brown'
+    accent: 'brown'
+  
+  # fun logos! see https://material.io/icons/
+  logo:
+    icon: 'line_style'
+
+  font:
+    text: 'Ubuntu'
+    code: 'Ubuntu Mono'
+
+# this will add docs/css/custom.css to all your docs
+extra_css:
+  - css/custom.css
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
