@@ -2,11 +2,14 @@
 
 This directory contains the workflow files.
 
-Each folder contains a Snakefile for a different workflow component.
+Each workflow has a corresponding folder here that contains a
+Snakefile that defines all of the rules in that workflow.
 
-Configuration is set in `*.settings`.
+Workflow parameters, workflow configuration, and data file specification
+files live in the `config/` folder.
 
-User can define their own Snakemake rules in `custom.snake`
+Slurm cluster configuration files and job submission scripts live 
+in the `slurm/` folder.
 
 Installing: [installing](../docs/installing.md)
 
