@@ -101,14 +101,22 @@ snakemake --config=config/custom_trimmomatic.json \
         [FLAGS] <target>
 ```
 
+<br />
+<br />
+
+## How To Run Workflows on HPC
+
 
 ### How do I use Snakemake with Singularity?  
 
 Singularity is a containerization technology similar to Docker but without the
-need for root access. Snakefiles in Dahak contain `singularity:` directives,
-which specify a Singularity image to pull and use to run the given commands.
-These directives are ignored by default, Snakemake must be run with the
-`--use-singularity` flag to run each command through a singularity container:
+need for root access, making it possible to use Docker containers in high
+performance computing environments. Snakefiles in Dahak contain `singularity:`
+directives, which specify a Singularity image to pull and use to run the given
+commands.  These directives will be ignored by Snakemake unless it is run with
+the `--use-singularity` flag. If the `--use-singularity` flag is passed to
+Snakemake on the command line, Snakemake will run the commands for each rule
+in separate singularity containers:
 
 ```bash
 snakemake --use-singularity <target>
@@ -126,6 +134,46 @@ SINGULARITY_BINDPATH="my_data:/data" snakemake --use-singularity <target>
 
 This bind-mounts the directory `my_data/` into the Singularity container at `/data/`.
 
+If you are running Singularity on an HPC cluster, the `SINGULARITY_BINDPATH` variable
+can be handled in the cluster configuration file as a part of all the other
+cluster configuration details.  
+
+See the [HPC Quickstart](hpc_quickstart.md).
+
+### How do I use Snakemake with a batch job system?  
+
+When executing Snakemake using batch job systems, Snakemake requires two things:
+
+* **Cluster Configuration (JSON file)** - the cluster configuration file
+  specifies what cluster parameters (required amount of memory, type of node,
+  etc.) should be used when submitting jobs for each rule. (A download step
+  might require a smaller node for a short amount of time, while an assembly
+  step might require a high-memory node for a longer amount of time.)
+    
+* **Job Script (Bash script)** - this is the actual script that is run once the job has 
+  finished waiting in the queue and the compute nodes are ready to go.
+  This script should load modules like Python, Conda, Snakemake, and 
+  Singularity.
+
+* **Job Submission Command (command line argument)** - Snakemake also requires a
+  templated job _submission_ command - that is, the command that Snakemake uses
+  to actually submit jobs. This command is provided to Snakemake on the command
+  line using the `--cluster "<submit-cmd>"` flag.
+
+Finally, when the workflow is executed, Snakemake will assemble the task graph,
+and will use the job submission script to request one node per rule.
+(If rules are in a group, they will be grouped and executed together 
+on a single node.)
+
+Also see the [HPC Quickstart](hpc_quickstart.md).
+
+The Snakemake documentation discusses executing workflows on clusters
+at [Cluster Execution](https://snakemake.readthedocs.io/en/stable/executable.html#cluster-execution).
+
+<br />
+<br />
+
+## Finding Your Data
 
 ### Where will data files live?
 
@@ -162,11 +210,6 @@ SINGULARITY_BINDPATH="work:/work" \
         snakemake --configfile=config/custom_scratch.settings \
         [FLAGS] <target>
 ```
-
-
-### How do I customize my workflow with custom configuration files?
-
-See the [Snakemake Configuration](config.md) page.
 
 
 ## Summary

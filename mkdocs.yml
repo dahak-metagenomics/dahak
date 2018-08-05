@@ -22,6 +22,7 @@ pages:
   - 'Running Workflows' : 'running_workflows.md'
   - 'Workflow Configuration' : 'config.md'
   - 'Quick Start' : 'quickstart.md'
+  - 'HPC Quick Start' : 'hpc_quickstart.md'
   - 'Troubleshooting' : 'troubleshooting.md'
 
   - 'Read Filtering':
