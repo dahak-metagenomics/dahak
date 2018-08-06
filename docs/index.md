@@ -1,5 +1,9 @@
 # Dahak
 
+<center>
+<img src="img/Dahak_Logo.png" width="400px" />
+</center>
+
 Dahak is a software suite that integrates state-of-the-art open source tools
 for metagenomic analyses. Tools in the dahak software suite will perform
 various steps in metagenomic analysis workflows including data pre-processing,
