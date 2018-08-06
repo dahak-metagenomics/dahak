@@ -18,9 +18,11 @@ site_dir: site
 pages:
   - 'Index' : 'index.md'
   - 'Installing' : 'installing.md'
+  - 'Workflows Overview' : 'workflows_overview.md'
   - 'Running Workflows' : 'running_workflows.md'
   - 'Workflow Configuration' : 'config.md'
   - 'Quick Start' : 'quickstart.md'
+  - 'HPC Quick Start' : 'hpc_quickstart.md'
   - 'Troubleshooting' : 'troubleshooting.md'
 
   - 'Read Filtering':
