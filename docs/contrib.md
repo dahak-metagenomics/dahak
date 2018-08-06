@@ -21,157 +21,157 @@ some data, and contribute however you see fit.
 
 1. Create a [GitHub](https://github.com) account.
 
-2.  Fork <https://github.com/dahak-metagenomics/dahak>.
+2. Fork <https://github.com/dahak-metagenomics/dahak>.
 
-    Visit that page, and then click 'Fork' in the upper right-hand corner. This
-    creates a copy of the dahak source code in your GitHub account. If you're
-    new to GitHub or want a refresher, please check out this awesome
-    [tutorial](https://guides.github.com/activities/hello-world/).
+Visit that page, and then click 'Fork' in the upper right-hand corner. This
+creates a copy of the dahak source code in your GitHub account. If you're
+new to GitHub or want a refresher, please check out this awesome
+[tutorial](https://guides.github.com/activities/hello-world/).
 
 3. Clone a copy of dahak into your local environment (or work in your browser!).
 
-    Your shell command should look something like (you can click the 'clone or
-    download' button on the dahak github, copy the link, and insert git clone
-    before it):
+Your shell command should look something like (you can click the 'clone or
+download' button on the dahak github, copy the link, and insert git clone
+before it):
     
-    ```
-    git clone https://github.com/dahak-metagenomics/dahak.git
-    ```
+```
+git clone https://github.com/dahak-metagenomics/dahak.git
+```
     
-    This makes a copy of the dahak repository on your local machine.
+This makes a copy of the dahak repository on your local machine.
 
 ## Claiming an issue and starting to develop
 
 1. Find an open issue and claim it.
 
-    Go to the list [open
-    issues](https://github.com/dahak-metagenomics/dahak/issues) and claim one
-    you like. Once you've found an issue you like, open it, click 'Assignees',
-    and assign yourself. Once you've assigned yourself make a comment below the
-    issue saying "I'm working on this." That's it; it's all yours. Well not
-    really, because you can always ask for help. Just make another comment below
-    stating what you need some help with and we'll get right back to you.
+Go to the list [open
+issues](https://github.com/dahak-metagenomics/dahak/issues) and claim one
+you like. Once you've found an issue you like, open it, click 'Assignees',
+and assign yourself. Once you've assigned yourself make a comment below the
+issue saying "I'm working on this." That's it; it's all yours. Well not
+really, because you can always ask for help. Just make another comment below
+stating what you need some help with and we'll get right back to you.
 
-    (Staking your claim is super important because we're trying to avoid people
-    working on the same issue.)
+(Staking your claim is super important because we're trying to avoid people
+working on the same issue.)
 
 2. In your local copy of the source code, update your master branch from the main dahak branch.
 
-    ```
-    git checkout master
-    git pull dahak master
-    ```
+```
+git checkout master
+git pull dahak master
+```
     
-    (This pulls in the latest changes from the master repository)
+(This pulls in the latest changes from the master repository)
 
-    If git complains about 'merge conflicts' when you execute `git pull`,
-    please refer to the ***Resolving merge conflicts***
-    [section](https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html)
-    of the khmer documentation.
+If git complains about 'merge conflicts' when you execute `git pull`,
+please refer to the ***Resolving merge conflicts***
+[section](https://khmer.readthedocs.io/en/v2.1.1/dev/guidelines-continued-dev.html)
+of the khmer documentation.
 
-    If you are asked to make changes before your pull request can be accepted,
-    you can continue to commit additional changes to the branch associated with
-    your original pull request. The pull request will automatically be updated
-    each time you commit to that branch. Github provides a medium for
-    communicating and providing feedback. Once the pull request is approved, it
-    will be merged into the main branch by the dahak development team.
+If you are asked to make changes before your pull request can be accepted,
+you can continue to commit additional changes to the branch associated with
+your original pull request. The pull request will automatically be updated
+each time you commit to that branch. Github provides a medium for
+communicating and providing feedback. Once the pull request is approved, it
+will be merged into the main branch by the dahak development team.
 
 3. Create a new branch and link it to your fork on GitHub:
 
-    ```
-    git checkout -b name-of-branch
-    git push -u origin name-of-branch
-    ```
+```
+git checkout -b name-of-branch
+git push -u origin name-of-branch
+```
     
-    where you replace "name-of-branch" with 2-3 words separated by
-    dashes or underscores describing what issue it fixes.
+where you replace "name-of-branch" with 2-3 words separated by
+dashes or underscores describing what issue it fixes.
 
 4. Make some changes and commit them to your branch.
 
-    After you've made a set of cohesive changes, run the command `git status`.
-    This will display a list of all the files git has noticed you changed. Files
-    in the 'untracked' section are files that weren't in the repository before
-    but git has seen.
+After you've made a set of cohesive changes, run the command `git status`.
+This will display a list of all the files git has noticed you changed. Files
+in the 'untracked' section are files that weren't in the repository before
+but git has seen.
     
-    To commit these changes you have to 'stage' them using the following command.
+To commit these changes you have to 'stage' them using the following command.
 
-    ```
-    git add path/to/file
-    ```
+```
+git add path/to/file
+```
     
-    Once you've staged your changes, it's time to make a commit (Don't forget to
-    change path/to/file to the actual path to file):
+Once you've staged your changes, it's time to make a commit (Don't forget to
+change path/to/file to the actual path to file):
     
-    ```
-    git commit -m 'Provide a brief description of the changes you made here'
-    ```
+```
+git commit -m 'Provide a brief description of the changes you made here'
+```
     
-    Please make your commit message informative but concise — these messages
-    become a part of the history of the repo and an informative message will
-    help track down changes later. Don't stress over this too much, but before
-    you press the button, please consider whether you will find this commit
-    message useful when a bug pops up 6 months from now and you need to sort
-    through issues to find the right one. Once your changes have been commited,
-    push them to the remote branch:
+Please make your commit message informative but concise — these messages
+become a part of the history of the repo and an informative message will
+help track down changes later. Don't stress over this too much, but before
+you press the button, please consider whether you will find this commit
+message useful when a bug pops up 6 months from now and you need to sort
+through issues to find the right one. Once your changes have been commited,
+push them to the remote branch:
     
-    ```
-    git push origin
-    ```
+```
+git push origin
+```
 
 7. As you develop, please periodically update your branch with changes that have
-   been made to the master branch, and resolve any conflicts that come up.
+been made to the master branch, and resolve any conflicts that come up.
 
-    ```
-    git pull master
-    ```
+```
+git pull master
+```
 
 8. Repeat until your ready to commit to master
 
 9. Set up a 'Pull Request' asking to merge your changes into the master dahak repository
 
-    In a web browser, go to your GitHub fork of dahak, e.g.:
+In a web browser, go to your GitHub fork of dahak, e.g.:
     
-    ```
-    https://github.com/your-github-username/dahak
-    ```
-    and you will see a list of 'recently pushed branches' just above the source
-    code listing. On the right side, there should be a green 'Compare and pull
-    request' button. This will add a pull request submission checklist in the
-    following form:
+```
+https://github.com/your-github-username/dahak
+```
+and you will see a list of 'recently pushed branches' just above the source
+code listing. On the right side, there should be a green 'Compare and pull
+request' button. This will add a pull request submission checklist in the
+following form:
     
-    ```
-    Merge Checklist
-     - Typos are a sign of poorly maintained code. Has this request been checked with a spell checker?
-     - Tutorials should be universally reproducible. If this request modifies a tutorial, does it assume we're starting from a blank Ubuntu 16.04 (Xenial Xerus) image?
-     - Large diffs to binary or data files can artificially inflate the size of the repository. Are there large diffs to binary or data files, and are these changes necessary?
-    ```
+```
+Merge Checklist
+* Typos are a sign of poorly maintained code. Has this request been checked with a spell checker?
+* Tutorials should be universally reproducible. If this request modifies a tutorial, does it assume we're starting from a blank Ubuntu 16.04 (Xenial Xerus) image?
+* Large diffs to binary or data files can artificially inflate the size of the repository. Are there large diffs to binary or data files, and are these changes necessary?
+```
 
-    Next, click "Create Pull Request". This creates a new issue where others can review and make suggestions before your code is added the master dahak repository.
+Next, click "Create Pull Request". This creates a new issue where others can review and make suggestions before your code is added the master dahak repository.
 
 10. Review the pull request checklist and make changes, if necessary.
 
-    Check off as many boxes as possible and make a comment if you need help. If
-    you have an [ORCID ID](https://orcid.org/), please add that as a comment. Dahak
-    is an open-source, community-driven project and we'd like to acknowledge
-    your contribution when we publish. Including your ORCID ID helps that
-    process move smoothly.
+Check off as many boxes as possible and make a comment if you need help. If
+you have an [ORCID ID](https://orcid.org/), please add that as a comment. Dahak
+is an open-source, community-driven project and we'd like to acknowledge
+your contribution when we publish. Including your ORCID ID helps that
+process move smoothly.
 
-    As you add new changes, you can keep pushing to your pull request using
-    `git push origin`.
+As you add new changes, you can keep pushing to your pull request using
+`git push origin`.
 
 11. When you're ready to have the pull request reviewed, please mention
-    @brooksph, @charlesreid1, @kternus, @stephenturner, @ctb or anyone else on
-    the list of
-    [collaborators](https://github.com/dahak-metagenomics/dahak/settings/collaboration)
-    plus the comment `ready for review`. Often pull requests will require
-    changes, need more work before they can be merged, or simply need to be
-    addressed later. Adding tags can help with organizing. Check out this list
-    for some examples of
-    [tags](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#pull-request-labels).
+@brooksph, @charlesreid1, @kternus, @stephenturner, @ctb or anyone else on
+the list of
+[collaborators](https://github.com/dahak-metagenomics/dahak/settings/collaboration)
+plus the comment `ready for review`. Often pull requests will require
+changes, need more work before they can be merged, or simply need to be
+addressed later. Adding tags can help with organizing. Check out this list
+for some examples of
+[tags](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#pull-request-labels).
 
 12. Once your issue has been reviewed an merged, stand-up, throw your hands in
-    the air, and do a little dance; you're officially a GitHub master and a
-    contributor to the dahak project – we hold you in the highest of regards.
+the air, and do a little dance; you're officially a GitHub master and a
+contributor to the dahak project – we hold you in the highest of regards.
 
 ## My pull request was merged. What now?
 
