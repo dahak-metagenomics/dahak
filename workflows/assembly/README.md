@@ -27,7 +27,7 @@ do
 	base=$(basename $file .contigs.fa)
 	echo $base 
 	 
-	docker run -v /${PWD}:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
+	docker run -v ${PWD}:/data -it quay.io/biocontainers/quast:4.5--boost1.61_1 \
 	quast.py /data/${file} -o /data/${base}.megahit_quast_report
 done
 ```
