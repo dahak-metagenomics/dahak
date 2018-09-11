@@ -10,6 +10,6 @@ RUN apt-get install -y build-essential \
 
 RUN pip3 install biopython
 
-RUN git clone https://git@bitbucket.org/bromberglab/mifaser_base.git
+RUN git clone https://git@bitbucket.org/bromberglab/mifaser.git
 
 WORKDIR mifaser_base/
